@@ -79,8 +79,12 @@ class CellLocationFile {
             new LruCache<QueryArgs, List<CellInfo>>(10000);
 
     public void init(Context ctx) {
-        this.file = new File("/sdcard/.nogapps/lacells.db");
+        openDatabase();
+    }
+
+    private void openDatabase() {
         if (database == null) {
+            this.file = new File("/sdcard/.nogapps/lacells.db");
             database = SQLiteDatabase.openDatabase(file.getAbsolutePath(), null, SQLiteDatabase.NO_LOCALIZED_COLLATORS);
         }
     }
@@ -119,7 +123,7 @@ class CellLocationFile {
         List<CellInfo> cached = queryResultCache.get(args);
         if (cached != null) return cached;
 
-
+        openDatabase();
         assertDatabaseOpen();
         // Build up where clause and arguments based on what we were passed
         if (mcc != null) {

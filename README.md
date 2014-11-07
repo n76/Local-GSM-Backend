@@ -29,7 +29,7 @@ Requirements on phone
 1. This is a plug in for µg UnifiedNlp which can be installed from f-droid.
 
 How to build and install
-=======================-
+========================
 
 1. ant debug
 2. adb install bin/android_apps_gsmlp-debug.apk
