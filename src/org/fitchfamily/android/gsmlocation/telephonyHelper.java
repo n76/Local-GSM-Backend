@@ -1,0 +1,226 @@
+package org.fitchfamily.android.gsmlocation;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.List;
+
+import android.location.Location;
+import android.os.Bundle;
+import android.telephony.CellIdentityGsm;
+import android.telephony.CellIdentityWcdma;
+import android.telephony.CellInfo;
+import android.telephony.CellInfoGsm;
+import android.telephony.CellInfoWcdma;
+import android.telephony.CellLocation;
+import android.telephony.gsm.GsmCellLocation;
+import android.telephony.NeighboringCellInfo;
+import android.telephony.TelephonyManager;
+import android.util.Log;
+
+import org.microg.nlp.api.LocationBackendService;
+import org.microg.nlp.api.LocationHelper;
+
+import org.fitchfamily.android.gsmlocation.model.myCellInfo;
+
+class telephonyHelper {
+    protected String TAG = "gsm-backend-telephonyHelper";
+
+    private TelephonyManager tm = null;
+    private CellLocationFile db = new CellLocationFile();
+
+    private telephonyHelper() {
+    }
+
+    public telephonyHelper( TelephonyManager teleMgr ) {
+        tm = teleMgr;
+    }
+
+    // call getAllCellInfo() in a way that is safe for many
+    // versions of Android. If does not exist, returns null or
+    // returns an empty list then return null otherwise return
+    // list of cells.
+    public synchronized List<myCellInfo> getAllCellInfoWrapper() {
+        if (tm == null)
+            return null;
+
+        List<android.telephony.CellInfo> allCells;
+
+        if (tm == null)
+            return null;
+        try {
+            allCells = tm.getAllCellInfo();
+        } catch (NoSuchMethodError e) {
+            allCells = null;
+//            Log.d(TAG, "no such member: getAllCellInfo().");
+        }
+        if ((allCells == null) || allCells.isEmpty())
+            return null;
+
+        List<myCellInfo> rslt = new ArrayList<myCellInfo>();
+        for (android.telephony.CellInfo inputCellInfo : allCells) {
+            List<myCellInfo> cellInfos = null;
+            if (inputCellInfo instanceof CellInfoGsm) {
+                CellInfoGsm gsm = (CellInfoGsm) inputCellInfo;
+                CellIdentityGsm id = gsm.getCellIdentity();
+                cellInfos = db.query(id.getMcc(), id.getMnc(), id.getCid(), id.getLac());
+            }
+            if (inputCellInfo instanceof CellInfoWcdma) {
+                CellInfoWcdma wcdma = (CellInfoWcdma) inputCellInfo;
+                CellIdentityWcdma id = wcdma.getCellIdentity();
+                cellInfos = db.query(id.getMcc(), id.getMnc(), id.getCid(), id.getLac());
+            }
+            if (cellInfos == null) continue;
+
+            if ((cellInfos != null) && !cellInfos.isEmpty()) {
+                for (myCellInfo cellInfo : cellInfos) {
+                    rslt.add(cellInfo);
+                }
+            }
+        }
+        if ((rslt != null) && rslt.isEmpty())
+            return null;
+        return rslt;
+    }
+
+    public synchronized List<myCellInfo> legacyGetCellTowers() {
+        if (tm == null)
+            return null;
+
+        List<myCellInfo> rslt = new ArrayList<myCellInfo>();
+        String mncString = tm.getNetworkOperator();
+
+        if ((mncString == null) || (mncString.length() < 5) || (mncString.length() > 6)) {
+            Log.d(TAG, "mncString is NULL or not recognized.");
+            return null;
+        }
+        int mcc = Integer.parseInt(mncString.substring(0,3));
+        int mnc = Integer.parseInt(mncString.substring(3));
+        final CellLocation cellLocation = tm.getCellLocation();
+        if ((cellLocation != null) && (cellLocation instanceof GsmCellLocation)) {
+            GsmCellLocation cell = (GsmCellLocation) cellLocation;
+            List<myCellInfo> cellInfos = db.query(mcc, mnc, cell.getCid(), cell.getLac());
+            if (cellInfos != null)
+                rslt = cellInfos;
+        }
+
+        final List<NeighboringCellInfo> neighbours = tm.getNeighboringCellInfo();
+        if ((neighbours != null) && !neighbours.isEmpty()) {
+            for (NeighboringCellInfo neighbour : neighbours) {
+                List<myCellInfo> cellInfos = db.query(mcc, mnc, neighbour.getCid(), neighbour.getLac());
+                if ((cellInfos != null) && !cellInfos.isEmpty()) {
+                    for (myCellInfo cellInfo : cellInfos) {
+                        rslt.add(cellInfo);
+                    }
+                }
+            }
+        }
+        if ((rslt != null) && rslt.isEmpty())
+            return null;
+        return rslt;
+    }
+
+    public synchronized List<myCellInfo> getCellTowers() {
+        if (tm == null)
+            return null;
+
+        List<myCellInfo> rslt = getAllCellInfoWrapper();
+        if (rslt == null) {
+//            Log.d(TAG, "getAllCellInfoWrapper() returned nothing, trying legacyGetCellTowers().");
+            rslt = legacyGetCellTowers();
+        }
+        return rslt;
+    }
+
+    public List<Location> getTowerLocations() {
+        if (tm == null)
+            return null;
+
+        List<myCellInfo> cellInfos = getCellTowers();
+        if ((cellInfos == null) || cellInfos.isEmpty()) {
+            Log.d(TAG, "getCellTowers() returned nothing.");
+            return null;
+        }
+
+        List<Location> rslt = new ArrayList<Location>();
+        for (myCellInfo ci : cellInfos) {
+            rslt.add(LocationHelper.create("gsm", ci.getLat(), ci.getLng(), (float) ci.getRng()));
+            Log.d(TAG, "Tower at (lat="+ ci.getLat() + ", lng=" + ci.getLng() + ", rng=" + ci.getRng() + ")");
+        }
+        if (rslt.isEmpty())
+            return null;
+        return rslt;
+    }
+
+    public Location weightedAverage(String source, Collection<Location> locations) {
+        Location rslt = null;
+
+        if (locations == null || locations.size() == 0) {
+            return null;
+        }
+        int num = locations.size();
+        int totalWeight = 0;
+        double latitude = 0;
+        double longitude = 0;
+        float accuracy = 0;
+        int altitudes = 0;
+        double altitude = 0;
+        for (Location value : locations) {
+            if (value != null) {
+                // Create weight value based on accuracy. Higher accuracy
+                // (lower tower radius/range) towers get higher weight.
+                float thisAcc = (float) value.getAccuracy();
+                if (thisAcc < 1f)
+                    thisAcc = 1f;
+                int wgt = (int) (100000f / thisAcc);
+                if (wgt < 1)
+                    wgt = 1;
+
+                latitude += (value.getLatitude() * wgt);
+                longitude += (value.getLongitude() * wgt);
+                accuracy += (value.getAccuracy() * wgt);
+                totalWeight += wgt;
+
+//                Log.d(TAG, "(lat="+ latitude + ", lng=" + longitude + ", acc=" + accuracy + ") / wgt=" + totalWeight );
+
+                if (value.hasAltitude()) {
+                    altitude += value.getAltitude();
+                    altitudes++;
+                }
+            }
+        }
+        latitude = latitude / totalWeight;
+        longitude = longitude / totalWeight;
+        accuracy = accuracy / totalWeight;
+        altitude = altitude / altitudes;
+        Bundle extras = new Bundle();
+        extras.putInt("AVERAGED_OF", num);
+//        Log.d(TAG, "Location est (lat="+ latitude + ", lng=" + longitude + ", acc=" + accuracy);
+        if (altitudes > 0) {
+            rslt = LocationHelper.create(source,
+                          latitude,
+                          longitude ,
+                          altitude,
+                          accuracy,
+                          extras);
+        } else {
+            rslt = LocationHelper.create(source,
+                          latitude,
+                          longitude,
+                          accuracy,
+                          extras);
+        }
+        rslt.setTime(System.currentTimeMillis());
+        return rslt;
+    }
+
+    public synchronized Location getLocationEstimate() {
+        if (tm == null)
+            return null;
+        return weightedAverage("gsm",getTowerLocations());
+    }
+
+}
+
+

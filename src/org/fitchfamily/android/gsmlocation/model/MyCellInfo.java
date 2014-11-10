@@ -1,23 +1,21 @@
 package org.fitchfamily.android.gsmlocation.model;
 
-public class CellInfo {
+public class myCellInfo {
     private int MCC = -1;
     private int MNC = -1;
     private int CID = -1;
     private int LAC = -1;
-    public int dbm = 0;
     private double lat = 0d;
     private double lng = 0d;
     private double rng = 0d;
     public long measurement;
     public long seen = System.currentTimeMillis();
 
-    public CellInfo(int mcc, int mnc, int lac, int cid, double latV, double lon) {
+    public myCellInfo(int mcc, int mnc, int lac, int cid, double latV, double lon) {
         MCC = mcc;
         MNC = mnc;
         LAC = lac;
         CID = cid;
-        dbm = 0;
         lat = latV;
         lng = lon;
         rng = 0;
@@ -26,8 +24,8 @@ public class CellInfo {
 
     public void setRng(double range_est) {
         rng = range_est;
-        if (range_est < 800d) {
-            rng = 800d;
+        if (range_est < 500d) {
+            rng = 500d;
         }
     }
 
@@ -40,8 +38,8 @@ public class CellInfo {
     }
 
     public double getRng() {
-        if (rng == 0)
-            return 800d;
+        if (rng < 50d)
+            return 500d;
         else
             return rng;
     }
@@ -54,7 +52,7 @@ public class CellInfo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        CellInfo cellInfo = (CellInfo) o;
+        myCellInfo cellInfo = (myCellInfo) o;
 
         if (CID != cellInfo.CID) return false;
         if (LAC != cellInfo.LAC) return false;
@@ -92,12 +90,11 @@ public class CellInfo {
     }
 
     public String toString() {
-        return "CellInfo(" +
+        return "myCellInfo(" +
                 "MCC=" + MCC +
                 ", MNC=" + MNC +
                 ", CID=" + CID +
                 ", LAC=" + LAC +
-                ", dbm=" + dbm +
                 ", lng=" + lng +
                 ", lat=" + lat +
                 ", rng=" + rng +

@@ -2,10 +2,7 @@ package org.fitchfamily.android.gsmlocation;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.fitchfamily.android.gsmlocation.model.CellInfo;
-import org.microg.nlp.api.LocationBackendService;
-import org.microg.nlp.api.LocationHelper;
+import java.util.List;
 
 import android.app.Service;
 import android.content.Context;
@@ -14,109 +11,131 @@ import android.location.Location;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.telephony.CellInfo;
+import android.telephony.CellLocation;
+import android.telephony.gsm.GsmCellLocation;
+import android.telephony.NeighboringCellInfo;
+import android.telephony.PhoneStateListener;
+import android.telephony.ServiceState;
+import android.telephony.SignalStrength;
+import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import org.microg.nlp.api.LocationBackendService;
+import org.microg.nlp.api.LocationHelper;
+
+import org.fitchfamily.android.gsmlocation.model.myCellInfo;
 
 public class GSMService extends LocationBackendService {
 
-    protected String TAG = "org.fitchfamily.android.gsmlocation";
+    private TelephonyManager tm = null;
+    private telephonyHelper th = null;
 
-    protected Lock lock = new ReentrantLock();
+    protected String TAG = "gsm-backend";
+
     protected Thread worker = null;
     protected CellbasedLocationProvider lp = null;
 
     private Location lastLocation = null;
 
-    public void start() {
+    public synchronized void start() {
         if (worker != null && worker.isAlive()) return;
 
         Log.d(TAG, "Starting location backend");
         Handler handler = new Handler(Looper.getMainLooper());
         final Context ctx = getApplicationContext();
+        tm = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
+        th = new telephonyHelper(tm);
         handler.post(new Runnable() {
             public void run() {
                 CellbasedLocationProvider.getInstance().init(ctx);
             }
         });
         try {
-            lock.lock();
             if (worker != null && worker.isAlive()) worker.interrupt();
             worker = new Thread() {
                 public void run() {
                     Log.d(TAG, "Starting reporter thread");
-                    lp = CellbasedLocationProvider.getInstance();
-                    double lastLng = 0d;
-                    double lastLat = 0d;
-                    try {
-                        while (true) {
-                            Thread.sleep(1000);
 
-                            try {
-                                CellInfo[] infos = lp.getAll();
+                    final PhoneStateListener listener = new PhoneStateListener() {
 
-                                if (infos.length == 0) {
-                                    lastLocation = null;
-                                    continue;
+                        Location lastLocation = null;
+
+                        private boolean sameLoc(Location l1, Location l2) {
+                            if ((l1 == null) && (l2 == null)) {
+                                return true;
+                            }
+                            if ((l1 == null) && (l2 != null)) {
+                                return false;
+                            }
+                            if ((l1 != null) && (l2 == null)) {
+                                return false;
+                            }
+                            return (l1.getLatitude() == l2.getLatitude()) &&
+                                   (l1.getLongitude() == l2.getLongitude()) &&
+                                   (l1.getAccuracy() == l2.getAccuracy());
+                        }
+
+                        private synchronized void doIt(String from) {
+                            if (isConnected()) {
+                                Location rslt = th.getLocationEstimate();
+                                String logString = "";
+                                if (rslt != null)
+                                    logString = from + rslt.toString();
+                                else
+                                    logString = from + " null position";
+                                if (!sameLoc(lastLocation, rslt)) {
+                                    Log.e(TAG, logString);
+                                    if (rslt != null)
+                                        report(rslt);
                                 }
-
-                                double lng = 0d;
-                                double lat = 0d;
-                                float acc = 0f;
-
-                                // use accuracy (observed cell tower
-                                // coverage range) as proxy for position
-                                // weighting rather than simply average
-                                // locations
-                                int totalWeight = 0;
-
-                                for(CellInfo c : infos) {
-                                    float thisAcc = (float) c.getRng();
-
-                                    if (thisAcc < 1f)
-                                        thisAcc = 1f;
-                                    int wgt = (int) (100000f / thisAcc);
-                                    if (wgt < 1)
-                                        wgt = 1;
-                                    lng += (c.getLng() * wgt);
-                                    lat += (c.getLat() * wgt);
-                                    acc += (thisAcc * wgt);
-                                    totalWeight += wgt;
-//                                    Log.d(TAG, "loop (" + lat + "," + lng + "," + acc + "," + wgt+ ")/" + totalWeight);
-                                }
-                                lng /= totalWeight;
-                                lat /= totalWeight;
-                                acc /= totalWeight;
-                                if (lng != lastLng || lat != lastLat) {
-                                    Log.d(TAG, "new location (" + lat + "," + lng + "," + acc + ") Number of towers:" + infos.length);
-                                    lastLng = lng;
-                                    lastLat = lat;
-                                    lastLocation = LocationHelper.create("gsm", lat, lng, acc);
-                                    report(lastLocation);
-                                }
-                            } catch (Exception e) {
-                                Log.e(TAG, "Update loop failed", e);
-                                lastLocation = null;
+                                lastLocation = rslt;
                             }
                         }
-                    } catch (InterruptedException e) {}
+
+                        public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+//                            doIt("onSignalStrengthsChanged: ");
+                        }
+                        public void onServiceStateChanged(ServiceState serviceState) {
+                            doIt("onServiceStateChanged: ");
+                        }
+                        public void onCellLocationChanged(CellLocation location) {
+                            doIt("onCellLocationChanged: ");
+                        }
+                        public void onDataConnectionStateChanged(int state) {
+//                            doIt("onDataConnectionStateChanged: ");
+                        }
+                        public void onCellInfoChanged(List<android.telephony.CellInfo> cellInfo) {
+                            doIt("onCellInfoChanged: ");
+                        }
+                    };
+                    tm.listen(
+                        listener,
+                        PhoneStateListener.LISTEN_SIGNAL_STRENGTHS |
+                        PhoneStateListener.LISTEN_CELL_INFO |
+                        PhoneStateListener.LISTEN_CELL_LOCATION |
+                        PhoneStateListener.LISTEN_DATA_CONNECTION_STATE |
+                        PhoneStateListener.LISTEN_SERVICE_STATE
+                    );
                 }
             };
             worker.start();
         } catch (Exception e) {
             Log.e(TAG, "Start failed", e);
-        } finally {
-            try { lock.unlock(); } catch (Exception e) {}
+            worker = null;
         }
     }
 
-    @Override
-    protected Location update() {
-        start();
-//        Log.e(TAG, "update: " + lastLocation.toString());
-        return (lastLocation);
-    }
+//     @Override
+//     protected synchronized Location update() {
+//         start();
+//         Location rslt = th.getLocationEstimate();
+//         Log.e(TAG, rslt.toString());
+//         return rslt;
+//     }
 
     @Override
-    protected void onOpen() {
+    protected synchronized void onOpen() {
         super.onOpen();
 
         start();
@@ -124,15 +143,14 @@ public class GSMService extends LocationBackendService {
         Log.d(TAG, "Binder OPEN called");
     }
 
-    protected void onClose() {
+    protected synchronized void onClose() {
         Log.d(TAG, "Binder CLOSE called");
         super.onClose();
         try {
-            lock.lock();
             if (worker != null && worker.isAlive()) worker.interrupt();
             if (worker != null) worker = null;
         } finally {
-            try { lock.unlock(); } catch (Exception e) {}
+            worker = null;
         }
     }
 

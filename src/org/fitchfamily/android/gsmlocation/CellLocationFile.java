@@ -12,7 +12,7 @@ import android.os.Environment;
 import android.util.LruCache;
 
 
-import org.fitchfamily.android.gsmlocation.model.CellInfo;
+import org.fitchfamily.android.gsmlocation.model.myCellInfo;
 
 
 class CellLocationFile {
@@ -75,8 +75,8 @@ class CellLocationFile {
     /**
      * DB positive query cache (found in the db).
      */
-    private final LruCache<QueryArgs, List<CellInfo>> queryResultCache =
-            new LruCache<QueryArgs, List<CellInfo>>(10000);
+    private final LruCache<QueryArgs, List<myCellInfo>> queryResultCache =
+            new LruCache<QueryArgs, List<myCellInfo>>(10000);
 
     public void init(Context ctx) {
         openDatabase();
@@ -110,7 +110,7 @@ class CellLocationFile {
         return file.getAbsolutePath();
     }
 
-    public List<CellInfo> query(final Integer mcc, final Integer mnc, final int cid, final int lac) {
+    public synchronized List<myCellInfo> query(final Integer mcc, final Integer mnc, final int cid, final int lac) {
         List<String> specArgs = new ArrayList<String>();
         String delim = "";
         String bySpec = "";
@@ -120,7 +120,7 @@ class CellLocationFile {
         Boolean negative = queryResultNegativeCache.get(args);
         if (negative != null && negative.booleanValue()) return null;
 
-        List<CellInfo> cached = queryResultCache.get(args);
+        List<myCellInfo> cached = queryResultCache.get(args);
         if (cached != null) return cached;
 
         openDatabase();
@@ -161,13 +161,13 @@ class CellLocationFile {
                                null,
                                null);
         if (cursor != null) {
-            List<CellInfo> ciList = new ArrayList<CellInfo>();
+            List<myCellInfo> ciList = new ArrayList<myCellInfo>();
             try {
                 if (cursor.getCount() > 0) {
                     while (!cursor.isLast()) {
                         cursor.moveToNext();
 
-                        CellInfo ci = new CellInfo(cursor.getInt(cursor.getColumnIndexOrThrow(COL_MCC)),
+                        myCellInfo ci = new myCellInfo(cursor.getInt(cursor.getColumnIndexOrThrow(COL_MCC)),
                                                    cursor.getInt(cursor.getColumnIndexOrThrow(COL_MNC)),
                                                    cursor.getInt(cursor.getColumnIndexOrThrow(COL_LAC)),
                                                    cursor.getInt(cursor.getColumnIndexOrThrow(COL_CID)),
