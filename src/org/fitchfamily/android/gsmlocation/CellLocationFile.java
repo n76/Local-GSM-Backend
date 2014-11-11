@@ -85,13 +85,13 @@ class CellLocationFile {
     private void openDatabase() {
         if (database == null) {
             this.file = new File("/sdcard/.nogapps/lacells.db");
-            database = SQLiteDatabase.openDatabase(file.getAbsolutePath(), null, SQLiteDatabase.NO_LOCALIZED_COLLATORS);
-        }
-    }
-
-    private void assertDatabaseOpen() {
-        if (database == null) {
-            throw new IllegalArgumentException("You need to open the file first!");
+            if (file.exists() && file.canRead()) {
+                database = SQLiteDatabase.openDatabase(file.getAbsolutePath(),
+                                                       null,
+                                                       SQLiteDatabase.NO_LOCALIZED_COLLATORS);
+            } else {
+                database = null;
+            }
         }
     }
 
@@ -124,7 +124,9 @@ class CellLocationFile {
         if (cached != null) return cached;
 
         openDatabase();
-        assertDatabaseOpen();
+        if (database == null)
+            return null;
+
         // Build up where clause and arguments based on what we were passed
         if (mcc != null) {
             bySpec = bySpec + delim + "mcc=?";

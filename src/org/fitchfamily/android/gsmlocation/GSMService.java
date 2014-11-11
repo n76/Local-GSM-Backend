@@ -93,28 +93,28 @@ public class GSMService extends LocationBackendService {
                             }
                         }
 
-                        public void onSignalStrengthsChanged(SignalStrength signalStrength) {
-//                            doIt("onSignalStrengthsChanged: ");
-                        }
+//                         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+//                             doIt("onSignalStrengthsChanged: ");
+//                         }
                         public void onServiceStateChanged(ServiceState serviceState) {
                             doIt("onServiceStateChanged: ");
                         }
                         public void onCellLocationChanged(CellLocation location) {
                             doIt("onCellLocationChanged: ");
                         }
-                        public void onDataConnectionStateChanged(int state) {
-//                            doIt("onDataConnectionStateChanged: ");
-                        }
+//                         public void onDataConnectionStateChanged(int state) {
+//                             doIt("onDataConnectionStateChanged: ");
+//                         }
                         public void onCellInfoChanged(List<android.telephony.CellInfo> cellInfo) {
                             doIt("onCellInfoChanged: ");
                         }
                     };
                     tm.listen(
                         listener,
-                        PhoneStateListener.LISTEN_SIGNAL_STRENGTHS |
+//                        PhoneStateListener.LISTEN_SIGNAL_STRENGTHS |
                         PhoneStateListener.LISTEN_CELL_INFO |
                         PhoneStateListener.LISTEN_CELL_LOCATION |
-                        PhoneStateListener.LISTEN_DATA_CONNECTION_STATE |
+//                        PhoneStateListener.LISTEN_DATA_CONNECTION_STATE |
                         PhoneStateListener.LISTEN_SERVICE_STATE
                     );
                 }
