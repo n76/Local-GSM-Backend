@@ -26,6 +26,7 @@ import org.fitchfamily.android.gsmlocation.model.myCellInfo;
 
 class telephonyHelper {
     protected String TAG = "gsm-backend-telephonyHelper";
+    private static boolean DEBUG = true;
 
     private TelephonyManager tm = null;
     private CellLocationFile db = new CellLocationFile();
@@ -53,7 +54,7 @@ class telephonyHelper {
             allCells = tm.getAllCellInfo();
         } catch (NoSuchMethodError e) {
             allCells = null;
-//            Log.d(TAG, "no such member: getAllCellInfo().");
+            if (DEBUG) Log.d(TAG, "no such member: getAllCellInfo().");
         }
         if ((allCells == null) || allCells.isEmpty())
             return null;
@@ -92,7 +93,7 @@ class telephonyHelper {
         String mncString = tm.getNetworkOperator();
 
         if ((mncString == null) || (mncString.length() < 5) || (mncString.length() > 6)) {
-            Log.d(TAG, "mncString is NULL or not recognized.");
+            if (DEBUG) Log.d(TAG, "mncString is NULL or not recognized.");
             return null;
         }
         int mcc = Integer.parseInt(mncString.substring(0,3));
@@ -127,7 +128,7 @@ class telephonyHelper {
 
         List<myCellInfo> rslt = getAllCellInfoWrapper();
         if (rslt == null) {
-//            Log.d(TAG, "getAllCellInfoWrapper() returned nothing, trying legacyGetCellTowers().");
+//            if (DEBUG) Log.d(TAG, "getAllCellInfoWrapper() returned nothing, trying legacyGetCellTowers().");
             rslt = legacyGetCellTowers();
         }
         return rslt;
@@ -139,14 +140,14 @@ class telephonyHelper {
 
         List<myCellInfo> cellInfos = getCellTowers();
         if ((cellInfos == null) || cellInfos.isEmpty()) {
-            Log.d(TAG, "getCellTowers() returned nothing.");
+            if (DEBUG) Log.d(TAG, "getCellTowers() returned nothing.");
             return null;
         }
 
         List<Location> rslt = new ArrayList<Location>();
         for (myCellInfo ci : cellInfos) {
             rslt.add(LocationHelper.create("gsm", ci.getLat(), ci.getLng(), (float) ci.getRng()));
-            Log.d(TAG, "Tower at (lat="+ ci.getLat() + ", lng=" + ci.getLng() + ", rng=" + ci.getRng() + ")");
+            if (DEBUG) Log.d(TAG, "Tower at (lat="+ ci.getLat() + ", lng=" + ci.getLng() + ", rng=" + ci.getRng() + ")");
         }
         if (rslt.isEmpty())
             return null;
@@ -182,7 +183,7 @@ class telephonyHelper {
                 accuracy += (value.getAccuracy() * wgt);
                 totalWeight += wgt;
 
-//                Log.d(TAG, "(lat="+ latitude + ", lng=" + longitude + ", acc=" + accuracy + ") / wgt=" + totalWeight );
+                if (DEBUG) Log.d(TAG, "(lat="+ latitude + ", lng=" + longitude + ", acc=" + accuracy + ") / wgt=" + totalWeight );
 
                 if (value.hasAltitude()) {
                     altitude += value.getAltitude();
@@ -196,7 +197,7 @@ class telephonyHelper {
         altitude = altitude / altitudes;
         Bundle extras = new Bundle();
         extras.putInt("AVERAGED_OF", num);
-//        Log.d(TAG, "Location est (lat="+ latitude + ", lng=" + longitude + ", acc=" + accuracy);
+//        if (DEBUG) Log.d(TAG, "Location est (lat="+ latitude + ", lng=" + longitude + ", acc=" + accuracy);
         if (altitudes > 0) {
             rslt = LocationHelper.create(source,
                           latitude,

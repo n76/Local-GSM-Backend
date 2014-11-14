@@ -9,6 +9,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import android.util.Log;
 import android.util.LruCache;
 
 
@@ -27,7 +28,8 @@ class CellLocationFile {
     private static File file;
     private SQLiteDatabase database;
 
-    protected String TAG = "org.fitchfamily.android.gsmlocation";
+    protected String TAG = "gsm-backend-database";
+    private static boolean DEBUG = true;
 
     /**
      * Used internally for caching. HashMap compatible entity class.
@@ -65,6 +67,9 @@ class CellLocationFile {
             return result;
         }
 
+        public String toString() {
+            return "mcc=" + mcc + ", mnc=" + mnc + ", lac=" + lac +", cid=" + cid;
+        }
     }
 
     /**
@@ -124,8 +129,10 @@ class CellLocationFile {
         if (cached != null) return cached;
 
         openDatabase();
-        if (database == null)
+        if (database == null) {
+            if (DEBUG) Log.d(TAG, "Unable to open cell tower database file.");
             return null;
+        }
 
         // Build up where clause and arguments based on what we were passed
         if (mcc != null) {
@@ -183,8 +190,10 @@ class CellLocationFile {
                 cursor.close();
             }
             queryResultCache.put(args, ciList);
+            if (DEBUG) Log.d(TAG,"Cell info found: "+args.toString());
             return ciList;
         }
+        if (DEBUG) Log.d(TAG,"Cell info not found: "+args.toString());
         queryResultNegativeCache.put(args, true);
         return null;
     }

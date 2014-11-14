@@ -32,30 +32,26 @@ public class GSMService extends LocationBackendService {
     private telephonyHelper th = null;
 
     protected String TAG = "gsm-backend";
+    private static boolean DEBUG = true;
 
     protected Thread worker = null;
-    protected CellbasedLocationProvider lp = null;
 
     private Location lastLocation = null;
 
     public synchronized void start() {
         if (worker != null && worker.isAlive()) return;
 
-        Log.d(TAG, "Starting location backend");
+        if (DEBUG) Log.d(TAG, "Starting location backend");
         Handler handler = new Handler(Looper.getMainLooper());
         final Context ctx = getApplicationContext();
         tm = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
         th = new telephonyHelper(tm);
-        handler.post(new Runnable() {
-            public void run() {
-                CellbasedLocationProvider.getInstance().init(ctx);
-            }
-        });
+
         try {
             if (worker != null && worker.isAlive()) worker.interrupt();
             worker = new Thread() {
                 public void run() {
-                    Log.d(TAG, "Starting reporter thread");
+                    if (DEBUG) Log.d(TAG, "Starting reporter thread");
 
                     final PhoneStateListener listener = new PhoneStateListener() {
 
@@ -78,6 +74,8 @@ public class GSMService extends LocationBackendService {
 
                         private synchronized void doIt(String from) {
                             if (isConnected()) {
+                                if (DEBUG) Log.d(TAG,"doIt() entry");
+                                long entryTime = System.currentTimeMillis();
                                 Location rslt = th.getLocationEstimate();
                                 String logString = "";
                                 if (rslt != null)
@@ -90,6 +88,7 @@ public class GSMService extends LocationBackendService {
                                         report(rslt);
                                 }
                                 lastLocation = rslt;
+                                if (DEBUG) Log.d(TAG,"doIt() exit - "+(System.currentTimeMillis()-entryTime)+"ms");
                             }
                         }
 
@@ -140,11 +139,11 @@ public class GSMService extends LocationBackendService {
 
         start();
 
-        Log.d(TAG, "Binder OPEN called");
+        if (DEBUG) Log.d(TAG, "Binder OPEN called");
     }
 
     protected synchronized void onClose() {
-        Log.d(TAG, "Binder CLOSE called");
+        if (DEBUG) Log.d(TAG, "Binder CLOSE called");
         super.onClose();
         try {
             if (worker != null && worker.isAlive()) worker.interrupt();
