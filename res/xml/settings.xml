@@ -1,0 +1,47 @@
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+            android:title="Data Sources">
+
+        <CheckBoxPreference
+                android:key="oci_preference"
+                android:title="@string/use_oci"
+                android:summary="@string/use_oci_summary"
+                />
+
+        <CheckBoxPreference
+                android:key="mls_preference"
+                android:title="@string/use_mls"
+                android:summary="@string/use_mls_summary"
+                />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            android:title="OpenCellID Configuration">
+
+        <EditTextPreference
+                android:key="oci_key_preference"
+                android:title="@string/oci_api_label"
+                android:summary="@string/oci_api_summary"
+                android:dialogTitle="@string/oci_api_description"
+                />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            android:title="Filtering">
+
+        <EditTextPreference
+                android:key="mcc_filter_preference"
+                android:title="@string/mcc_filter_label"
+                android:summary="@string/mcc_filter_summary"
+                android:dialogTitle="@string/mcc_filter_description"
+                android:hint="@string/mcc_hint"
+                android:digits="0123456789 ,"
+                />
+    </PreferenceCategory>
+    <Preference
+        android:layout="@layout/settings"
+        android:key="genButtons">
+    </Preference>
+</PreferenceScreen>

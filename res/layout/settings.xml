@@ -1,79 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    >
-
-    <!-- Configuration Items -->
-    <!-- OpenCellID API Code -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/oci_api_label"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
+    <Button android:text="@string/gen_db_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
     />
-    <EditText
-        android:id="@+id/oci_api_code"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:drawable/editbox_background"
-        android:layout_alignParentTop="true"
-    />
-
-    <!-- MCC filter -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/mcc_filter_label"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-    />
-    <EditText
-        android:id="@+id/mcc_filter"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/mcc_hint"
-        android:background="@android:drawable/editbox_background"
-        android:layout_alignParentTop="true"
-    />
-
-    <!-- Data source options -->
-    <CheckBox
-        android:id="@+id/useOCI"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/use_osi"
-    />
-    <CheckBox
-        android:id="@+id/useMLS"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/use_mls"
-    />
-
-    <Button
-        android:id="@+id/saveConfig"
-        android:text="@string/save_config"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        />
-
-    <Button
-        android:id="@+id/downloadButton"
-        android:text="@string/dl_data"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        />
-
 </LinearLayout>
-
