@@ -52,6 +52,7 @@ public class GSMService extends LocationBackendService {
             worker = new Thread() {
                 public void run() {
                     if (DEBUG) Log.d(TAG, "Starting reporter thread");
+                    Looper.prepare();
 
                     final PhoneStateListener listener = new PhoneStateListener() {
 
