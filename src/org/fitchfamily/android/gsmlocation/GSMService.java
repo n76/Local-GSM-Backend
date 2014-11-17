@@ -31,8 +31,8 @@ public class GSMService extends LocationBackendService {
     private TelephonyManager tm = null;
     private telephonyHelper th = null;
 
-    protected String TAG = "gsm-backend";
-    private static boolean DEBUG = true;
+    protected String TAG = appConstants.TAG_PREFIX+"service";
+    private static boolean DEBUG = appConstants.DEBUG;
 
     protected Thread worker = null;
 

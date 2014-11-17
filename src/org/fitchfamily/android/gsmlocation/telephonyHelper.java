@@ -25,8 +25,8 @@ import org.microg.nlp.api.LocationHelper;
 import org.fitchfamily.android.gsmlocation.model.myCellInfo;
 
 class telephonyHelper {
-    protected String TAG = "gsm-backend-telephonyHelper";
-    private static boolean DEBUG = true;
+    protected String TAG = appConstants.TAG_PREFIX+"telephonyHelper";
+    private static boolean DEBUG = appConstants.DEBUG;
 
     private TelephonyManager tm = null;
     private CellLocationFile db = new CellLocationFile();

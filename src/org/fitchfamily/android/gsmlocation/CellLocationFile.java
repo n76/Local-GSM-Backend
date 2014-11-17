@@ -28,8 +28,8 @@ class CellLocationFile {
     private static File file;
     private SQLiteDatabase database;
 
-    protected String TAG = "gsm-backend-database";
-    private static boolean DEBUG = true;
+    protected String TAG = appConstants.TAG_PREFIX+"database";
+    private static boolean DEBUG = appConstants.DEBUG;
 
     /**
      * Used internally for caching. HashMap compatible entity class.
@@ -89,7 +89,7 @@ class CellLocationFile {
 
     private void openDatabase() {
         if (database == null) {
-            this.file = new File("/sdcard/.nogapps/lacells.db");
+            this.file = new File(appConstants.DB_FILE_NAME);
             if (file.exists() && file.canRead()) {
                 database = SQLiteDatabase.openDatabase(file.getAbsolutePath(),
                                                        null,

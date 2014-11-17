@@ -12,8 +12,8 @@ import android.util.Log;
 import android.view.View;
 
 public class settings extends Activity {
-    protected String TAG = "gsm-backend-settings";
-    private static boolean DEBUG = true;
+    protected String TAG = appConstants.TAG_PREFIX+"settings";
+    private static boolean DEBUG = appConstants.DEBUG;
 
     private boolean oci_preference;
     private boolean mls_preference;
