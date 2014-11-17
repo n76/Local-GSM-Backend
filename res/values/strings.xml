@@ -4,19 +4,15 @@
 
   <!-- Strings for settings -->
   <string name="use_oci">OpenCellID</string>
-  <string name="use_oci_summary">Use Data from OpenCellId?</string>
   <string name="use_mls">Mozilla Location Services</string>
-  <string name="use_mls_summary">Use Data from Mozilla Location Services?</string>
 
   <string name="dl_data">Download Cell Tower Data</string>
 
   <string name="oci_api_label">OpenCellId API</string>
-  <string name="oci_api_summary">API Code from OpenCellId</string>
   <string name="oci_api_description">See http://wiki.opencellid.org/wiki/API</string>
 
   <string name="mcc_filter_label">MCC Filter</string>
   <string name="mcc_hint">310, 311</string>
-  <string name="mcc_filter_summary">MCC codes to use</string>
   <string name="mcc_filter_description">Comma separated list of numeric Mobile Carrier Codes (MCC) to be used</string>
 
   <string name="gen_db_button">Generate Database</string>
