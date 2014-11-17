@@ -21,5 +21,10 @@
 
   <string name="gen_db_button">Generate Database</string>
 
+  <string name="no_api_key">OpenCellId data selected but no API key given. Continue without using OpenCellId data?</string>
+  <string name="no_data_requested">Neither OpenCellId data nor Mozilla Location Services data selected. Nothing to do.</string>
+  <string name="no_string">No</string>
+  <string name="yes_string">Yes</string>
+  <string name="okay_string">Okay</string>
 </resources>
 
