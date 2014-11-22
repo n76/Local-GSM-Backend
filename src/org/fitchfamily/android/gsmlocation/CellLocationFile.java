@@ -89,7 +89,7 @@ class CellLocationFile {
 
     private void openDatabase() {
         if (database == null) {
-            this.file = new File(appConstants.DB_FILE_NAME);
+            this.file = appConstants.OLD_DB_FILE;
             if (file.exists() && file.canRead()) {
                 database = SQLiteDatabase.openDatabase(file.getAbsolutePath(),
                                                        null,

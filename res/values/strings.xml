@@ -22,5 +22,6 @@
   <string name="no_string">No</string>
   <string name="yes_string">Yes</string>
   <string name="okay_string">Okay</string>
+  <string name="cancel_string">Cancel</string>
 </resources>
 

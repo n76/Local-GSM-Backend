@@ -12,6 +12,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 
+import android.content.Intent;
+
 import android.preference.EditTextPreference;
 import android.preference.Preference.OnPreferenceChangeListener;
 
@@ -24,64 +26,13 @@ public class settings extends Activity {
     private String oci_key_preference;
     private String mcc_filter_preference;
 
-    class PrefsFragment extends PreferenceFragment {
-
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.settings);
-
-            EditTextPreference ociKeyPreference = (EditTextPreference) this.findPreference("oci_key_preference");
-            if (ociKeyPreference != null) {
-                if (DEBUG) Log.d(TAG, "PrefsFragment.onCreate(): ociKeyPreference is "+ociKeyPreference.toString());
-                if(ociKeyPreference.getText()==null) {
-                    // to ensure we don't get a null value
-                    // set first value by default
-                    ociKeyPreference.setText("");
-                }
-                ociKeyPreference.setSummary(ociKeyPreference.getText());
-                ociKeyPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        preference.setSummary(newValue.toString());
-                        return true;
-                    }
-                });
-            } else {
-                if (DEBUG) Log.d(TAG, "PrefsFragment.onCreate(): ociKeyPreference is null");
-            }
-
-            EditTextPreference mccFilterPreference = (EditTextPreference) this.findPreference("mcc_filter_preference");
-            if (mccFilterPreference != null) {
-                if (DEBUG) Log.d(TAG, "PrefsFragment.onCreate(): mccFilterPreference is "+mccFilterPreference.toString());
-                if(mccFilterPreference.getText()==null) {
-                    // to ensure we don't get a null value
-                    // set first value by default
-                    mccFilterPreference.setText("");
-                }
-                mccFilterPreference.setSummary(mccFilterPreference.getText());
-                mccFilterPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        preference.setSummary(newValue.toString());
-                        return true;
-                    }
-                });
-            } else {
-                if (DEBUG) Log.d(TAG, "PrefsFragment.onCreate(): mccFilterPreference is null");
-            }
-
-        }
-
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PrefsFragment myFrag = new PrefsFragment();
+        prefsFragment myFrag = new prefsFragment();
         getFragmentManager().beginTransaction().replace(android.R.id.content,
-                                                        new PrefsFragment()).commit();
+                                                        new prefsFragment()).commit();
     }
 
     public void doCheckParameters(View theButton) {
@@ -150,5 +101,11 @@ public class settings extends Activity {
             Log.d(TAG, "OpenCellId API Key = " + oci_key_preference);
             Log.d(TAG, "MCC filtering = " + mcc_filter_preference);
         }
+        Intent myIntent = new Intent(this, dlActivity.class);
+        myIntent.putExtra("doOCI", oci_preference);
+        myIntent.putExtra("doMLS", mls_preference);
+        myIntent.putExtra("ociAPI", oci_key_preference);
+        myIntent.putExtra("mccFilter", mcc_filter_preference);
+        startActivity(myIntent);
     }
 }
