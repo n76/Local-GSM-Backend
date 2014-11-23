@@ -166,7 +166,8 @@ class CellLocationFile {
                                             COL_CID,
                                             COL_LATITUDE,
                                             COL_LONGITUDE,
-                                            COL_ACCURACY},
+                                            COL_ACCURACY,
+                                            COL_SAMPLES},
                                bySpec,
                                specArgArry,
                                null,
@@ -202,7 +203,7 @@ class CellLocationFile {
                     thisLat = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LATITUDE));
                     thisLng = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LONGITUDE));
                     thisRng = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_ACCURACY));
-                    thisSamples = cursor.getInt(cursor.getColumnIndexOrThrow(COL_CID));
+                    thisSamples = cursor.getInt(cursor.getColumnIndexOrThrow(COL_SAMPLES));
                     if (DEBUG) Log.d(TAG, "query result: " +
                                           db_mcc + ", " + db_mnc + ", " + db_lac + ", " + db_cid + ", " +
                                           thisLat + ", " + thisLng + ", " + thisRng + ", " + thisSamples);
@@ -215,7 +216,7 @@ class CellLocationFile {
                         rng = thisRng;
                     samples += thisSamples;
                 }
-                if (DEBUG) Log.d(TAG, "Final: " +
+                if (DEBUG) Log.d(TAG, "Final result: " +
                                       db_mcc + ", " + db_mnc + ", " + db_lac + ", " + db_cid + ", " +
                                       lat/samples + ", " + lng/samples + ", " + rng );
                 myCellInfo ci = new myCellInfo(db_mcc, db_mnc, db_lac, db_cid, lat/samples, lng/samples);
