@@ -11,14 +11,11 @@ class appConstants {
 
     // Location of database
     public static final File ROOT_DIR = Environment.getExternalStorageDirectory();
-    public static final File DB_DIR = new File(ROOT_DIR, ".microG");
+    public static final File DB_DIR = new File(ROOT_DIR, ".nogapps");
     public static final String DB_NAME = "lacells.db";
     public static final File DB_FILE = new File(DB_DIR, DB_NAME);
     public static final String DB_BAK_NAME = DB_NAME + ".bak";
     public static final File DB_BAK_FILE = new File(DB_DIR, DB_NAME);
-
-    public static final File OLD_DB_DIR = new File(ROOT_DIR, ".nogapps");
-    public static final File OLD_DB_FILE = new File(OLD_DB_DIR, DB_NAME);
 
     // Strings for building URLs
     // Open Cell ID uses:

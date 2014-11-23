@@ -184,7 +184,7 @@ public class dlFragment extends Fragment {
      * A task that performs the actual downloading and building of a new
      * database it proxies progress updates and results back to the Activity.
      */
-    private class downloadDataAsync extends AsyncTask<Context, progressInfo, String> {
+    private class downloadDataAsync extends AsyncTask<Context, progressInfo, Void> {
 
         private String OpenCellId_API;
         private String MCCfilter;
@@ -226,11 +226,11 @@ public class dlFragment extends Fragment {
                 mccEnable[i] = false;
             int enableCount = 0;
             if (!MCCfilter.equals("")) {
+                doLog("MCC filter: " + MCCfilter );
                 String[] mccCodes = MCCfilter.split(",");
                 for (String c : mccCodes) {
                     if ((c != null) && (c.length() > 0)) {
                         mccEnable[Integer.parseInt(c)] = true;
-                        doLog("Filter MCC " + Integer.parseInt(c));
                         enableCount++;
                     }
                 }
@@ -272,7 +272,7 @@ public class dlFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(String ignore) {
+        protected void onPostExecute(Void ignore) {
             if (mCallbacks != null) {
                 // Proxy the call to the Activity.
                 mCallbacks.onPostExecute();
@@ -285,26 +285,26 @@ public class dlFragment extends Fragment {
          * background thread, as this could result in a race condition.
          */
         @Override
-        protected String doInBackground(Context... params) {
-            doLog("Initialized.");
-
+        protected Void doInBackground(Context... params) {
             try {
-                doLog(appConstants.DB_FILE.getAbsolutePath());
+//                doLog(appConstants.DB_FILE.getAbsolutePath());
 
                 // Create new database to put everything in.
                 appConstants.DB_DIR.mkdirs();
-                newDbFile = File.createTempFile("lacells", ".db", appConstants.DB_DIR);
+                newDbFile = File.createTempFile("new_lacells", ".db", appConstants.DB_DIR);
                 database = SQLiteDatabase.openDatabase(newDbFile.getAbsolutePath(),
                                                        null,
                                                        SQLiteDatabase.NO_LOCALIZED_COLLATORS +
                                                        SQLiteDatabase.OPEN_READWRITE +
                                                        SQLiteDatabase.CREATE_IF_NECESSARY
                                                        );
-                database.execSQL("CREATE TABLE cells(mcc INTEGER, mnc INTEGER, lac INTEGER, cid INTEGER, longitude REAL, latitude REAL, accuracy REAL, samples INTEGER);");
+                database.execSQL("CREATE TABLE cells(mcc INTEGER, mnc INTEGER, lac INTEGER, cid INTEGER, longitude REAL, latitude REAL, accuracy REAL, samples INTEGER, altitude REAL);");
+                database.execSQL("CREATE INDEX _idx1 ON cells (mcc, mnc, lac, cid);");
+                database.execSQL("CREATE INDEX _idx2 ON cells (lac, cid);");
 
                 if (doOCI) {
                     doLog("Getting Tower Data From Open Cell ID. . .");
-                    doLog("OpenCellId API Key = " + OpenCellId_API);
+//                    doLog("OpenCellId API Key = " + OpenCellId_API);
                     getData(appConstants.OCI_URL_PREFIX + OpenCellId_API + appConstants.OCI_URL_SUFFIX);
                 }
                 if (doMLS) {
@@ -314,48 +314,34 @@ public class dlFragment extends Fragment {
                     getData(appConstants.MLS_URL_PREFIX + dateFormatGmt.format(new Date())+"" + appConstants.MLS_URL_SUFFIX);
                 }
 
-                doLog("Creating database search indexes.");
-                database.execSQL("CREATE INDEX _idx1 ON cells (mcc, mnc, lac, cid);");
-                database.execSQL("CREATE INDEX _idx2 ON cells (lac, cid);");
-
                 database.execSQL("VACUUM;");
-                database.close();
-                File jFile = new File(newDbFile.getAbsolutePath() + "-journal");
-                jFile.delete();
-
-                if (!isCancelled()) {         // successful completion
-                    if (appConstants.DB_BAK_FILE.exists())
-                        appConstants.DB_BAK_FILE.delete();
-                    if (appConstants.DB_FILE.exists())
-                        appConstants.DB_FILE.renameTo(appConstants.DB_BAK_FILE);
-                    newDbFile.renameTo(appConstants.DB_FILE);
-                } else {
-                    if ((newDbFile != null) && newDbFile.exists()) {
-                        newDbFile.delete();
-                        newDbFile = null;
-                    }
-                }
 
             } catch (Exception e) {
                 doLog(e.getMessage());
-                if (database != null)
-                    database.close();
-                if (newDbFile != null) {
-                    File jFile = new File(newDbFile.getAbsolutePath() + "-journal");
-                    if (jFile.exists())
-                        jFile.delete();
-                    if (newDbFile.exists()) {
-                        newDbFile.delete();
-                    }
-                }
-                return "exception";
             }
-            if (isCancelled()) {
-                if ((newDbFile != null) && newDbFile.exists())
+
+            if (database != null)
+                database.close();
+
+            File jFile = new File(newDbFile.getAbsolutePath() + "-journal");
+            if (jFile.exists())
+                jFile.delete();
+
+           if (!isCancelled()) {         // successful completion
+                if (appConstants.DB_BAK_FILE.exists())
+                    appConstants.DB_BAK_FILE.delete();
+                if (appConstants.DB_FILE.exists())
+                    appConstants.DB_FILE.renameTo(appConstants.DB_BAK_FILE);
+                newDbFile.renameTo(appConstants.DB_FILE);
+            } else {
+                if ((newDbFile != null) && newDbFile.exists()) {
                     newDbFile.delete();
-                return "aborted";
+                    newDbFile = null;
+                }
             }
-            return "success";
+
+            doLog("Finished.");
+            return null;
         }
 
         private void doLog(String s) {
@@ -420,7 +406,7 @@ public class dlFragment extends Fragment {
                 int accIndex = headers.indexOf("range");
                 int smpIndex = headers.indexOf("samples");
 
-                String sql = "INSERT INTO cells (mcc, mnc, lac, cid, longitude, latitude, accuracy, samples) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+                String sql = "INSERT INTO cells (mcc, mnc, lac, cid, longitude, latitude, accuracy, samples, altitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, -1);";
                 SQLiteStatement stmt = database.compileStatement(sql);
                 database.beginTransaction();
 
@@ -466,16 +452,14 @@ public class dlFragment extends Fragment {
                 }
                 database.setTransactionSuccessful();
                 database.endTransaction();
+                doLog("Records Read: " + Integer.toString(totalRecords) +
+                      ", Inserted: " + Integer.toString(insertedRecords));
+
                 long exitTime = System.currentTimeMillis();
                 long execTime = exitTime-entryTime;
-                doLog("Total Time: " + execTime + "ms");
-                if (totalRecords > 0)
-                    doLog("Total records = " + totalRecords +
-                          " (" + (1.0*execTime)/totalRecords + "ms/rec)");
-                if (insertedRecords > 0)
-                    doLog("Inserted records = " + insertedRecords +
-                          " (" + (1.0*execTime)/insertedRecords + "ms/rec)");
-//            } catch (Exception e) {
+                if (totalRecords < 1)
+                    totalRecords = 1;
+                doLog("Total Time: " + execTime + "ms (" + (1.0*execTime)/totalRecords + "ms/record)");
             } catch (MalformedURLException e) {
                 doLog("getData('" + mUrl + "') failed: " + e.getMessage());
                 throw e;

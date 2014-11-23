@@ -6,7 +6,9 @@ The µg Project at https://github.com/microg has a unified network location prov
 This "GSM Location Backend" works without network connectivity and will
 never post your data anywhere.
 
-The on-phone database used to look up cell tower locations can be generated from scripts at https://github.com/n76/lacells-creator Those scripts gather tower information from OpenCellId http://opencellid.org and Mozilla Location Services https://location.services.mozilla.com
+The database needed to lookup cell tower locations resides on the phone. A facility in the setting menu allows you to create a database using data from OpenCellID and/or Mozilla Location Services CSV files.
+
+Alternatively, the on-phone database can be generated from scripts at https://github.com/n76/lacells-creator Those scripts gather tower information from OpenCellId http://opencellid.org and Mozilla Location Services https://location.services.mozilla.com
 
 You can improve the quality of the data used by this location provider by contributing to either or both of those projects.
 
@@ -36,5 +38,16 @@ How to build and install
 
 Setup on phone
 ==============
-1. Install a cell tower database. The scripts at https://github.com/n76/lacells-creator can be used to build and install a database.
+1. Install a cell tower database. Either use the settings menu to select the data sources and mobile country codes (mcc) that you desire or use the scripts at https://github.com/n76/lacells-creator to build and install a database.
 2. In the NLP Controller app (interface for µg UnifiedNlp) select the "GSM Location Backend".
+
+Notes on generating the database
+================================
+The on-phone database can be created using this settings in the app or via scripts located at https://github.com/n76/lacells-creator in either case the following applies:
+
+1. OpenCellID requires an API key to download its CSV file and limits downloads to one per day. Information on getting an API key can be found at http://wiki.opencellid.org/wiki/How_to_join
+2. Mozilla publishes new CSV files once per day.
+
+Both of these are large files and take time to transfer and process: The current OpenCellID gzip 152MB data file contains over 6.7 million records and Mozilla’s gzip 48MB data file contains over 2.2 million records. You are very likely to want to filter the data going into the on-phone database so that it only contains the Mobile Country Codes (MCCs) in your area of interest. For the United States (MCC codes of 310 and 311) the final on-phone database is about 96MB.
+
+At least on a Google Galaxy Nexus (Maguro), download and creation of the database is much slower than using the scripts at https://github.com/n76/lacells-creator though with a decent data connection it can be done in a reasonable amount of time directly on the phone.
