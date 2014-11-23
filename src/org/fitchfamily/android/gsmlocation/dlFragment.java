@@ -1,5 +1,6 @@
 package org.fitchfamily.android.gsmlocation;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -363,7 +364,7 @@ public class dlFragment extends Fragment {
 
         private void getData(String mUrl) throws Exception {
             try {
-                int maxLength = 0;
+                long maxLength = 0;
                 int totalRecords = 0;
                 int insertedRecords = 0;
 
@@ -376,16 +377,13 @@ public class dlFragment extends Fragment {
 
                 c = (HttpURLConnection) u.openConnection();
                 c.setRequestMethod("GET");
-                c.setDoOutput(true);
                 c.connect();
-
-                InputStream in = c.getInputStream();
 
                 // Looks like .gz is about a 4 to 1 compression ratio
                 doLog("Content length = "+c.getContentLength());
                 maxLength = c.getContentLength()*4;
-                in = new GZIPInputStream(in);
-                csvParser cvs = new csvParser(in);
+
+                csvParser cvs = new csvParser(new BufferedInputStream(new GZIPInputStream(new BufferedInputStream(c.getInputStream()))));
                 // CSV Field    ==> Database Field
                 // radio        ==>
                 // mcc          ==> mcc
@@ -421,7 +419,7 @@ public class dlFragment extends Fragment {
                        !isCancelled()) {
                     totalRecords++;
 
-                    int percentComplete = (100 * cvs.bytesRead()) / maxLength;
+                    int percentComplete = (int)((100l * cvs.bytesRead()) / maxLength);
                     if ((totalRecords % 1000) == 0) {
                         String statusText = "Records Read: " + Integer.toString(totalRecords) +
                                             ", Inserted: " + Integer.toString(insertedRecords);
