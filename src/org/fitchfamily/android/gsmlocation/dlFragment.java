@@ -14,6 +14,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.zip.GZIPInputStream;
+import java.net.MalformedURLException;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -374,8 +377,11 @@ public class dlFragment extends Fragment {
 
                 HttpURLConnection c = null;
                 URL u = new URL(mUrl);
-
-                c = (HttpURLConnection) u.openConnection();
+                if (u.getProtocol().equals("https")) {
+                    c = (HttpsURLConnection) u.openConnection();
+                } else {
+                    c = (HttpURLConnection) u.openConnection();
+                }
                 c.setRequestMethod("GET");
                 c.connect();
 
@@ -383,7 +389,12 @@ public class dlFragment extends Fragment {
                 doLog("Content length = "+c.getContentLength());
                 maxLength = c.getContentLength()*4;
 
-                csvParser cvs = new csvParser(new BufferedInputStream(new GZIPInputStream(new BufferedInputStream(c.getInputStream()))));
+                csvParser cvs = new csvParser(
+                                new BufferedInputStream(
+                                new GZIPInputStream(
+                                new BufferedInputStream(
+                                c.getInputStream()))));
+
                 // CSV Field    ==> Database Field
                 // radio        ==>
                 // mcc          ==> mcc
@@ -464,7 +475,8 @@ public class dlFragment extends Fragment {
                 if (insertedRecords > 0)
                     doLog("Inserted records = " + insertedRecords +
                           " (" + (1.0*execTime)/insertedRecords + "ms/rec)");
-            } catch (Exception e) {
+//            } catch (Exception e) {
+            } catch (MalformedURLException e) {
                 doLog("getData('" + mUrl + "') failed: " + e.getMessage());
                 throw e;
             }
