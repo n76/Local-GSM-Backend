@@ -33,6 +33,7 @@
                 android:title="@string/mcc_filter_label"
                 android:dialogTitle="@string/mcc_filter_description"
                 android:hint="@string/mcc_hint"
+                android:inputType="numberDecimal"
                 android:digits="0123456789,"
                 />
     </PreferenceCategory>
