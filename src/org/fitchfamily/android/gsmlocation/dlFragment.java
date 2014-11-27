@@ -29,9 +29,18 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 
-/**
+/*
  * TaskFragment manages a single background task and retains itself across
  * configuration changes.
+ *
+ * Background tasks gathers data from OpenCellId and/or Mozilla Location
+ * services and produces a new database file in the name specified by
+ * appConstants. We don't actually touch the file being used by
+ * the actual tower lookup.
+ *
+ * If/when the tower lookup is called, it will check for the existence of
+ * the new file and if so, close the file it is using, purge its caches,
+ * and then move the old file to backup and the new file to active.
  */
 public class dlFragment extends Fragment {
     private static String TAG = appConstants.TAG_PREFIX+"dlFragment";
@@ -49,8 +58,7 @@ public class dlFragment extends Fragment {
     }
 
     private TaskCallbacks mCallbacks;
-    private downloadDataAsync mTask;
-    private boolean mRunning;
+    private downloadDataAsync mTask = null;
 
     /**
      * Hold a reference to the parent Activity so we can report the task's current
@@ -109,13 +117,10 @@ public class dlFragment extends Fragment {
                       boolean doMLS,
                       String OpenCellId_API,
                       String MCCfilter) {
-        if (!mRunning) {
-            mTask = new downloadDataAsync(doOCI,
-                                          doMLS,
-                                          OpenCellId_API,
-                                          MCCfilter);
+        if (mTask == null) {
+            mTask = new downloadDataAsync();
+            mTask.initialize(doOCI, doMLS, OpenCellId_API, MCCfilter);
             mTask.execute();
-            mRunning = true;
         }
     }
 
@@ -123,19 +128,8 @@ public class dlFragment extends Fragment {
     * Cancel the background task.
     */
     public void cancel() {
-        if (DEBUG) Log.i(TAG, "cancel() while running="+String.valueOf(mRunning));
-        if (mRunning) {
-            mTask.cancel(false);
-            mTask = null;
-            mRunning = false;
-        }
-    }
-
-    /**
-     * Returns the current state of the background task.
-     */
-    public boolean isRunning() {
-        return mRunning;
+        if (DEBUG) Log.i(TAG, "cancel()");
+        mTask.setState(mTask.CANCELED);
     }
 
     /************************/
@@ -200,10 +194,17 @@ public class dlFragment extends Fragment {
 
         private String logText;
 
-        downloadDataAsync(boolean doOCI,
-                          boolean doMLS,
-                          String OpenCellId_API,
-                          String MCCfilter) {
+        public static final int RUNNING = 0;
+        public static final int CANCELED = 1;
+        public static final int FAILED = 2;
+        public static final int SUCCESS = 3;
+        private int mState = RUNNING;
+
+
+        void initialize(boolean doOCI,
+                        boolean doMLS,
+                        String OpenCellId_API,
+                        String MCCfilter) {
 
             percentComplete = 0;
             logText = "";
@@ -212,8 +213,9 @@ public class dlFragment extends Fragment {
             this.MCCfilter = MCCfilter;
             this.doOCI = doOCI;
             this.doMLS = doMLS;
+            setState(RUNNING);
             if (DEBUG) {
-                Log.d(TAG, "downloadDataAsync(" + String.valueOf(doOCI)
+                Log.d(TAG, "downloadDataAsync:initialize(" + String.valueOf(doOCI)
                         +  ", " + String.valueOf(doMLS)
                         +  ", \"" + OpenCellId_API
                         +  "\", \"" + MCCfilter
@@ -250,7 +252,6 @@ public class dlFragment extends Fragment {
                 // Proxy the call to the Activity.
                 mCallbacks.onPreExecute();
             }
-            mRunning = true;
         }
 
         @Override
@@ -264,11 +265,11 @@ public class dlFragment extends Fragment {
 
         @Override
         protected void onCancelled() {
+            setState(CANCELED);
             if (mCallbacks != null) {
                 // Proxy the call to the Activity.
                 mCallbacks.onCancelled();
             }
-            mRunning = false;
         }
 
         @Override
@@ -277,7 +278,6 @@ public class dlFragment extends Fragment {
                 // Proxy the call to the Activity.
                 mCallbacks.onPostExecute();
             }
-            mRunning = false;
         }
 
         /**
@@ -299,24 +299,31 @@ public class dlFragment extends Fragment {
                                                        SQLiteDatabase.CREATE_IF_NECESSARY
                                                        );
                 database.execSQL("CREATE TABLE cells(mcc INTEGER, mnc INTEGER, lac INTEGER, cid INTEGER, longitude REAL, latitude REAL, accuracy REAL, samples INTEGER, altitude REAL);");
-                database.execSQL("CREATE INDEX _idx1 ON cells (mcc, mnc, lac, cid);");
-                database.execSQL("CREATE INDEX _idx2 ON cells (lac, cid);");
 
-                if (doOCI) {
+                if (doOCI && (getState() == RUNNING)) {
                     doLog("Getting Tower Data From Open Cell ID. . .");
 //                    doLog("OpenCellId API Key = " + OpenCellId_API);
                     getData(appConstants.OCI_URL_PREFIX + OpenCellId_API + appConstants.OCI_URL_SUFFIX);
                 }
-                if (doMLS) {
+                if (doMLS && (getState() == RUNNING)) {
                     doLog("Getting Tower Data From Mozilla Location Services. . .");
                     SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd");
-                    dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+                    // Mozilla publishes new CSV files at a bit after the beginning of
+                    // a new day in GMT time. Get the time for a place a couple hours
+                    // west of Greenwich to allow time for the data to be posted.
+                    dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT-03"));
                     getData(appConstants.MLS_URL_PREFIX + dateFormatGmt.format(new Date())+"" + appConstants.MLS_URL_SUFFIX);
                 }
 
-                database.execSQL("VACUUM;");
+                doLog("Creating indicies for faster access.");
+                database.execSQL("CREATE INDEX _idx1 ON cells (mcc, mnc, lac, cid);");
+                database.execSQL("CREATE INDEX _idx2 ON cells (lac, cid);");
+
+//                 doLog("Vacuming database");
+//                 database.execSQL("VACUUM;");
 
             } catch (Exception e) {
+                setState(FAILED);
                 doLog(e.getMessage());
             }
 
@@ -327,12 +334,11 @@ public class dlFragment extends Fragment {
             if (jFile.exists())
                 jFile.delete();
 
-           if (!isCancelled()) {         // successful completion
-                if (appConstants.DB_BAK_FILE.exists())
-                    appConstants.DB_BAK_FILE.delete();
-                if (appConstants.DB_FILE.exists())
-                    appConstants.DB_FILE.renameTo(appConstants.DB_BAK_FILE);
-                newDbFile.renameTo(appConstants.DB_FILE);
+            if (getState() == RUNNING) {         // successful completion
+                if (appConstants.DB_NEW_FILE.exists())
+                    appConstants.DB_NEW_FILE.delete();
+                newDbFile.renameTo(appConstants.DB_NEW_FILE);
+                setState(SUCCESS);
             } else {
                 if ((newDbFile != null) && newDbFile.exists()) {
                     newDbFile.delete();
@@ -348,7 +354,7 @@ public class dlFragment extends Fragment {
             logText += s + "\n";
 
             publishProgress(new progressInfo(percentComplete, logText));
-            if (DEBUG) Log.d(TAG, s);
+            if (DEBUG) Log.d(TAG, "downloadDataAsync: "+ s);
         }
 
         private void getData(String mUrl) throws Exception {
@@ -413,7 +419,7 @@ public class dlFragment extends Fragment {
                 List<String> rec = null;
                 while (((rec = cvs.parseLine()) != null) &&
                        (rec.size() > 8) &&
-                       !isCancelled()) {
+                       (getState() == RUNNING)) {
                     totalRecords++;
 
                     int percentComplete = (int)((100l * cvs.bytesRead()) / maxLength);
@@ -462,8 +468,18 @@ public class dlFragment extends Fragment {
                 doLog("Total Time: " + execTime + "ms (" + (1.0*execTime)/totalRecords + "ms/record)");
             } catch (MalformedURLException e) {
                 doLog("getData('" + mUrl + "') failed: " + e.getMessage());
+                setState(FAILED);
                 throw e;
             }
+        }
+
+        public synchronized void setState(int s) {
+            mState = s;
+            if (DEBUG) Log.d(TAG, "downloadDataAsync.setState(" + s + ")");
+        }
+
+        public synchronized int getState() {
+            return mState;
         }
     }
 }

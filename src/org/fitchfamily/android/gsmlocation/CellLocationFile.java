@@ -76,20 +76,35 @@ class CellLocationFile {
     /**
      * DB negative query cache (not found in db).
      */
-    private final LruCache<QueryArgs, Boolean> queryResultNegativeCache =
+    private LruCache<QueryArgs, Boolean> queryResultNegativeCache =
             new LruCache<QueryArgs, Boolean>(10000);
     /**
      * DB positive query cache (found in the db).
      */
-    private final LruCache<QueryArgs, List<myCellInfo>> queryResultCache =
+    private LruCache<QueryArgs, List<myCellInfo>> queryResultCache =
             new LruCache<QueryArgs, List<myCellInfo>>(10000);
 
     public void init(Context ctx) {
         openDatabase();
     }
 
+    public void checkForNewDatabase() {
+        if (appConstants.DB_NEW_FILE.exists() && appConstants.DB_NEW_FILE.canRead()) {
+            if (DEBUG) Log.d(TAG, "New database file detected.");
+            if (database != null)
+                database.close();
+            database = null;
+            queryResultCache = new LruCache<QueryArgs, List<myCellInfo>>(10000);
+            queryResultNegativeCache = new LruCache<QueryArgs, Boolean>(10000);
+
+            appConstants.DB_FILE.renameTo(appConstants.DB_BAK_FILE);
+            appConstants.DB_NEW_FILE.renameTo(appConstants.DB_FILE);
+        }
+    }
+
     private void openDatabase() {
         if (database == null) {
+            if (DEBUG) Log.d(TAG, "Attempting to open database.");
             this.file = appConstants.DB_FILE;
             if (file.exists() && file.canRead()) {
                 database = SQLiteDatabase.openDatabase(file.getAbsolutePath(),

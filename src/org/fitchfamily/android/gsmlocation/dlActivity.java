@@ -40,7 +40,7 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
     private boolean doOCI;
     private boolean doMLS;
 
-    private boolean running = false;
+    private boolean mRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,7 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
         mButton = (Button) findViewById(R.id.cancel_button);
         mButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (running) {
+                if (mRunning) {
                     if (DEBUG) Log.i(TAG, "mButton.onClick: Stop running task");
                     mTaskFragment.cancel();
                 } else {
@@ -94,7 +94,7 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
         if (mTaskFragment == null) {
             mTaskFragment = new dlFragment();
             fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
-            running = true;
+            mRunning = true;
             mTaskFragment.start(doOCI, doMLS, OpenCellId_API, MCCfilter);
         }
     }
@@ -115,8 +115,7 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
     public void onPreExecute() {
         if (DEBUG) Log.i(TAG, "onPreExecute()");
         mButton.setText(getString(R.string.cancel_string));
-        running = true;
-//        Toast.makeText(this, R.string.task_started_msg, Toast.LENGTH_SHORT).show();
+        mRunning = true;
     }
 
     @Override
@@ -131,10 +130,7 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
         if (DEBUG) Log.i(TAG, "onCancelled()");
         mButton.setText(getString(R.string.okay_string));
         mProgressBar.setProgress(0);
-        running = false;
-
-//         mTextView.setText(getString(R.string.zero_percent));
-//         Toast.makeText(this, R.string.task_cancelled_msg, Toast.LENGTH_SHORT).show();
+        mRunning = false;
     }
 
     @Override
@@ -142,10 +138,7 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
         if (DEBUG) Log.i(TAG, "onPostExecute()");
         mProgressBar.setProgress(mProgressBar.getMax());
         mButton.setText(getString(R.string.okay_string));
-        running = false;
-
-//         mPercent.setText(getString(R.string.one_hundred_percent));
-//         Toast.makeText(this, R.string.task_complete_msg, Toast.LENGTH_SHORT).show();
+        mRunning = false;
     }
 
     /************************/

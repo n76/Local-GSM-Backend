@@ -48,8 +48,6 @@ class telephonyHelper {
 
         List<android.telephony.CellInfo> allCells;
 
-        if (tm == null)
-            return null;
         try {
             allCells = tm.getAllCellInfo();
         } catch (NoSuchMethodError e) {
@@ -126,6 +124,7 @@ class telephonyHelper {
         if (tm == null)
             return null;
 
+        db.checkForNewDatabase();
         List<myCellInfo> rslt = getAllCellInfoWrapper();
         if (rslt == null) {
 //            if (DEBUG) Log.d(TAG, "getAllCellInfoWrapper() returned nothing, trying legacyGetCellTowers().");
