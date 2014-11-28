@@ -315,12 +315,14 @@ public class dlFragment extends Fragment {
                     getData(appConstants.MLS_URL_PREFIX + dateFormatGmt.format(new Date())+"" + appConstants.MLS_URL_SUFFIX);
                 }
 
-                doLog("Creating indicies for faster access.");
-                database.execSQL("CREATE INDEX _idx1 ON cells (mcc, mnc, lac, cid);");
-                database.execSQL("CREATE INDEX _idx2 ON cells (lac, cid);");
+                if (getState() == RUNNING) {
+                    doLog("Creating indicies for faster access.");
+                    database.execSQL("CREATE INDEX _idx1 ON cells (mcc, mnc, lac, cid);");
+                    database.execSQL("CREATE INDEX _idx2 ON cells (lac, cid);");
+//                     doLog("Vacuming database");
+//                     database.execSQL("VACUUM;");
+                }
 
-//                 doLog("Vacuming database");
-//                 database.execSQL("VACUUM;");
 
             } catch (Exception e) {
                 setState(FAILED);
@@ -330,10 +332,13 @@ public class dlFragment extends Fragment {
             if (database != null)
                 database.close();
 
+            // Remove database journal file regardless of how we finished
             File jFile = new File(newDbFile.getAbsolutePath() + "-journal");
             if (jFile.exists())
                 jFile.delete();
 
+            // On successful completion, set result into new database file
+            // On any failure, remove the result file.
             if (getState() == RUNNING) {         // successful completion
                 if (appConstants.DB_NEW_FILE.exists())
                     appConstants.DB_NEW_FILE.delete();
