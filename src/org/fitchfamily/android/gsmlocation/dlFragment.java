@@ -286,6 +286,7 @@ public class dlFragment extends Fragment {
          */
         @Override
         protected Void doInBackground(Context... params) {
+            long entryTime = System.currentTimeMillis();
             try {
 //                doLog(appConstants.DB_FILE.getAbsolutePath());
 
@@ -350,6 +351,9 @@ public class dlFragment extends Fragment {
                     newDbFile = null;
                 }
             }
+            long exitTime = System.currentTimeMillis();
+            long execTime = exitTime-entryTime;
+            doLog("Total Time: " + execTime + "ms");
 
             doLog("Finished.");
             return null;
@@ -470,7 +474,8 @@ public class dlFragment extends Fragment {
                 long execTime = exitTime-entryTime;
                 if (totalRecords < 1)
                     totalRecords = 1;
-                doLog("Total Time: " + execTime + "ms (" + (1.0*execTime)/totalRecords + "ms/record)");
+                float f = (float) (Math.round((1000.0f * execTime)/totalRecords)/1000.0f);
+                doLog("Total Time: " + execTime + "ms (" + f + "ms/record)");
             } catch (MalformedURLException e) {
                 doLog("getData('" + mUrl + "') failed: " + e.getMessage());
                 setState(FAILED);
