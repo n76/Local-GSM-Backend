@@ -24,8 +24,6 @@ import android.util.Log;
 import org.microg.nlp.api.LocationBackendService;
 import org.microg.nlp.api.LocationHelper;
 
-import org.fitchfamily.android.gsmlocation.model.myCellInfo;
-
 public class GSMService extends LocationBackendService {
 
     private TelephonyManager tm = null;

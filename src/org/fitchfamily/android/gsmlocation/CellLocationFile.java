@@ -8,13 +8,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
+import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.util.LruCache;
 
-
-import org.fitchfamily.android.gsmlocation.model.myCellInfo;
-
+import org.microg.nlp.api.LocationHelper;
 
 class CellLocationFile {
     private static final String TABLE_CELLS = "cells";
@@ -81,8 +81,8 @@ class CellLocationFile {
     /**
      * DB positive query cache (found in the db).
      */
-    private LruCache<QueryArgs, List<myCellInfo>> queryResultCache =
-            new LruCache<QueryArgs, List<myCellInfo>>(10000);
+    private LruCache<QueryArgs, Location> queryResultCache =
+            new LruCache<QueryArgs, Location>(10000);
 
     public void init(Context ctx) {
         openDatabase();
@@ -94,7 +94,7 @@ class CellLocationFile {
             if (database != null)
                 database.close();
             database = null;
-            queryResultCache = new LruCache<QueryArgs, List<myCellInfo>>(10000);
+            queryResultCache = new LruCache<QueryArgs, Location>(10000);
             queryResultNegativeCache = new LruCache<QueryArgs, Boolean>(10000);
 
             appConstants.DB_FILE.renameTo(appConstants.DB_BAK_FILE);
@@ -131,7 +131,7 @@ class CellLocationFile {
         return file.getAbsolutePath();
     }
 
-    public synchronized List<myCellInfo> query(final Integer mcc, final Integer mnc, final int cid, final int lac) {
+    public synchronized Location query(final Integer mcc, final Integer mnc, final int cid, final int lac) {
         List<String> specArgs = new ArrayList<String>();
         String delim = "";
         String bySpec = "";
@@ -141,7 +141,7 @@ class CellLocationFile {
         Boolean negative = queryResultNegativeCache.get(args);
         if (negative != null && negative.booleanValue()) return null;
 
-        List<myCellInfo> cached = queryResultCache.get(args);
+        Location cached = queryResultCache.get(args);
         if (cached != null) return cached;
 
         openDatabase();
@@ -171,7 +171,7 @@ class CellLocationFile {
         String[] specArgArry = new String[ specArgs.size() ];
         specArgs.toArray( specArgArry );
 
-        List<myCellInfo> ciList = null;
+        Location cellLocInfo = null;
 
         Cursor cursor =
                 database.query(TABLE_CELLS,
@@ -189,8 +189,7 @@ class CellLocationFile {
                                null,
                                null);
         if (cursor != null) {
-            if (cursor.getCount() > 0) {
-                ciList = new ArrayList<myCellInfo>();
+            if (cursor.getCount() > 0) {;
                 int db_mcc = 0;
                 int db_mnc = 0;
                 int db_lac = 0;
@@ -234,10 +233,9 @@ class CellLocationFile {
                 if (DEBUG) Log.d(TAG, "Final result: " +
                                       db_mcc + ", " + db_mnc + ", " + db_lac + ", " + db_cid + ", " +
                                       lat/samples + ", " + lng/samples + ", " + rng );
-                myCellInfo ci = new myCellInfo(db_mcc, db_mnc, db_lac, db_cid, lat/samples, lng/samples);
-                ci.setRng(rng);
-                ciList.add(ci);
-                queryResultCache.put(args, ciList);
+                Bundle extras = new Bundle();
+                cellLocInfo = LocationHelper.create("gsm", (float)lat/samples, (float)lng/samples, (float)rng, extras);
+                queryResultCache.put(args, cellLocInfo);
                 if (DEBUG) Log.d(TAG,"Cell info found: "+args.toString());
             } else {
                 if (DEBUG) Log.d(TAG,"DB Cursor empty for: "+args.toString());
@@ -248,6 +246,6 @@ class CellLocationFile {
             if (DEBUG) Log.d(TAG,"DB Cursor null for: "+args.toString());
             queryResultNegativeCache.put(args, true);
         }
-        return ciList;
+        return cellLocInfo;
     }
 }

@@ -22,8 +22,6 @@ import android.util.Log;
 import org.microg.nlp.api.LocationBackendService;
 import org.microg.nlp.api.LocationHelper;
 
-import org.fitchfamily.android.gsmlocation.model.myCellInfo;
-
 class telephonyHelper {
     protected String TAG = appConstants.TAG_PREFIX+"telephonyHelper";
     private static boolean DEBUG = appConstants.DEBUG;
@@ -42,7 +40,7 @@ class telephonyHelper {
     // versions of Android. If does not exist, returns null or
     // returns an empty list then return null otherwise return
     // list of cells.
-    public synchronized List<myCellInfo> getAllCellInfoWrapper() {
+    public synchronized List<Location> getAllCellInfoWrapper() {
         if (tm == null)
             return null;
 
@@ -57,25 +55,21 @@ class telephonyHelper {
         if ((allCells == null) || allCells.isEmpty())
             return null;
 
-        List<myCellInfo> rslt = new ArrayList<myCellInfo>();
+        List<Location> rslt = new ArrayList<Location>();
         for (android.telephony.CellInfo inputCellInfo : allCells) {
-            List<myCellInfo> cellInfos = null;
+            Location cellLocation = null;
             if (inputCellInfo instanceof CellInfoGsm) {
                 CellInfoGsm gsm = (CellInfoGsm) inputCellInfo;
                 CellIdentityGsm id = gsm.getCellIdentity();
-                cellInfos = db.query(id.getMcc(), id.getMnc(), id.getCid(), id.getLac());
-            }
-            if (inputCellInfo instanceof CellInfoWcdma) {
+                cellLocation = db.query(id.getMcc(), id.getMnc(), id.getCid(), id.getLac());
+            } else if (inputCellInfo instanceof CellInfoWcdma) {
                 CellInfoWcdma wcdma = (CellInfoWcdma) inputCellInfo;
                 CellIdentityWcdma id = wcdma.getCellIdentity();
-                cellInfos = db.query(id.getMcc(), id.getMnc(), id.getCid(), id.getLac());
+                cellLocation = db.query(id.getMcc(), id.getMnc(), id.getCid(), id.getLac());
             }
-            if (cellInfos == null) continue;
 
-            if ((cellInfos != null) && !cellInfos.isEmpty()) {
-                for (myCellInfo cellInfo : cellInfos) {
-                    rslt.add(cellInfo);
-                }
+            if ((cellLocation != null)) {
+                rslt.add(cellLocation);
             }
         }
         if ((rslt != null) && rslt.isEmpty())
@@ -83,11 +77,11 @@ class telephonyHelper {
         return rslt;
     }
 
-    public synchronized List<myCellInfo> legacyGetCellTowers() {
+    public synchronized List<Location> legacyGetCellTowers() {
         if (tm == null)
             return null;
 
-        List<myCellInfo> rslt = new ArrayList<myCellInfo>();
+        List<Location> rslt = new ArrayList<Location>();
         String mncString = tm.getNetworkOperator();
 
         if ((mncString == null) || (mncString.length() < 5) || (mncString.length() > 6)) {
@@ -99,19 +93,17 @@ class telephonyHelper {
         final CellLocation cellLocation = tm.getCellLocation();
         if ((cellLocation != null) && (cellLocation instanceof GsmCellLocation)) {
             GsmCellLocation cell = (GsmCellLocation) cellLocation;
-            List<myCellInfo> cellInfos = db.query(mcc, mnc, cell.getCid(), cell.getLac());
-            if (cellInfos != null)
-                rslt = cellInfos;
+            Location cellLocInfo = db.query(mcc, mnc, cell.getCid(), cell.getLac());
+            if (cellLocInfo != null)
+                rslt.add(cellLocInfo);
         }
 
         final List<NeighboringCellInfo> neighbours = tm.getNeighboringCellInfo();
         if ((neighbours != null) && !neighbours.isEmpty()) {
             for (NeighboringCellInfo neighbour : neighbours) {
-                List<myCellInfo> cellInfos = db.query(mcc, mnc, neighbour.getCid(), neighbour.getLac());
-                if ((cellInfos != null) && !cellInfos.isEmpty()) {
-                    for (myCellInfo cellInfo : cellInfos) {
-                        rslt.add(cellInfo);
-                    }
+                Location cellLocInfo = db.query(mcc, mnc, neighbour.getCid(), neighbour.getLac());
+                if (cellLocInfo != null) {
+                    rslt.add(cellLocInfo);
                 }
             }
         }
@@ -120,36 +112,20 @@ class telephonyHelper {
         return rslt;
     }
 
-    public synchronized List<myCellInfo> getCellTowers() {
+    public synchronized List<Location> getTowerLocations() {
         if (tm == null)
             return null;
 
         db.checkForNewDatabase();
-        List<myCellInfo> rslt = getAllCellInfoWrapper();
+        List<Location> rslt = getAllCellInfoWrapper();
         if (rslt == null) {
 //            if (DEBUG) Log.d(TAG, "getAllCellInfoWrapper() returned nothing, trying legacyGetCellTowers().");
             rslt = legacyGetCellTowers();
         }
-        return rslt;
-    }
-
-    public List<Location> getTowerLocations() {
-        if (tm == null)
-            return null;
-
-        List<myCellInfo> cellInfos = getCellTowers();
-        if ((cellInfos == null) || cellInfos.isEmpty()) {
-            if (DEBUG) Log.d(TAG, "getCellTowers() returned nothing.");
+        if ((rslt == null) || rslt.isEmpty()) {
+            if (DEBUG) Log.d(TAG, "getTowerLocations(): No tower information.");
             return null;
         }
-
-        List<Location> rslt = new ArrayList<Location>();
-        for (myCellInfo ci : cellInfos) {
-            rslt.add(LocationHelper.create("gsm", ci.getLat(), ci.getLng(), (float) ci.getRng()));
-            if (DEBUG) Log.d(TAG, "Tower at (lat="+ ci.getLat() + ", lng=" + ci.getLng() + ", rng=" + ci.getRng() + ")");
-        }
-        if (rslt.isEmpty())
-            return null;
         return rslt;
     }
 
