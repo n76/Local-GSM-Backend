@@ -73,7 +73,7 @@ public class GSMService extends LocationBackendService {
 
                         private synchronized void doIt(String from) {
                             if (isConnected()) {
-                                if (DEBUG) Log.d(TAG,"doIt() entry");
+//                                if (DEBUG) Log.d(TAG,"doIt() entry");
                                 long entryTime = System.currentTimeMillis();
                                 Location rslt = th.getLocationEstimate();
                                 String logString = "";
@@ -82,12 +82,12 @@ public class GSMService extends LocationBackendService {
                                 else
                                     logString = from + " null position";
                                 if (!sameLoc(lastLocation, rslt)) {
-                                    Log.e(TAG, logString);
+//                                    if (DEBUG) Log.d(TAG, logString);
                                     if (rslt != null)
                                         report(rslt);
                                 }
                                 lastLocation = rslt;
-                                if (DEBUG) Log.d(TAG,"doIt() exit - "+(System.currentTimeMillis()-entryTime)+"ms");
+//                                if (DEBUG) Log.d(TAG,"doIt() exit - "+(System.currentTimeMillis()-entryTime)+"ms");
                             }
                         }
 

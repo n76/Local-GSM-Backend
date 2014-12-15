@@ -158,7 +158,7 @@ class telephonyHelper {
                 accuracy += (value.getAccuracy() * wgt);
                 totalWeight += wgt;
 
-                if (DEBUG) Log.d(TAG, "(lat="+ latitude + ", lng=" + longitude + ", acc=" + accuracy + ") / wgt=" + totalWeight );
+//                if (DEBUG) Log.d(TAG, "(lat="+ latitude + ", lng=" + longitude + ", acc=" + accuracy + ") / wgt=" + totalWeight );
 
                 if (value.hasAltitude()) {
                     altitude += value.getAltitude();
