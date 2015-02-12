@@ -52,8 +52,10 @@ class telephonyHelper {
             allCells = null;
             if (DEBUG) Log.d(TAG, "no such member: getAllCellInfo().");
         }
-        if ((allCells == null) || allCells.isEmpty())
+        if ((allCells == null) || allCells.isEmpty()) {
+            if (DEBUG) Log.d(TAG, "getAllCellInfo()  returned null or empty set");
             return null;
+        }
 
         List<Location> rslt = new ArrayList<Location>();
         for (android.telephony.CellInfo inputCellInfo : allCells) {
@@ -106,6 +108,8 @@ class telephonyHelper {
                     rslt.add(cellLocInfo);
                 }
             }
+        } else {
+            if (DEBUG) Log.d(TAG, "getNeighboringCellInfo() returned null or empty set.");
         }
         if ((rslt != null) && rslt.isEmpty())
             return null;

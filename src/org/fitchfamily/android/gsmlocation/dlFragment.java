@@ -1,12 +1,15 @@
 package org.fitchfamily.android.gsmlocation;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.IOException;
 import java.lang.IllegalStateException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,7 +17,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.zip.GZIPInputStream;
-import java.net.MalformedURLException;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -206,8 +208,11 @@ public class dlFragment extends Fragment {
                         String OpenCellId_API,
                         String MCCfilter) {
 
+            // Clear logging when starting new download
             percentComplete = 0;
             logText = "";
+            if (appConstants.GEN_LOG_FILE.exists())
+                appConstants.GEN_LOG_FILE.delete();
 
             this.OpenCellId_API = OpenCellId_API;
             this.MCCfilter = MCCfilter;
@@ -364,6 +369,37 @@ public class dlFragment extends Fragment {
 
             publishProgress(new progressInfo(percentComplete, logText));
             if (DEBUG) Log.d(TAG, "downloadDataAsync: "+ s);
+            appendLog(s);
+        }
+
+        private void appendLog(String text)
+        {
+           if (!appConstants.GEN_LOG_FILE.exists())
+           {
+              try
+              {
+                 appConstants.GEN_LOG_FILE.createNewFile();
+              }
+              catch (IOException e)
+              {
+                 // TODO Auto-generated catch block
+                 e.printStackTrace();
+              }
+           }
+           try
+           {
+              //BufferedWriter for performance, true to set append to file flag
+              BufferedWriter buf = new BufferedWriter(new FileWriter(appConstants.GEN_LOG_FILE, true));
+              buf.append(text);
+              buf.newLine();
+              buf.flush();
+              buf.close();
+           }
+           catch (IOException e)
+           {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+           }
         }
 
         private void getData(String mUrl) throws Exception {

@@ -7,7 +7,7 @@ class appConstants {
 
     // Logging related values
     public static final String TAG_PREFIX = "gsm-backend-";
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
 
     // Location of database
     public static final String DB_NAME = "lacells.db";
@@ -19,6 +19,8 @@ class appConstants {
     public static final File DB_FILE = new File(DB_DIR, DB_NAME);
     public static final File DB_BAK_FILE = new File(DB_DIR, DB_BAK_NAME);
     public static final File DB_NEW_FILE = new File(DB_DIR, DB_NEW_NAME);
+
+    public static final File GEN_LOG_FILE = new File(DB_DIR, "lacells_gen.log");
 
     // Strings for building URLs
     // Open Cell ID uses:
