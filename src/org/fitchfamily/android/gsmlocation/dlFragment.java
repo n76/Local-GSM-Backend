@@ -501,6 +501,9 @@ public class dlFragment extends Fragment {
                         insertedRecords++;
                     }
                 }
+                if (getState() != RUNNING) {
+                    doLog("Aborted by state change, state="+stateString(getState()));
+                }
                 database.setTransactionSuccessful();
                 database.endTransaction();
                 doLog("Records Read: " + Integer.toString(totalRecords) +
@@ -526,6 +529,18 @@ public class dlFragment extends Fragment {
 
         public synchronized int getState() {
             return mState;
+        }
+
+        public synchronized String stateString(int st) {
+            if (st == RUNNING)
+                return "RUNNING";
+            if (st == CANCELED)
+                return "CANCELED";
+            if (st == FAILED)
+                return "FAILED";
+            if (st == SUCCESS)
+                return "SUCCESS";
+            return "UNKNOWN(" + st + ")";
         }
     }
 }
