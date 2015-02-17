@@ -115,6 +115,7 @@ public class GSMService extends LocationBackendService {
 //                        PhoneStateListener.LISTEN_DATA_CONNECTION_STATE |
                         PhoneStateListener.LISTEN_SERVICE_STATE
                     );
+                    Looper.loop();
                 }
             };
             worker.start();
