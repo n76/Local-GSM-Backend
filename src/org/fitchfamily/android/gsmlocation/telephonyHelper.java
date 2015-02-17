@@ -98,6 +98,8 @@ class telephonyHelper {
             Location cellLocInfo = db.query(mcc, mnc, cell.getCid(), cell.getLac());
             if (cellLocInfo != null)
                 rslt.add(cellLocInfo);
+        } else {
+            if (DEBUG) Log.d(TAG, "getCellLocation() returned null or no GsmCellLocation.");
         }
 
         final List<NeighboringCellInfo> neighbours = tm.getNeighboringCellInfo();
