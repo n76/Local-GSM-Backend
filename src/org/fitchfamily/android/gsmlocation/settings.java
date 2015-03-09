@@ -25,6 +25,7 @@ public class settings extends Activity {
     private boolean mls_preference;
     private String oci_key_preference;
     private String mcc_filter_preference;
+    private String mnc_filter_preference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,12 +44,14 @@ public class settings extends Activity {
         mls_preference = mySharedPreferences.getBoolean("mls_preference", false);
         oci_key_preference = mySharedPreferences.getString("oci_key_preference", "");
         mcc_filter_preference = mySharedPreferences.getString("mcc_filter_preference", "");
+        mnc_filter_preference = mySharedPreferences.getString("mnc_filter_preference", "");
 
         if (DEBUG) {
             Log.d(TAG, "Use OpenCellID data = " + String.valueOf(oci_preference));
             Log.d(TAG, "Use Mozilla data = " + String.valueOf(mls_preference));
             Log.d(TAG, "OpenCellId API Key = " + oci_key_preference);
             Log.d(TAG, "MCC filtering = " + mcc_filter_preference);
+            Log.d(TAG, "MNC filtering = " + mnc_filter_preference);
         }
         if (oci_preference && oci_key_preference.equals("")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -90,22 +93,24 @@ public class settings extends Activity {
             if (DEBUG) Log.d(TAG, "Neither OpenCellId nor Mozilla Location data selected");
             return;
         }
-        genDatabase(oci_preference, mls_preference, oci_key_preference, mcc_filter_preference );
+        genDatabase(oci_preference, mls_preference, oci_key_preference, mcc_filter_preference, mnc_filter_preference );
     }
 
-    public void genDatabase(boolean useOCI, boolean useMLS, String OciKey, String MccFilter) {
+    public void genDatabase(boolean useOCI, boolean useMLS, String OciKey, String MccFilter, String MncFilter) {
         if (DEBUG) Log.d(TAG, "Inputs validated: Start background processing...");
         if (DEBUG) {
             Log.d(TAG, "Use OpenCellID data = " + String.valueOf(oci_preference));
             Log.d(TAG, "Use Mozilla data = " + String.valueOf(mls_preference));
             Log.d(TAG, "OpenCellId API Key = " + oci_key_preference);
             Log.d(TAG, "MCC filtering = " + mcc_filter_preference);
+            Log.d(TAG, "MNC filtering = " + mcc_filter_preference);
         }
         Intent myIntent = new Intent(this, dlActivity.class);
         myIntent.putExtra("doOCI", oci_preference);
         myIntent.putExtra("doMLS", mls_preference);
         myIntent.putExtra("ociAPI", oci_key_preference);
         myIntent.putExtra("mccFilter", mcc_filter_preference);
+        myIntent.putExtra("mncFilter", mnc_filter_preference);
         startActivity(myIntent);
     }
 }

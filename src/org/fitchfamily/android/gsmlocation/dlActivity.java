@@ -37,6 +37,7 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
 
     private String OpenCellId_API;
     private String MCCfilter;
+    private String MNCfilter;
     private boolean doOCI;
     private boolean doMLS;
 
@@ -50,6 +51,7 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
 
         OpenCellId_API  = getIntent().getExtras().getString("ociAPI");
         MCCfilter       = getIntent().getExtras().getString("mccFilter");
+        MNCfilter       = getIntent().getExtras().getString("mncFilter");
         doOCI           = getIntent().getExtras().getBoolean("doOCI");
         doMLS           = getIntent().getExtras().getBoolean("doMLS");
         if (DEBUG) {
@@ -57,6 +59,7 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
             Log.d(TAG, "Use Mozilla data = " + String.valueOf(doMLS));
             Log.d(TAG, "OpenCellId API Key = " + OpenCellId_API);
             Log.d(TAG, "MCC filtering = " + MCCfilter);
+            Log.d(TAG, "MNC filtering = " + MNCfilter);
         }
 
         // Initialize views.
@@ -95,7 +98,7 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
             mTaskFragment = new dlFragment();
             fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
             mRunning = true;
-            mTaskFragment.start(doOCI, doMLS, OpenCellId_API, MCCfilter);
+            mTaskFragment.start(doOCI, doMLS, OpenCellId_API, MCCfilter, MNCfilter);
         }
     }
 

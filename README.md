@@ -48,6 +48,15 @@ The on-phone database can be created using this settings in the app or via scrip
 1. OpenCellID requires an API key to download its CSV file and limits downloads to one per day. Information on getting an API key can be found at http://wiki.opencellid.org/wiki/How_to_join
 2. Mozilla publishes new CSV files once per day.
 
-Both of these are large files and take time to transfer and process: The current OpenCellID gzip 152MB data file contains over 6.7 million records and Mozilla’s gzip 48MB data file contains over 2.2 million records. You are very likely to want to filter the data going into the on-phone database so that it only contains the Mobile Country Codes (MCCs) in your area of interest. For the United States (MCC codes of 310 and 311) the final on-phone database is about 96MB.
+Both of these are large files and take time to transfer and process: The current OpenCellID gzip 152MB data file contains over 6.7 million records and Mozilla’s gzip 48MB data file contains over 2.2 million records.
 
 At least on a Google Galaxy Nexus (Maguro), download and creation of the database is much slower than using the scripts at https://github.com/n76/lacells-creator though with a decent data connection it can be done in a reasonable amount of time directly on the phone.
+
+Filtering
+=========
+You are very likely to want to filter the data going into the on-phone database so that it only contains the Mobile Country Codes (MCCs) in your area of interest. For the United States (MCC codes of 310 and 311) the final on-phone database is about 96MB.
+
+In addition to filtering by Mobile Country Code (MCCs), the on phone database generator can filter by Mobile Network Code (MNCs). This can further decrease the size of the on phone database but may decrease accuracy of the location result.
+
+Mobile Country Codes (MCC) and Mobile Network Codes (MNC) can be found at http://en.wikipedia.org/wiki/Mobile_country_code
+

@@ -23,12 +23,20 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-            android:title="@string/mcc_filter_title">
+            android:title="@string/filter_title">
         <EditTextPreference
                 android:key="mcc_filter_preference"
                 android:title="@string/mcc_filter_label"
                 android:dialogTitle="@string/mcc_filter_description"
                 android:defaultValue="@string/mcc_default"
+                android:inputType="numberDecimal"
+                android:digits="0123456789,"
+                />
+        <EditTextPreference
+                android:key="mnc_filter_preference"
+                android:title="@string/mnc_filter_label"
+                android:dialogTitle="@string/mnc_filter_description"
+                android:defaultValue="@string/mnc_default"
                 android:inputType="numberDecimal"
                 android:digits="0123456789,"
                 />

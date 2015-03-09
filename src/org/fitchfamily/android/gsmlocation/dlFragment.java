@@ -118,10 +118,11 @@ public class dlFragment extends Fragment {
     public void start(boolean doOCI,
                       boolean doMLS,
                       String OpenCellId_API,
-                      String MCCfilter) {
+                      String MCCfilter,
+                      String MNCfilter) {
         if (mTask == null) {
             mTask = new downloadDataAsync();
-            mTask.initialize(doOCI, doMLS, OpenCellId_API, MCCfilter);
+            mTask.initialize(doOCI, doMLS, OpenCellId_API, MCCfilter, MNCfilter);
             mTask.execute();
         }
     }
@@ -184,10 +185,12 @@ public class dlFragment extends Fragment {
 
         private String OpenCellId_API;
         private String MCCfilter;
+        private String MNCfilter;
         private boolean doOCI;
         private boolean doMLS;
 
         private Boolean mccEnable[] = new Boolean[1000];
+        private Boolean mncEnable[] = new Boolean[1000];
 
         private int percentComplete;
 
@@ -206,7 +209,8 @@ public class dlFragment extends Fragment {
         void initialize(boolean doOCI,
                         boolean doMLS,
                         String OpenCellId_API,
-                        String MCCfilter) {
+                        String MCCfilter,
+                        String MNCfilter) {
 
             // Clear logging when starting new download
             percentComplete = 0;
@@ -216,6 +220,7 @@ public class dlFragment extends Fragment {
 
             this.OpenCellId_API = OpenCellId_API;
             this.MCCfilter = MCCfilter;
+            this.MNCfilter = MNCfilter;
             this.doOCI = doOCI;
             this.doMLS = doMLS;
             setState(RUNNING);
@@ -224,6 +229,7 @@ public class dlFragment extends Fragment {
                         +  ", " + String.valueOf(doMLS)
                         +  ", \"" + OpenCellId_API
                         +  "\", \"" + MCCfilter
+                        +  "\", \"" + MNCfilter
                         +  "\")");
             }
 
@@ -248,6 +254,29 @@ public class dlFragment extends Fragment {
                 for (int i=0; i<1000; i++)
                     mccEnable[i] = true;
                 doLog("No MCC Filters, assume world");
+            }
+
+            // mnc filtering is a boolean array. Fill with false (don't use)
+            // and then set the mnc codes we want to true.
+            for (int i=0; i<1000; i++)
+                mncEnable[i] = false;
+            enableCount = 0;
+            if (!MNCfilter.equals("")) {
+                doLog("MNC filter: " + MNCfilter );
+                String[] mncCodes = MNCfilter.split(",");
+                for (String c : mncCodes) {
+                    if ((c != null) && (c.length() > 0)) {
+                        mncEnable[Integer.parseInt(c)] = true;
+                        enableCount++;
+                    }
+                }
+            }
+            // If no mnc codes were specified, then assume we want the
+            // world, so set all codes to true.
+            if (enableCount == 0) {
+                for (int i=0; i<1000; i++)
+                    mncEnable[i] = true;
+                doLog("No MNC Filters, assume world");
             }
         }
 
@@ -476,7 +505,9 @@ public class dlFragment extends Fragment {
                     }
 
                     int mcc = Integer.parseInt((String) rec.get(mccIndex));
-                    if ((mcc >= 0) && (mcc <=999) && mccEnable[mcc]) {
+                    int mnc = Integer.parseInt((String) rec.get(mncIndex));
+                    if ((mcc >= 0) && (mcc <=999) && mccEnable[mcc] &&
+                        (mnc >= 0) && (mnc <=999) && mncEnable[mnc]) {
                         // Keep transaction size limited
                         if ((insertedRecords % 1000) == 0) {
                             database.setTransactionSuccessful();

@@ -13,10 +13,14 @@
     <string name="oci_api_label">OpenCellId API</string>
     <string name="oci_api_description">See http://wiki.opencellid.org/wiki/API</string>
 
-    <string name="mcc_filter_title">Filtering</string>
+    <string name="filter_title">Filtering</string>
     <string name="mcc_filter_label">MCC Filter</string>
     <string name="mcc_default">310,311</string>
-    <string name="mcc_filter_description">Comma separated list of numeric Mobile Carrier Codes (MCC) to be used</string>
+    <string name="mcc_filter_description">Comma separated list of numeric Mobile Carrier Codes (MCC) to be used. See http://en.wikipedia.org/wiki/Mobile_country_code</string>
+
+    <string name="mnc_filter_label">MNC Filter</string>
+    <string name="mnc_default"></string>
+    <string name="mnc_filter_description">Comma separated list of numeric Mobile Network Codes (MNC) to be used. See http://en.wikipedia.org/wiki/Mobile_country_code</string>
 
     <string name="db_date_label">Current Database</string>
 

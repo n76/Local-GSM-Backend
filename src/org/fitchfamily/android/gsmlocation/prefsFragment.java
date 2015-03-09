@@ -65,6 +65,26 @@ public class prefsFragment extends PreferenceFragment {
             if (DEBUG) Log.d(TAG, "prefsFragment.onCreate(): mccFilterPreference is null");
         }
 
+        EditTextPreference mncFilterPreference = (EditTextPreference) this.findPreference("mnc_filter_preference");
+        if (mncFilterPreference != null) {
+            if (DEBUG) Log.d(TAG, "prefsFragment.onCreate(): mncFilterPreference is "+mncFilterPreference.toString());
+            if(mncFilterPreference.getText()==null) {
+                // to ensure we don't get a null value
+                // set first value by default
+                mncFilterPreference.setText("");
+            }
+            mncFilterPreference.setSummary(mncFilterPreference.getText());
+            mncFilterPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    preference.setSummary(newValue.toString());
+                    return true;
+                }
+            });
+        } else {
+            if (DEBUG) Log.d(TAG, "prefsFragment.onCreate(): mncFilterPreference is null");
+        }
+
         EditTextPreference currentDbPreference = (EditTextPreference) this.findPreference("db_date_preference");
         if (currentDbPreference != null) {
             if(currentDbPreference.getText()==null) {
@@ -74,7 +94,11 @@ public class prefsFragment extends PreferenceFragment {
             }
 
             String currentDbInfo = "";
-            if (appConstants.DB_FILE.exists()) {
+            if (appConstants.DB_NEW_FILE.exists() &&
+                appConstants.DB_NEW_FILE.canRead()) {
+                    DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance();
+                    currentDbInfo = "Last Modified: " + dateTimeInstance.format(appConstants.DB_NEW_FILE.lastModified());
+            } else if (appConstants.DB_FILE.exists()) {
                 if (appConstants.DB_FILE.canRead()) {
                     DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance();
                     currentDbInfo = "Last Modified: " + dateTimeInstance.format(appConstants.DB_FILE.lastModified());
