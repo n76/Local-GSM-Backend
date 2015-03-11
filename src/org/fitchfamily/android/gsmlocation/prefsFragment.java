@@ -90,29 +90,48 @@ public class prefsFragment extends PreferenceFragment {
             if(currentDbPreference.getText()==null) {
                 // to ensure we don't get a null value
                 // set first value by default
-                mccFilterPreference.setText("");
+                currentDbPreference.setText("");
             }
-
-            String currentDbInfo = "";
-            if (appConstants.DB_NEW_FILE.exists() &&
-                appConstants.DB_NEW_FILE.canRead()) {
-                    DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance();
-                    currentDbInfo = "Last Modified: " + dateTimeInstance.format(appConstants.DB_NEW_FILE.lastModified());
-            } else if (appConstants.DB_FILE.exists()) {
-                if (appConstants.DB_FILE.canRead()) {
-                    DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance();
-                    currentDbInfo = "Last Modified: " + dateTimeInstance.format(appConstants.DB_FILE.lastModified());
-                } else {
-                    currentDbInfo = "No read permission on database.";
-                }
-            } else {
-                currentDbInfo = "No database file found.";
-            }
-            currentDbPreference.setSummary(currentDbInfo);
+            currentDbPreference.setSummary(currentDbTimeStamp());
         } else {
             if (DEBUG) Log.d(TAG, "prefsFragment.onCreate(): currentDbPreference is null");
         }
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (DEBUG) Log.d(TAG, "prefsFragment.onResume()");
+        EditTextPreference currentDbPreference = (EditTextPreference) this.findPreference("db_date_preference");
+        if (currentDbPreference != null) {
+            if(currentDbPreference.getText()==null) {
+                // to ensure we don't get a null value
+                // set first value by default
+                currentDbPreference.setText("");
+            }
+            currentDbPreference.setSummary(currentDbTimeStamp());
+        } else {
+            if (DEBUG) Log.d(TAG, "prefsFragment.onResume(): currentDbPreference is null");
+        }
+    }
+
+    private String currentDbTimeStamp() {
+        String currentDbInfo = "";
+        if (appConstants.DB_NEW_FILE.exists() &&
+            appConstants.DB_NEW_FILE.canRead()) {
+                DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance();
+                currentDbInfo = "Last Modified: " + dateTimeInstance.format(appConstants.DB_NEW_FILE.lastModified());
+        } else if (appConstants.DB_FILE.exists()) {
+            if (appConstants.DB_FILE.canRead()) {
+                DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance();
+                currentDbInfo = "Last Modified: " + dateTimeInstance.format(appConstants.DB_FILE.lastModified());
+            } else {
+                currentDbInfo = "No read permission on database.";
+            }
+        } else {
+            currentDbInfo = "No database file found.";
+        }
+        return currentDbInfo;
+    }
 }
