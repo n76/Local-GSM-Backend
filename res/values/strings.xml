@@ -16,7 +16,7 @@
     <string name="filter_title">Filtering</string>
     <string name="mcc_filter_label">MCC Filter</string>
     <string name="mcc_default">310,311</string>
-    <string name="mcc_filter_description">Comma separated list of numeric Mobile Carrier Codes (MCC) to be used. See http://en.wikipedia.org/wiki/Mobile_country_code</string>
+    <string name="mcc_filter_description">Comma separated list of numeric Mobile Country Codes (MCC) to be used. See http://en.wikipedia.org/wiki/Mobile_country_code</string>
 
     <string name="mnc_filter_label">MNC Filter</string>
     <string name="mnc_default"></string>
