@@ -87,7 +87,7 @@ class telephonyHelper {
         String mncString = tm.getNetworkOperator();
 
         if ((mncString == null) || (mncString.length() < 5) || (mncString.length() > 6)) {
-            if (DEBUG) Log.d(TAG, "mncString is NULL or not recognized.");
+            if (DEBUG) Log.d(TAG, "legacyGetCellTowers(): mncString is NULL or not recognized.");
             return null;
         }
         int mcc = Integer.parseInt(mncString.substring(0,3));
@@ -125,7 +125,7 @@ class telephonyHelper {
         db.checkForNewDatabase();
         List<Location> rslt = getAllCellInfoWrapper();
         if (rslt == null) {
-//            if (DEBUG) Log.d(TAG, "getAllCellInfoWrapper() returned nothing, trying legacyGetCellTowers().");
+            if (DEBUG) Log.d(TAG, "getAllCellInfoWrapper() returned nothing, trying legacyGetCellTowers().");
             rslt = legacyGetCellTowers();
         }
         if ((rslt == null) || rslt.isEmpty()) {

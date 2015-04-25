@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">GSM Location Backend</string>
+    <string name="app_name">GSM Location Service</string>
+    <string name="summary">Locate using on phone database.</string>
 
     <!-- Strings for settings -->
     <string name="data_sources">Data Sources</string>

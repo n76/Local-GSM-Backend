@@ -54,8 +54,6 @@ public class GSMService extends LocationBackendService {
 
                     final PhoneStateListener listener = new PhoneStateListener() {
 
-                        Location lastLocation = null;
-
                         private boolean sameLoc(Location l1, Location l2) {
                             if ((l1 == null) && (l2 == null)) {
                                 return true;
@@ -81,10 +79,10 @@ public class GSMService extends LocationBackendService {
                                     logString = from + rslt.toString();
                                 else
                                     logString = from + " null position";
+                                if (DEBUG) Log.d(TAG, logString);
                                 if (!sameLoc(lastLocation, rslt)) {
-//                                    if (DEBUG) Log.d(TAG, logString);
-                                    if (rslt != null)
-                                        report(rslt);
+                                    if (DEBUG) Log.d(TAG, "Location Changed.");
+                                    report(rslt);
                                 }
                                 lastLocation = rslt;
 //                                if (DEBUG) Log.d(TAG,"doIt() exit - "+(System.currentTimeMillis()-entryTime)+"ms");
@@ -125,13 +123,10 @@ public class GSMService extends LocationBackendService {
         }
     }
 
-//     @Override
-//     protected synchronized Location update() {
-//         start();
-//         Location rslt = th.getLocationEstimate();
-//         Log.e(TAG, rslt.toString());
-//         return rslt;
-//     }
+     @Override
+     protected synchronized Location update() {
+         return lastLocation;
+     }
 
     @Override
     protected synchronized void onOpen() {
