@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Услуга локације помоћу ГСМ-а</string>
+    <string name="summary">Лоцирање помоћу базе података базних станица на телефону.</string>
+
+    <!-- Strings for settings -->
+    <string name="data_sources">Извори података</string>
+    <string name="use_oci">OpenCellID</string>
+    <string name="use_mls">Мозилине услуге лоцирања</string>
+
+    <string name="dl_data">Преузми податке о базним станицама</string>
+
+    <string name="oci_config">Поставке за OpenCellID</string>
+    <string name="oci_api_label">OpenCellId АПИ</string>
+    <string name="oci_api_description">Погледајте http://wiki.opencellid.org/wiki/API</string>
+
+    <string name="filter_title">Филтер</string>
+    <string name="mcc_filter_label">МЦЦ филтер</string>
+    <string name="mcc_default">218,219,220,297</string>
+    <string name="mcc_filter_description">Списак мобилних кôдова земље (MCC) за коришћење, одвојених зарезом. Погледајте http://en.wikipedia.org/wiki/Mobile_country_code</string>
+
+    <string name="mnc_filter_label">МНЦ филтер</string>
+    <string name="mnc_default">1,2,3,5,10,90</string>
+    <string name="mnc_filter_description">Списак кôдова мобилних мрежа (MNC) за коришћење, одвојених зарезом. Погледајте http://en.wikipedia.org/wiki/Mobile_country_code</string>
+
+    <string name="db_date_label">Тренутна база података</string>
+
+    <string name="gen_db_button">Направи базу података</string>
+
+    <string name="no_api_key">Изабран OpenCellId за извор података али није наведен АПИ кључ. Да наставим без коришћења OpenCellId података?</string>
+    <string name="no_data_requested">Ниједан извор података није изабран. Немам шта да радим.</string>
+    <string name="no_string">Не</string>
+    <string name="yes_string">Да</string>
+    <string name="okay_string">У реду</string>
+    <string name="cancel_string">Одустани</string>
+</resources>
+
