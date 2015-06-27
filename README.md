@@ -60,3 +60,6 @@ In addition to filtering by Mobile Country Code (MCCs), the on phone database ge
 
 Mobile Country Codes (MCC) and Mobile Network Codes (MNC) can be found at http://en.wikipedia.org/wiki/Mobile_country_code
 
+Update History
+==============
+0.8.0   27June2015 -- Serbian translation (thanks to Mladen Pejaković) and conversion to use Android Studio and Gradle for building.
