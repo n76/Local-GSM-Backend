@@ -1,18 +1,13 @@
 package org.fitchfamily.android.gsmlocation;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * MainActivity displays the screen's UI and starts a dlFragment which will
@@ -73,10 +68,12 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
         mButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mRunning) {
-                    if (DEBUG) Log.i(TAG, "mButton.onClick: Stop running task");
+                    if (DEBUG)
+                        Log.i(TAG, "mButton.onClick: Stop running task");
                     mTaskFragment.cancel();
                 } else {
-                    if (DEBUG) Log.i(TAG, "mButton.onClick: Finish Activity");
+                    if (DEBUG)
+                        Log.i(TAG, "mButton.onClick: Finish Activity");
                     finish();
                 }
             }
@@ -104,7 +101,8 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (DEBUG) Log.i(TAG, "onSaveInstanceState(Bundle)");
+        if (DEBUG)
+            Log.i(TAG, "onSaveInstanceState(Bundle)");
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_CURRENT_PROGRESS, mProgressBar.getProgress());
         outState.putString(KEY_LOG_PROGRESS, mTextView.getText().toString());
@@ -116,21 +114,22 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
 
     @Override
     public void onPreExecute() {
-        if (DEBUG) Log.i(TAG, "onPreExecute()");
+        if (DEBUG)
+            Log.i(TAG, "onPreExecute()");
         mButton.setText(getString(R.string.cancel_string));
         mRunning = true;
     }
 
     @Override
     public void onProgressUpdate(int percent, String logText) {
-//         if (DEBUG) Log.i(TAG, "onProgressUpdate(" + percent + "%)");
         mProgressBar.setProgress(percent * mProgressBar.getMax() / 100);
         mTextView.setText(logText);
     }
 
     @Override
     public void onCancelled() {
-        if (DEBUG) Log.i(TAG, "onCancelled()");
+        if (DEBUG)
+            Log.i(TAG, "onCancelled()");
         mButton.setText(getString(R.string.okay_string));
         mProgressBar.setProgress(0);
         mRunning = false;
@@ -138,7 +137,8 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
 
     @Override
     public void onPostExecute() {
-        if (DEBUG) Log.i(TAG, "onPostExecute()");
+        if (DEBUG)
+            Log.i(TAG, "onPostExecute()");
         mProgressBar.setProgress(mProgressBar.getMax());
         mButton.setText(getString(R.string.okay_string));
         mRunning = false;

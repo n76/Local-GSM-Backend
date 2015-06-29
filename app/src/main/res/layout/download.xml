@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
               android:orientation="vertical"
-              android:keepScreenOn="true"
-              >
+              android:keepScreenOn="true">
     <ProgressBar
             android:id="@+id/progress"
             android:progress="0"
@@ -15,17 +14,20 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             />
-    <TextView android:id="@+id/logText"
-            android:lines="25"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello, I am a TextView"
-            />
-    <Button
-            android:id="@+id/cancel_button"
-            android:text="@string/cancel_string"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-    />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView android:id="@+id/logText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+        <Button
+                android:id="@+id/cancel_button"
+                android:text="@string/cancel_string"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:gravity="bottom" />
+    </FrameLayout>
 </LinearLayout>

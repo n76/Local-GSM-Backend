@@ -1,37 +1,19 @@
 package org.fitchfamily.android.gsmlocation;
 
-import java.io.LineNumberReader;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Vector;
 import java.io.InputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
-import android.util.Log;
 
 public class csvParser {
     protected String TAG = appConstants.TAG_PREFIX+"csvParser";
     private static boolean DEBUG = appConstants.DEBUG;
 
-    private List headers = null;
     private InputStream r = null;
 
     private int chCount = 0;
 
     public csvParser(InputStream r) {
         this.r = r;
-    }
-
-    public static String ListString(List l) {
-        String result = "";
-        if (l == null)
-            return "(null)";
-        for (int i=0; i< l.size(); i++) {
-            result += (String) l.get(i) + ", ";
-        }
-        return result;
     }
 
     public int bytesRead() {

@@ -3,20 +3,17 @@ package org.fitchfamily.android.gsmlocation;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.util.LruCache;
 
 import org.microg.nlp.api.LocationHelper;
 
 class CellLocationFile {
+
     private static final String TABLE_CELLS = "cells";
     private static final String COL_LATITUDE = "latitude";
     private static final String COL_LONGITUDE = "longitude";
@@ -36,10 +33,10 @@ class CellLocationFile {
      * Used internally for caching. HashMap compatible entity class.
      */
     private static class QueryArgs {
-        Integer mcc;
-        Integer mnc;
-        int cid;
-        int lac;
+        private Integer mcc;
+        private Integer mnc;
+        private int cid;
+        private int lac;
 
         private QueryArgs(Integer mcc, Integer mnc, int cid, int lac) {
             this.mcc = mcc;
@@ -47,16 +44,26 @@ class CellLocationFile {
             this.cid = cid;
             this.lac = lac;
         }
+
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
 
             QueryArgs queryArgs = (QueryArgs) o;
 
-            if (cid != queryArgs.cid) return false;
-            if (lac != queryArgs.lac) return false;
-            if (mcc != null ? !mcc.equals(queryArgs.mcc) : queryArgs.mcc != null) return false;
-            if (mnc != null ? !mnc.equals(queryArgs.mnc) : queryArgs.mnc != null) return false;
+            if (cid != queryArgs.cid)
+                return false;
+
+            if (lac != queryArgs.lac)
+                return false;
+
+            if (mcc != null ? !mcc.equals(queryArgs.mcc) : queryArgs.mcc != null)
+                return false;
+
+            if (mnc != null ? !mnc.equals(queryArgs.mnc) : queryArgs.mnc != null)
+                return false;
 
             return true;
         }
@@ -76,23 +83,20 @@ class CellLocationFile {
     /**
      * DB negative query cache (not found in db).
      */
-    private LruCache<QueryArgs, Boolean> queryResultNegativeCache =
-            new LruCache<QueryArgs, Boolean>(10000);
+    private LruCache<QueryArgs, Boolean> queryResultNegativeCache = new LruCache<QueryArgs, Boolean>(10000);
     /**
      * DB positive query cache (found in the db).
      */
-    private LruCache<QueryArgs, Location> queryResultCache =
-            new LruCache<QueryArgs, Location>(10000);
+    private LruCache<QueryArgs, Location> queryResultCache = new LruCache<QueryArgs, Location>(10000);
 
-    public void init(Context ctx) {
-        openDatabase();
-    }
 
     public void checkForNewDatabase() {
         if (appConstants.DB_NEW_FILE.exists() && appConstants.DB_NEW_FILE.canRead()) {
-            if (DEBUG) Log.d(TAG, "New database file detected.");
+            if (DEBUG)
+                Log.d(TAG, "New database file detected.");
             if (database != null)
                 database.close();
+
             database = null;
             queryResultCache = new LruCache<QueryArgs, Location>(10000);
             queryResultNegativeCache = new LruCache<QueryArgs, Boolean>(10000);
@@ -104,8 +108,11 @@ class CellLocationFile {
 
     private void openDatabase() {
         if (database == null) {
-            if (DEBUG) Log.d(TAG, "Attempting to open database.");
+            if (DEBUG)
+                Log.d(TAG, "Attempting to open database.");
+
             this.file = appConstants.DB_FILE;
+
             if (file.exists() && file.canRead()) {
                 database = SQLiteDatabase.openDatabase(file.getAbsolutePath(),
                                                        null,
@@ -117,21 +124,6 @@ class CellLocationFile {
         }
     }
 
-    public void close() {
-        if (database != null) {
-            database.close();
-            database = null;
-        }
-    }
-
-    public boolean exists() {
-        return file.exists() && file.canRead();
-    }
-
-    public String getPath() {
-        return file.getAbsolutePath();
-    }
-
     public synchronized Location query(final Integer mcc, final Integer mnc, final int cid, final int lac) {
         List<String> specArgs = new ArrayList<String>();
         String delim = "";
@@ -140,14 +132,18 @@ class CellLocationFile {
         // short circuit duplicate calls
         QueryArgs args = new QueryArgs(mcc, mnc, cid, lac);
         Boolean negative = queryResultNegativeCache.get(args);
-        if (negative != null && negative.booleanValue()) return null;
+
+        if (negative != null && negative.booleanValue())
+            return null;
 
         Location cached = queryResultCache.get(args);
-        if (cached != null) return cached;
+        if (cached != null)
+            return cached;
 
         openDatabase();
         if (database == null) {
-            if (DEBUG) Log.d(TAG, "Unable to open cell tower database file.");
+            if (DEBUG)
+                Log.d(TAG, "Unable to open cell tower database file.");
             return null;
         }
 
@@ -157,11 +153,13 @@ class CellLocationFile {
             delim = " AND ";
             specArgs.add(Integer.toString(mcc));
         }
+
         if (mnc != null) {
             bySpec = bySpec + delim + "mnc=?";
             delim = " AND ";
             specArgs.add(Integer.toString(mnc));
         }
+
         bySpec = bySpec + delim + "lac=?";
         delim = " AND ";
         specArgs.add(Integer.toString(lac));
@@ -175,8 +173,7 @@ class CellLocationFile {
         Location cellLocInfo = null;
 
         Cursor cursor =
-                database.query(TABLE_CELLS,
-                               new String[]{COL_MCC,
+                database.query(TABLE_CELLS, new String[]{COL_MCC,
                                             COL_MNC,
                                             COL_LAC,
                                             COL_CID,
@@ -184,13 +181,9 @@ class CellLocationFile {
                                             COL_LONGITUDE,
                                             COL_ACCURACY,
                                             COL_SAMPLES},
-                               bySpec,
-                               specArgArry,
-                               null,
-                               null,
-                               null);
+                               bySpec, specArgArry, null, null, null);
         if (cursor != null) {
-            if (cursor.getCount() > 0) {;
+            if (cursor.getCount() > 0) {
                 int db_mcc = 0;
                 int db_mnc = 0;
                 int db_lac = 0;
@@ -201,10 +194,10 @@ class CellLocationFile {
                 double rng = 0d;
                 int samples = 0;
 
-                double thisLat = 0d;
-                double thisLng = 0d;
-                double thisRng = 0d;
-                int thisSamples = 0;
+                double thisLat;
+                double thisLng;
+                double thisRng;
+                int thisSamples;
 
                 // Get weighted average of tower locations and coverage
                 // range from reports by the various providers (OpenCellID,
@@ -227,6 +220,7 @@ class CellLocationFile {
 
                     lat += (thisLat * thisSamples);
                     lng += (thisLng * thisSamples);
+
                     if (thisRng > rng)
                         rng = thisRng;
                     samples += thisSamples;
@@ -237,14 +231,17 @@ class CellLocationFile {
                 Bundle extras = new Bundle();
                 cellLocInfo = LocationHelper.create("gsm", (float)lat/samples, (float)lng/samples, (float)rng, extras);
                 queryResultCache.put(args, cellLocInfo);
-                if (DEBUG) Log.d(TAG,"Cell info found: "+args.toString());
+                if (DEBUG)
+                    Log.d(TAG,"Cell info found: "+args.toString());
             } else {
-                if (DEBUG) Log.d(TAG,"DB Cursor empty for: "+args.toString());
+                if (DEBUG)
+                    Log.d(TAG,"DB Cursor empty for: "+args.toString());
                 queryResultNegativeCache.put(args, true);
             }
             cursor.close();
         } else {
-            if (DEBUG) Log.d(TAG,"DB Cursor null for: "+args.toString());
+            if (DEBUG)
+                Log.d(TAG,"DB Cursor null for: "+args.toString());
             queryResultNegativeCache.put(args, true);
         }
         return cellLocInfo;
