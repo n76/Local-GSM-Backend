@@ -47,10 +47,12 @@ public class prefsFragment extends PreferenceFragment {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     String value = newValue.toString();
-                    if(isKeyValid(value) == false) {
-                        Toast.makeText(mContext, mContext.getString(R.string.invalid_api_key), Toast.LENGTH_SHORT).show();
-                        return false;
-                    }
+                    // Keys acquired from OCID website don't seem to fit same format with
+                    // 'dev-' prefix as ones requested through the API
+//                    if(isKeyValid(value) == false) {
+//                        Toast.makeText(mContext, mContext.getString(R.string.invalid_api_key), Toast.LENGTH_SHORT).show();
+//                        return false;
+//                    }
 
                     preference.setSummary(value);
                     return true;

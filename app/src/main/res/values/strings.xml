@@ -23,6 +23,12 @@
     <string name="mnc_default"></string>
     <string name="mnc_filter_description">Comma separated list of numeric Mobile Network Codes (MNC) to be used. See http://en.wikipedia.org/wiki/Mobile_country_code</string>
 
+    <string name="opencellid_api_get_key">http://opencellid.org/gsmCell/user/generateApiKey</string>
+    <string name="request_new_api_key">Request new OpenCellID key</string>
+    <string name="new_key_saved">New API key saved!</string>
+    <string name="one_request_per_24h">You can request one new API key per 24 hours. Please try again later.</string>
+    <string name="invalid_api_key">Invalid API key. The key must start with `dev-`</string>
+
     <string name="db_date_label">Current Database</string>
 
     <string name="gen_db_button">Generate Database</string>
@@ -33,10 +39,5 @@
     <string name="yes_string">Yes</string>
     <string name="okay_string">Okay</string>
     <string name="cancel_string">Cancel</string>
-    <string name="opencellid_api_get_key">http://opencellid.org/gsmCell/user/generateApiKey</string>
-    <string name="request_new_api_key">Request new OpenCellID key</string>
-    <string name="new_key_saved">New API key saved!</string>
-    <string name="one_request_per_24h">You can request one new API key per 24 hours. Please try again later.</string>
-    <string name="invalid_api_key">Invalid API key. The key must start with `dev-`</string>
 </resources>
 

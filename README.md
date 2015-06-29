@@ -63,3 +63,4 @@ Mobile Country Codes (MCC) and Mobile Network Codes (MNC) can be found at http:/
 Update History
 ==============
 0.8.0   27June2015 -- Serbian translation (thanks to Mladen Pejaković) and conversion to use Android Studio and Gradle for building.
+0.9.0   29June2015 -- Add ability to acquire OpenCellID API key from within app (thanks to agilob)
