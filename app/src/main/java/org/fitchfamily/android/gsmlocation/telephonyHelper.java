@@ -22,11 +22,11 @@ class telephonyHelper {
     protected String TAG = appConstants.TAG_PREFIX + "telephonyHelper";
     private static boolean DEBUG = appConstants.DEBUG;
 
-    private TelephonyManager tm = null;
+    private TelephonyManager tm;
     private CellLocationFile db = new CellLocationFile();
 
 
-    public telephonyHelper( TelephonyManager teleMgr ) {
+    public telephonyHelper(TelephonyManager teleMgr) {
         tm = teleMgr;
     }
 
@@ -151,7 +151,7 @@ class telephonyHelper {
             if (value != null) {
                 // Create weight value based on accuracy. Higher accuracy
                 // (lower tower radius/range) towers get higher weight.
-                float thisAcc = (float) value.getAccuracy();
+                float thisAcc = value.getAccuracy();
                 if (thisAcc < 1f)
                     thisAcc = 1f;
 

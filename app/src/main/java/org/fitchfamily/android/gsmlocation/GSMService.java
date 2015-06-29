@@ -15,8 +15,8 @@ import org.microg.nlp.api.LocationBackendService;
 
 public class GSMService extends LocationBackendService {
 
-    private TelephonyManager tm = null;
-    private telephonyHelper th = null;
+    private TelephonyManager tm;
+    private telephonyHelper th;
 
     protected String TAG = appConstants.TAG_PREFIX+"service";
     private static boolean DEBUG = appConstants.DEBUG;
