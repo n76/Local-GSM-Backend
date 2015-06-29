@@ -37,5 +37,6 @@
     <string name="request_new_api_key">Request new OpenCellID key</string>
     <string name="new_key_saved">New API key saved!</string>
     <string name="one_request_per_24h">You can request one new API key per 24 hours. Please try again later.</string>
+    <string name="invalid_api_key">Invalid API key. The key must start with `dev-`</string>
 </resources>
 

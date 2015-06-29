@@ -35,16 +35,24 @@ public class prefsFragment extends PreferenceFragment {
         if (ociKeyPreference != null) {
             if (DEBUG)
                 Log.d(TAG, "prefsFragment.onCreate(): ociKeyPreference is " + ociKeyPreference.toString());
-            if (ociKeyPreference.getText() == null) {
+
+            if (ociKeyPreference.getText().isEmpty()) {
                 // to ensure we don't get a null value
                 // set first value by default
                 ociKeyPreference.setText("");
             }
+
             ociKeyPreference.setSummary(ociKeyPreference.getText());
             ociKeyPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    preference.setSummary(newValue.toString());
+                    String value = newValue.toString();
+                    if(isKeyValid(value) == false) {
+                        Toast.makeText(mContext, mContext.getString(R.string.invalid_api_key), Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+
+                    preference.setSummary(value);
                     return true;
                 }
             });
