@@ -19,12 +19,11 @@ import android.util.Log;
 import org.microg.nlp.api.LocationHelper;
 
 class telephonyHelper {
-    protected String TAG = appConstants.TAG_PREFIX + "telephonyHelper";
+    private String TAG = appConstants.TAG_PREFIX + "telephonyHelper";
     private static boolean DEBUG = appConstants.DEBUG;
 
     private TelephonyManager tm;
     private CellLocationFile db = new CellLocationFile();
-
 
     public telephonyHelper(TelephonyManager teleMgr) {
         tm = teleMgr;
@@ -85,7 +84,7 @@ class telephonyHelper {
                 Log.d(TAG, "legacyGetCellTowers(): mncString is NULL or not recognized.");
             return null;
         }
-        int mcc = Integer.parseInt(mncString.substring(0,3));
+        int mcc = Integer.parseInt(mncString.substring(0, 3));
         int mnc = Integer.parseInt(mncString.substring(3));
         final CellLocation cellLocation = tm.getCellLocation();
 
@@ -122,7 +121,8 @@ class telephonyHelper {
         db.checkForNewDatabase();
         List<Location> rslt = getAllCellInfoWrapper();
         if (rslt == null) {
-            if (DEBUG) Log.d(TAG, "getAllCellInfoWrapper() returned nothing, trying legacyGetCellTowers().");
+            if (DEBUG)
+                Log.d(TAG, "getAllCellInfoWrapper() returned nothing, trying legacyGetCellTowers().");
             rslt = legacyGetCellTowers();
         }
         if ((rslt == null) || rslt.isEmpty()) {
@@ -182,17 +182,17 @@ class telephonyHelper {
 
         if (altitudes > 0) {
             rslt = LocationHelper.create(source,
-                          latitude,
-                          longitude ,
-                          altitude,
-                          accuracy,
-                          extras);
+                    latitude,
+                    longitude,
+                    altitude,
+                    accuracy,
+                    extras);
         } else {
             rslt = LocationHelper.create(source,
-                          latitude,
-                          longitude,
-                          accuracy,
-                          extras);
+                    latitude,
+                    longitude,
+                    accuracy,
+                    extras);
         }
         rslt.setTime(System.currentTimeMillis());
         return rslt;
@@ -201,7 +201,7 @@ class telephonyHelper {
     public synchronized Location getLocationEstimate() {
         if (tm == null)
             return null;
-        return weightedAverage("gsm",getTowerLocations());
+        return weightedAverage("gsm", getTowerLocations());
     }
 }
 

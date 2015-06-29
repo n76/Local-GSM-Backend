@@ -8,12 +8,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-
 import android.content.Intent;
 
 public class settings extends Activity {
 
-    protected String TAG = appConstants.TAG_PREFIX+"settings";
+    protected String TAG = appConstants.TAG_PREFIX + "settings";
     private static boolean DEBUG = appConstants.DEBUG;
 
     private boolean oci_preference;
@@ -26,8 +25,7 @@ public class settings extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getFragmentManager().beginTransaction().replace(android.R.id.content,
-                                                        new prefsFragment()).commit();
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new prefsFragment()).commit();
     }
 
     public void doCheckParameters(View theButton) {
@@ -81,10 +79,10 @@ public class settings extends Activity {
             builder.setCancelable(false);
 
             builder.setNeutralButton(getString(R.string.okay_string),
-                                      new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                }
-            });
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    });
 
             AlertDialog alert = builder.create();
             alert.show();
@@ -94,7 +92,7 @@ public class settings extends Activity {
 
             return;
         }
-        genDatabase(oci_preference, mls_preference, oci_key_preference, mcc_filter_preference, mnc_filter_preference );
+        genDatabase(oci_preference, mls_preference, oci_key_preference, mcc_filter_preference, mnc_filter_preference);
     }
 
     public void genDatabase(boolean useOCI, boolean useMLS, String OciKey, String MccFilter, String MncFilter) {
@@ -115,4 +113,5 @@ public class settings extends Activity {
         myIntent.putExtra("mncFilter", MncFilter);
         startActivity(myIntent);
     }
+
 }

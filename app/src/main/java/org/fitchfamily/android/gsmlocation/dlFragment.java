@@ -40,7 +40,7 @@ import android.util.Log;
  * and then move the old file to backup and the new file to active.
  */
 public class dlFragment extends Fragment {
-    private static String TAG = appConstants.TAG_PREFIX+"dlFragment";
+    private static String TAG = appConstants.TAG_PREFIX + "dlFragment";
     private static boolean DEBUG = appConstants.DEBUG;
 
     /**
@@ -49,8 +49,11 @@ public class dlFragment extends Fragment {
      */
     interface TaskCallbacks {
         void onPreExecute();
+
         void onProgressUpdate(int percent, String logText);
+
         void onCancelled();
+
         void onPostExecute();
     }
 
@@ -68,9 +71,6 @@ public class dlFragment extends Fragment {
             Log.i(TAG, "onAttach(Activity)");
 
         super.onAttach(activity);
-        if (!(activity instanceof TaskCallbacks)) {
-            throw new IllegalStateException("Activity must implement the TaskCallbacks interface.");
-        }
 
         // Hold a reference to the parent Activity so we can report back the task's
         // current progress and results.
@@ -94,6 +94,7 @@ public class dlFragment extends Fragment {
             Log.i(TAG, "onCreate(Bundle)");
         super.onActivityCreated(savedInstanceState);
     }
+
     /**
      * Note that this method is <em>not</em> called when the Fragment is being
      * retained across Activity instances. It will, however, be called when its
@@ -113,6 +114,7 @@ public class dlFragment extends Fragment {
     /*****************************/
     /**
      * Starts background task.
+     *
      * @param doOCI
      * @param doMLS
      * @param OpenCellId_API
@@ -128,8 +130,8 @@ public class dlFragment extends Fragment {
     }
 
     /**
-    * Cancels the background task.
-    */
+     * Cancels the background task.
+     */
     public void cancel() {
         if (DEBUG) Log.i(TAG, "cancel()");
         mTask.setState(mTask.CANCELED);
@@ -137,7 +139,9 @@ public class dlFragment extends Fragment {
 
     /************************/
     /***** LOGS & STUFF *****/
-    /************************/
+    /**
+     * ********************
+     */
 
     @Override
     public void onStart() {
@@ -169,13 +173,15 @@ public class dlFragment extends Fragment {
 
     /***************************/
     /***** BACKGROUND TASK *****/
-    /***************************/
+    /**
+     * ***********************
+     */
 
     class progressInfo {
         public int percent;
         public String log_line;
 
-        progressInfo(int curPercent, String newLogLine ) {
+        progressInfo(int curPercent, String newLogLine) {
             percent = curPercent;
             log_line = newLogLine;
         }
@@ -226,22 +232,22 @@ public class dlFragment extends Fragment {
             setState(RUNNING);
             if (DEBUG) {
                 Log.d(TAG, "downloadDataAsync:initialize(" + String.valueOf(doOCI)
-                        +  ", " + String.valueOf(doMLS)
-                        +  ", \"" + OpenCellId_API
-                        +  "\", \"" + MCCfilter
-                        +  "\", \"" + MNCfilter
-                        +  "\")");
+                        + ", " + String.valueOf(doMLS)
+                        + ", \"" + OpenCellId_API
+                        + "\", \"" + MCCfilter
+                        + "\", \"" + MNCfilter
+                        + "\")");
             }
 
             // mcc filtering is a boolean array. Fill with false (don't use)
             // and then set the mcc codes we want to true.
-            for (int i=0; i<1000; i++)
+            for (int i = 0; i < 1000; i++)
                 mccEnable[i] = false;
 
             int enableCount = 0;
 
             if (!MCCfilter.equals("")) {
-                doLog("MCC filter: " + MCCfilter );
+                doLog("MCC filter: " + MCCfilter);
                 String[] mccCodes = MCCfilter.split(",");
 
                 for (String c : mccCodes) {
@@ -254,19 +260,19 @@ public class dlFragment extends Fragment {
             // If no mcc codes were specified, then assume we want the
             // world, so set all codes to true.
             if (enableCount == 0) {
-                for (int i=0; i<1000; i++)
+                for (int i = 0; i < 1000; i++)
                     mccEnable[i] = true;
                 doLog("No MCC Filters, assume world");
             }
 
             // mnc filtering is a boolean array. Fill with false (don't use)
             // and then set the mnc codes we want to true.
-            for (int i=0; i<1000; i++)
+            for (int i = 0; i < 1000; i++)
                 mncEnable[i] = false;
 
             enableCount = 0;
             if (!MNCfilter.equals("")) {
-                doLog("MNC filter: " + MNCfilter );
+                doLog("MNC filter: " + MNCfilter);
                 String[] mncCodes = MNCfilter.split(",");
                 for (String c : mncCodes) {
                     if ((c != null) && (c.length() > 0)) {
@@ -278,7 +284,7 @@ public class dlFragment extends Fragment {
             // If no mnc codes were specified, then assume we want the
             // world, so set all codes to true.
             if (enableCount == 0) {
-                for (int i=0; i<1000; i++)
+                for (int i = 0; i < 1000; i++)
                     mncEnable[i] = true;
                 doLog("No MNC Filters, assume world");
             }
@@ -295,7 +301,7 @@ public class dlFragment extends Fragment {
         @Override
         protected void onProgressUpdate(progressInfo... progress) {
             if (mCallbacks != null) {
-            // Proxy the call to the Activity.
+                // Proxy the call to the Activity.
                 progressInfo thisProgress = progress[0];
                 mCallbacks.onProgressUpdate(thisProgress.percent, thisProgress.log_line);
             }
@@ -390,7 +396,7 @@ public class dlFragment extends Fragment {
                 }
             }
             long exitTime = System.currentTimeMillis();
-            long execTime = exitTime-entryTime;
+            long execTime = exitTime - entryTime;
             doLog("Total Time: " + execTime + "ms");
 
             doLog("Finished.");
@@ -402,30 +408,29 @@ public class dlFragment extends Fragment {
 
             publishProgress(new progressInfo(percentComplete, logText));
             if (DEBUG)
-                Log.d(TAG, "downloadDataAsync: "+ s);
+                Log.d(TAG, "downloadDataAsync: " + s);
             appendLog(s);
         }
 
-        private void appendLog(String text)
-        {
-           if (!appConstants.GEN_LOG_FILE.exists()) {
-              try {
-                  appConstants.GEN_LOG_FILE.createNewFile();
-              } catch (IOException e) {
-                  e.printStackTrace();
-              }
+        private void appendLog(String text) {
+            if (!appConstants.GEN_LOG_FILE.exists()) {
+                try {
+                    appConstants.GEN_LOG_FILE.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-           }
+            }
 
-           try {
+            try {
                 BufferedWriter buf = new BufferedWriter(new FileWriter(appConstants.GEN_LOG_FILE, true));
                 buf.append(text);
                 buf.newLine();
                 buf.flush();
                 buf.close();
-           } catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
-           }
+            }
         }
 
         private void getData(String mUrl) throws Exception {
@@ -450,14 +455,14 @@ public class dlFragment extends Fragment {
                 c.connect();
 
                 // Looks like .gz is about a 4 to 1 compression ratio
-                doLog("Content length = "+c.getContentLength());
-                maxLength = c.getContentLength()*4;
+                doLog("Content length = " + c.getContentLength());
+                maxLength = c.getContentLength() * 4;
 
                 csvParser cvs = new csvParser(
-                                new BufferedInputStream(
+                        new BufferedInputStream(
                                 new GZIPInputStream(
-                                new BufferedInputStream(
-                                c.getInputStream()))));
+                                        new BufferedInputStream(
+                                                c.getInputStream()))));
 
                 // CSV Field    ==> Database Field
                 // radio        ==>
@@ -491,22 +496,22 @@ public class dlFragment extends Fragment {
                 List<String> rec = null;
 
                 while (((rec = cvs.parseLine()) != null) &&
-                       (rec.size() > 8) &&
-                       (getState() == RUNNING)) {
+                        (rec.size() > 8) &&
+                        (getState() == RUNNING)) {
                     totalRecords++;
 
-                    int percentComplete = (int)((100l * cvs.bytesRead()) / maxLength);
+                    int percentComplete = (int) ((100l * cvs.bytesRead()) / maxLength);
                     if ((totalRecords % 1000) == 0) {
                         String statusText = "Records Read: " + Integer.toString(totalRecords) +
-                                            ", Inserted: " + Integer.toString(insertedRecords);
+                                ", Inserted: " + Integer.toString(insertedRecords);
                         String l = logText + statusText;
                         publishProgress(new progressInfo(percentComplete, l));
                     }
 
                     int mcc = Integer.parseInt((String) rec.get(mccIndex));
                     int mnc = Integer.parseInt((String) rec.get(mncIndex));
-                    if ((mcc >= 0) && (mcc <=999) && mccEnable[mcc] &&
-                        (mnc >= 0) && (mnc <=999) && mncEnable[mnc]) {
+                    if ((mcc >= 0) && (mcc <= 999) && mccEnable[mcc] &&
+                            (mnc >= 0) && (mnc <= 999) && mncEnable[mnc]) {
                         // Keep transaction size limited
                         if ((insertedRecords % 1000) == 0) {
                             database.setTransactionSuccessful();
@@ -531,19 +536,19 @@ public class dlFragment extends Fragment {
                     }
                 }
                 if (getState() != RUNNING) {
-                    doLog("Aborted by state change, state="+stateString(getState()));
+                    doLog("Aborted by state change, state=" + stateString(getState()));
                 }
                 database.setTransactionSuccessful();
                 database.endTransaction();
                 doLog("Records Read: " + Integer.toString(totalRecords) + ", Inserted: " + Integer.toString(insertedRecords));
 
                 long exitTime = System.currentTimeMillis();
-                long execTime = exitTime-entryTime;
+                long execTime = exitTime - entryTime;
 
                 if (totalRecords < 1)
                     totalRecords = 1;
 
-                float f = (Math.round((1000.0f * execTime)/totalRecords)/1000.0f);
+                float f = (Math.round((1000.0f * execTime) / totalRecords) / 1000.0f);
                 doLog("Total Time: " + execTime + "ms (" + f + "ms/record)");
             } catch (MalformedURLException e) {
                 doLog("getData('" + mUrl + "') failed: " + e.getMessage());

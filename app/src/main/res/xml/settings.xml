@@ -1,56 +1,48 @@
-<PreferenceScreen
-        xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory
-            android:title="@string/data_sources">
+    <PreferenceCategory android:title="@string/data_sources">
         <CheckBoxPreference
-                android:key="oci_preference"
-                android:title="@string/use_oci"
-                />
+            android:key="oci_preference"
+            android:title="@string/use_oci" />
         <CheckBoxPreference
-                android:key="mls_preference"
-                android:title="@string/use_mls"
-                />
+            android:key="mls_preference"
+            android:title="@string/use_mls" />
     </PreferenceCategory>
 
-    <PreferenceCategory
-            android:title="@string/oci_config">
+    <PreferenceCategory android:title="@string/oci_config">
         <EditTextPreference
-                android:key="oci_key_preference"
-                android:title="@string/oci_api_label"
-                android:dialogTitle="@string/oci_api_description"
-                />
+            android:dialogTitle="@string/oci_api_description"
+            android:key="oci_key_preference"
+            android:title="@string/oci_api_label" />
+        <Preference
+            android:key="request_new_api_key"
+            android:title="@string/request_new_api_key" />
     </PreferenceCategory>
 
-    <PreferenceCategory
-            android:title="@string/filter_title">
+    <PreferenceCategory android:title="@string/filter_title">
         <EditTextPreference
-                android:key="mcc_filter_preference"
-                android:title="@string/mcc_filter_label"
-                android:dialogTitle="@string/mcc_filter_description"
-                android:defaultValue="@string/mcc_default"
-                android:inputType="numberDecimal"
-                android:digits="0123456789,"
-                />
+            android:defaultValue="@string/mcc_default"
+            android:dialogTitle="@string/mcc_filter_description"
+            android:digits="0123456789,"
+            android:inputType="numberDecimal"
+            android:key="mcc_filter_preference"
+            android:title="@string/mcc_filter_label" />
         <EditTextPreference
-                android:key="mnc_filter_preference"
-                android:title="@string/mnc_filter_label"
-                android:dialogTitle="@string/mnc_filter_description"
-                android:defaultValue="@string/mnc_default"
-                android:inputType="numberDecimal"
-                android:digits="0123456789,"
-                />
+            android:defaultValue="@string/mnc_default"
+            android:dialogTitle="@string/mnc_filter_description"
+            android:digits="0123456789,"
+            android:inputType="numberDecimal"
+            android:key="mnc_filter_preference"
+            android:title="@string/mnc_filter_label" />
     </PreferenceCategory>
 
     <EditTextPreference
-            android:key="db_date_preference"
-            android:title="@string/db_date_label"
-            android:dialogTitle="not used"
-            android:defaultValue=""
-            android:enabled="false"
-            />
+        android:defaultValue=""
+        android:dialogTitle="not used"
+        android:enabled="false"
+        android:key="db_date_preference"
+        android:title="@string/db_date_label" />
     <Preference
-        android:layout="@layout/settings"
-        android:key="genButtons">
-    </Preference>
+        android:key="genButtons"
+        android:layout="@layout/settings"></Preference>
 </PreferenceScreen>

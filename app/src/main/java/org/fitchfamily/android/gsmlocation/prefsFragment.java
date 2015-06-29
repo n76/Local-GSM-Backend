@@ -1,29 +1,41 @@
 package org.fitchfamily.android.gsmlocation;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
+
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 public class prefsFragment extends PreferenceFragment {
 
-    protected String TAG = appConstants.TAG_PREFIX+"settings";
+    protected String TAG = appConstants.TAG_PREFIX + "settings";
     private static boolean DEBUG = appConstants.DEBUG;
+    private Context mContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
 
-        EditTextPreference ociKeyPreference = (EditTextPreference) this.findPreference("oci_key_preference");
+        final EditTextPreference ociKeyPreference = (EditTextPreference) this.findPreference("oci_key_preference");
         if (ociKeyPreference != null) {
-            if (DEBUG) Log.d(TAG, "prefsFragment.onCreate(): ociKeyPreference is "+ociKeyPreference.toString());
-            if(ociKeyPreference.getText()==null) {
+            if (DEBUG)
+                Log.d(TAG, "prefsFragment.onCreate(): ociKeyPreference is " + ociKeyPreference.toString());
+            if (ociKeyPreference.getText() == null) {
                 // to ensure we don't get a null value
                 // set first value by default
                 ociKeyPreference.setText("");
@@ -41,13 +53,36 @@ public class prefsFragment extends PreferenceFragment {
                 Log.d(TAG, "prefsFragment.onCreate(): ociKeyPreference is null");
         }
 
-        EditTextPreference mccFilterPreference = (EditTextPreference) this.findPreference("mcc_filter_preference");
+        Preference preference = this.findPreference("request_new_api_key");
+        preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference arg0) {
+                Log.i(TAG, "requesting new key");
+                try {
+                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+                    String newKey = new GetOpenCellIDKeyTask().execute(mContext.getString(R.string.opencellid_api_get_key)).get();
 
+                    if (isKeyValid(newKey)) {
+                        Log.i(TAG, "NEW KEY IS VALID");
+                        sp.edit().putString("oci_key_preference", newKey).commit();
+                        ociKeyPreference.setSummary(newKey); //refresh summary
+                        Toast.makeText(mContext, mContext.getString(R.string.new_key_saved), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, mContext.getString(R.string.one_request_per_24h), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+        });
+
+
+        EditTextPreference mccFilterPreference = (EditTextPreference) this.findPreference("mcc_filter_preference");
         if (mccFilterPreference != null) {
             if (DEBUG)
-                Log.d(TAG, "prefsFragment.onCreate(): mccFilterPreference is "+mccFilterPreference.toString());
+                Log.d(TAG, "prefsFragment.onCreate(): mccFilterPreference is " + mccFilterPreference.toString());
 
-            if(mccFilterPreference.getText()==null) {
+            if (mccFilterPreference.getText() == null) {
                 // to ensure we don't get a null value
                 // set first value by default
                 mccFilterPreference.setText("");
@@ -69,9 +104,9 @@ public class prefsFragment extends PreferenceFragment {
         EditTextPreference mncFilterPreference = (EditTextPreference) this.findPreference("mnc_filter_preference");
         if (mncFilterPreference != null) {
             if (DEBUG)
-                Log.d(TAG, "prefsFragment.onCreate(): mncFilterPreference is "+mncFilterPreference.toString());
+                Log.d(TAG, "prefsFragment.onCreate(): mncFilterPreference is " + mncFilterPreference.toString());
 
-            if(mncFilterPreference.getText()==null) {
+            if (mncFilterPreference.getText() == null) {
                 // to ensure we don't get a null value
                 // set first value by default
                 mncFilterPreference.setText("");
@@ -93,7 +128,7 @@ public class prefsFragment extends PreferenceFragment {
         EditTextPreference currentDbPreference = (EditTextPreference) this.findPreference("db_date_preference");
 
         if (currentDbPreference != null) {
-            if(currentDbPreference.getText() == null) {
+            if (currentDbPreference.getText() == null) {
                 // to ensure we don't get a null value
                 // set first value by default
                 currentDbPreference.setText("");
@@ -107,6 +142,12 @@ public class prefsFragment extends PreferenceFragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        mContext = activity.getApplicationContext();
+        super.onAttach(activity);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
@@ -115,7 +156,7 @@ public class prefsFragment extends PreferenceFragment {
 
         EditTextPreference currentDbPreference = (EditTextPreference) this.findPreference("db_date_preference");
         if (currentDbPreference != null) {
-            if(currentDbPreference.getText() == null) {
+            if (currentDbPreference.getText() == null) {
                 // to ensure we don't get a null value
                 // set first value by default
                 currentDbPreference.setText("");
@@ -130,9 +171,9 @@ public class prefsFragment extends PreferenceFragment {
     private String currentDbTimeStamp() {
         String currentDbInfo;
         if (appConstants.DB_NEW_FILE.exists() &&
-            appConstants.DB_NEW_FILE.canRead()) {
-                DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance();
-                currentDbInfo = "Last Modified: " + dateTimeInstance.format(appConstants.DB_NEW_FILE.lastModified());
+                appConstants.DB_NEW_FILE.canRead()) {
+            DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance();
+            currentDbInfo = "Last Modified: " + dateTimeInstance.format(appConstants.DB_NEW_FILE.lastModified());
         } else if (appConstants.DB_FILE.exists()) {
             if (appConstants.DB_FILE.canRead()) {
                 DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance();
@@ -145,4 +186,44 @@ public class prefsFragment extends PreferenceFragment {
         }
         return currentDbInfo;
     }
+
+    /**
+     * This might be extended in the future.
+     * Two keys I started started with `dev-usr`, not sure if that's a rule.
+     */
+    private boolean isKeyValid(String key) {
+        return key.startsWith("dev-");
+    }
+
+    private class GetOpenCellIDKeyTask extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                DefaultHttpClient httpclient = new DefaultHttpClient();
+                HttpGet httpGet = new HttpGet(mContext.getString(R.string.opencellid_api_get_key));
+                OCIDResponse result;
+
+                result = new OCIDResponse(httpclient.execute(httpGet));
+
+                if (result.getStatusCode() == 200) {
+                    String responseFromServer = result.getResponseFromServer();
+                    Log.d(TAG, responseFromServer);
+                    return responseFromServer;
+                } else if (result.getStatusCode() == 503) {
+                    // Check for HTTP error code 503 which is returned when user is trying to request
+                    String responseFromServer = result.getResponseFromServer();
+                    Log.d(TAG, "CellTracker: OpenCellID reached 24hrs API key limit: " + responseFromServer);
+                    return responseFromServer;
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
 }
