@@ -3,16 +3,13 @@ package org.fitchfamily.android.gsmlocation;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.InputStream;
 import java.io.IOException;
 import java.lang.IllegalStateException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -22,13 +19,11 @@ import javax.net.ssl.HttpsURLConnection;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 
 /*
@@ -52,7 +47,7 @@ public class dlFragment extends Fragment {
      * Callback interface through which the fragment can report the task's
      * progress and results back to the Activity.
      */
-    static interface TaskCallbacks {
+    interface TaskCallbacks {
         void onPreExecute();
         void onProgressUpdate(int percent, String logText);
         void onCancelled();
@@ -69,7 +64,9 @@ public class dlFragment extends Fragment {
      */
     @Override
     public void onAttach(Activity activity) {
-        if (DEBUG) Log.i(TAG, "onAttach(Activity)");
+        if (DEBUG)
+            Log.i(TAG, "onAttach(Activity)");
+
         super.onAttach(activity);
         if (!(activity instanceof TaskCallbacks)) {
             throw new IllegalStateException("Activity must implement the TaskCallbacks interface.");
@@ -85,14 +82,16 @@ public class dlFragment extends Fragment {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (DEBUG) Log.i(TAG, "onCreate(Bundle)");
+        if (DEBUG)
+            Log.i(TAG, "onCreate(Bundle)");
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) throws IllegalStateException {
-        if (DEBUG) Log.i(TAG, "onCreate(Bundle)");
+        if (DEBUG)
+            Log.i(TAG, "onCreate(Bundle)");
         super.onActivityCreated(savedInstanceState);
     }
     /**
@@ -103,7 +102,8 @@ public class dlFragment extends Fragment {
      */
     @Override
     public void onDestroy() {
-        if (DEBUG) Log.i(TAG, "onDestroy()");
+        if (DEBUG)
+            Log.i(TAG, "onDestroy()");
         super.onDestroy();
         cancel();
     }
@@ -111,15 +111,15 @@ public class dlFragment extends Fragment {
     /*****************************/
     /***** TASK FRAGMENT API *****/
     /*****************************/
-
     /**
-     * Start the background task.
+     * Starts background task.
+     * @param doOCI
+     * @param doMLS
+     * @param OpenCellId_API
+     * @param MCCfilter
+     * @param MNCfilter
      */
-    public void start(boolean doOCI,
-                      boolean doMLS,
-                      String OpenCellId_API,
-                      String MCCfilter,
-                      String MNCfilter) {
+    public void start(boolean doOCI, boolean doMLS, String OpenCellId_API, String MCCfilter, String MNCfilter) {
         if (mTask == null) {
             mTask = new downloadDataAsync();
             mTask.initialize(doOCI, doMLS, OpenCellId_API, MCCfilter, MNCfilter);
@@ -128,7 +128,7 @@ public class dlFragment extends Fragment {
     }
 
     /**
-    * Cancel the background task.
+    * Cancels the background task.
     */
     public void cancel() {
         if (DEBUG) Log.i(TAG, "cancel()");
@@ -141,25 +141,29 @@ public class dlFragment extends Fragment {
 
     @Override
     public void onStart() {
-        if (DEBUG) Log.i(TAG, "onStart()");
+        if (DEBUG)
+            Log.i(TAG, "onStart()");
         super.onStart();
     }
 
     @Override
     public void onResume() {
-        if (DEBUG) Log.i(TAG, "onResume()");
+        if (DEBUG)
+            Log.i(TAG, "onResume()");
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        if (DEBUG) Log.i(TAG, "onPause()");
+        if (DEBUG)
+            Log.i(TAG, "onPause()");
         super.onPause();
     }
 
     @Override
     public void onStop() {
-        if (DEBUG) Log.i(TAG, "onStop()");
+        if (DEBUG)
+            Log.i(TAG, "onStop()");
         super.onStop();
     }
 
@@ -206,11 +210,7 @@ public class dlFragment extends Fragment {
         private int mState = RUNNING;
 
 
-        void initialize(boolean doOCI,
-                        boolean doMLS,
-                        String OpenCellId_API,
-                        String MCCfilter,
-                        String MNCfilter) {
+        void initialize(boolean doOCI, boolean doMLS, String OpenCellId_API, String MCCfilter, String MNCfilter) {
 
             // Clear logging when starting new download
             percentComplete = 0;
@@ -237,10 +237,13 @@ public class dlFragment extends Fragment {
             // and then set the mcc codes we want to true.
             for (int i=0; i<1000; i++)
                 mccEnable[i] = false;
+
             int enableCount = 0;
+
             if (!MCCfilter.equals("")) {
                 doLog("MCC filter: " + MCCfilter );
                 String[] mccCodes = MCCfilter.split(",");
+
                 for (String c : mccCodes) {
                     if ((c != null) && (c.length() > 0)) {
                         mccEnable[Integer.parseInt(c)] = true;
@@ -260,6 +263,7 @@ public class dlFragment extends Fragment {
             // and then set the mnc codes we want to true.
             for (int i=0; i<1000; i++)
                 mncEnable[i] = false;
+
             enableCount = 0;
             if (!MNCfilter.equals("")) {
                 doLog("MNC filter: " + MNCfilter );
@@ -322,24 +326,23 @@ public class dlFragment extends Fragment {
         protected Void doInBackground(Context... params) {
             long entryTime = System.currentTimeMillis();
             try {
-//                doLog(appConstants.DB_FILE.getAbsolutePath());
 
                 // Create new database to put everything in.
                 appConstants.DB_DIR.mkdirs();
                 newDbFile = File.createTempFile("new_lacells", ".db", appConstants.DB_DIR);
                 database = SQLiteDatabase.openDatabase(newDbFile.getAbsolutePath(),
-                                                       null,
-                                                       SQLiteDatabase.NO_LOCALIZED_COLLATORS +
-                                                       SQLiteDatabase.OPEN_READWRITE +
-                                                       SQLiteDatabase.CREATE_IF_NECESSARY
-                                                       );
+                        null,
+                        SQLiteDatabase.NO_LOCALIZED_COLLATORS +
+                                SQLiteDatabase.OPEN_READWRITE +
+                                SQLiteDatabase.CREATE_IF_NECESSARY
+                );
                 database.execSQL("CREATE TABLE cells(mcc INTEGER, mnc INTEGER, lac INTEGER, cid INTEGER, longitude REAL, latitude REAL, accuracy REAL, samples INTEGER, altitude REAL);");
 
                 if (doOCI && (getState() == RUNNING)) {
                     doLog("Getting Tower Data From Open Cell ID. . .");
-//                    doLog("OpenCellId API Key = " + OpenCellId_API);
                     getData(appConstants.OCI_URL_PREFIX + OpenCellId_API + appConstants.OCI_URL_SUFFIX);
                 }
+
                 if (doMLS && (getState() == RUNNING)) {
                     doLog("Getting Tower Data From Mozilla Location Services. . .");
                     SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -347,21 +350,22 @@ public class dlFragment extends Fragment {
                     // a new day in GMT time. Get the time for a place a couple hours
                     // west of Greenwich to allow time for the data to be posted.
                     dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT-03"));
-                    getData(appConstants.MLS_URL_PREFIX + dateFormatGmt.format(new Date())+"" + appConstants.MLS_URL_SUFFIX);
+                    getData(appConstants.MLS_URL_PREFIX + dateFormatGmt.format(new Date()) + "" + appConstants.MLS_URL_SUFFIX);
                 }
 
                 if (getState() == RUNNING) {
                     doLog("Creating indicies for faster access.");
                     database.execSQL("CREATE INDEX _idx1 ON cells (mcc, mnc, lac, cid);");
                     database.execSQL("CREATE INDEX _idx2 ON cells (lac, cid);");
-//                     doLog("Vacuming database");
-//                     database.execSQL("VACUUM;");
                 }
-
-
+            } catch (IOException e) {
+                setState(FAILED);
+                doLog(e.getMessage());
+                e.printStackTrace();
             } catch (Exception e) {
                 setState(FAILED);
                 doLog(e.getMessage());
+                e.printStackTrace();
             }
 
             if (database != null)
@@ -397,37 +401,30 @@ public class dlFragment extends Fragment {
             logText += s + "\n";
 
             publishProgress(new progressInfo(percentComplete, logText));
-            if (DEBUG) Log.d(TAG, "downloadDataAsync: "+ s);
+            if (DEBUG)
+                Log.d(TAG, "downloadDataAsync: "+ s);
             appendLog(s);
         }
 
         private void appendLog(String text)
         {
-           if (!appConstants.GEN_LOG_FILE.exists())
-           {
-              try
-              {
-                 appConstants.GEN_LOG_FILE.createNewFile();
+           if (!appConstants.GEN_LOG_FILE.exists()) {
+              try {
+                  appConstants.GEN_LOG_FILE.createNewFile();
+              } catch (IOException e) {
+                  e.printStackTrace();
               }
-              catch (IOException e)
-              {
-                 // TODO Auto-generated catch block
-                 e.printStackTrace();
-              }
+
            }
-           try
-           {
-              //BufferedWriter for performance, true to set append to file flag
-              BufferedWriter buf = new BufferedWriter(new FileWriter(appConstants.GEN_LOG_FILE, true));
-              buf.append(text);
-              buf.newLine();
-              buf.flush();
-              buf.close();
-           }
-           catch (IOException e)
-           {
-              // TODO Auto-generated catch block
-              e.printStackTrace();
+
+           try {
+                BufferedWriter buf = new BufferedWriter(new FileWriter(appConstants.GEN_LOG_FILE, true));
+                buf.append(text);
+                buf.newLine();
+                buf.flush();
+                buf.close();
+           } catch (IOException e) {
+                e.printStackTrace();
            }
         }
 
@@ -441,8 +438,9 @@ public class dlFragment extends Fragment {
 
                 doLog("URL is " + mUrl);
 
-                HttpURLConnection c = null;
+                HttpURLConnection c;
                 URL u = new URL(mUrl);
+
                 if (u.getProtocol().equals("https")) {
                     c = (HttpsURLConnection) u.openConnection();
                 } else {
@@ -491,6 +489,7 @@ public class dlFragment extends Fragment {
                 database.beginTransaction();
 
                 List<String> rec = null;
+
                 while (((rec = cvs.parseLine()) != null) &&
                        (rec.size() > 8) &&
                        (getState() == RUNNING)) {
@@ -514,20 +513,19 @@ public class dlFragment extends Fragment {
                             database.endTransaction();
                             database.beginTransaction();
                         }
-                        stmt.bindString(1, (String) Integer.toString(mcc));
-                        stmt.bindString(2, (String) rec.get(mncIndex));
-                        stmt.bindString(3, (String) rec.get(lacIndex));
-                        stmt.bindString(4, (String) rec.get(cidIndex));
-                        stmt.bindString(5, (String) rec.get(lonIndex));
-                        stmt.bindString(6, (String) rec.get(latIndex));
-                        int range = Integer.parseInt((String) rec.get(accIndex));
+                        stmt.bindString(1, Integer.toString(mcc));
+                        stmt.bindString(2, rec.get(mncIndex));
+                        stmt.bindString(3, rec.get(lacIndex));
+                        stmt.bindString(4, rec.get(cidIndex));
+                        stmt.bindString(5, rec.get(lonIndex));
+                        stmt.bindString(6, rec.get(latIndex));
+                        int range = Integer.parseInt(rec.get(accIndex));
                         if (range < appConstants.MIN_RANGE)
                             range = appConstants.MIN_RANGE;
                         if (range > appConstants.MAX_RANGE)
                             range = appConstants.MAX_RANGE;
-                        stmt.bindString(7, (String) Integer.toString(range));
-                        stmt.bindString(8, (String) rec.get(smpIndex));
-                        long entryID = stmt.executeInsert();
+                        stmt.bindString(7, Integer.toString(range));
+                        stmt.bindString(8, rec.get(smpIndex));
                         stmt.clearBindings();
                         insertedRecords++;
                     }
@@ -537,14 +535,15 @@ public class dlFragment extends Fragment {
                 }
                 database.setTransactionSuccessful();
                 database.endTransaction();
-                doLog("Records Read: " + Integer.toString(totalRecords) +
-                      ", Inserted: " + Integer.toString(insertedRecords));
+                doLog("Records Read: " + Integer.toString(totalRecords) + ", Inserted: " + Integer.toString(insertedRecords));
 
                 long exitTime = System.currentTimeMillis();
                 long execTime = exitTime-entryTime;
+
                 if (totalRecords < 1)
                     totalRecords = 1;
-                float f = (float) (Math.round((1000.0f * execTime)/totalRecords)/1000.0f);
+
+                float f = (Math.round((1000.0f * execTime)/totalRecords)/1000.0f);
                 doLog("Total Time: " + execTime + "ms (" + f + "ms/record)");
             } catch (MalformedURLException e) {
                 doLog("getData('" + mUrl + "') failed: " + e.getMessage());
@@ -555,7 +554,8 @@ public class dlFragment extends Fragment {
 
         public synchronized void setState(int s) {
             mState = s;
-            if (DEBUG) Log.d(TAG, "downloadDataAsync.setState(" + s + ")");
+            if (DEBUG)
+                Log.d(TAG, "downloadDataAsync.setState(" + s + ")");
         }
 
         public synchronized int getState() {

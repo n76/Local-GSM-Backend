@@ -1,18 +1,13 @@
 package org.fitchfamily.android.gsmlocation;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * MainActivity displays the screen's UI and starts a dlFragment which will

@@ -2,15 +2,12 @@ package org.fitchfamily.android.gsmlocation;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.List;
 
 import android.location.Location;
 import android.os.Bundle;
 import android.telephony.CellIdentityGsm;
 import android.telephony.CellIdentityWcdma;
-import android.telephony.CellInfo;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoWcdma;
 import android.telephony.CellLocation;
@@ -19,7 +16,6 @@ import android.telephony.NeighboringCellInfo;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import org.microg.nlp.api.LocationBackendService;
 import org.microg.nlp.api.LocationHelper;
 
 class telephonyHelper {
@@ -29,8 +25,6 @@ class telephonyHelper {
     private TelephonyManager tm = null;
     private CellLocationFile db = new CellLocationFile();
 
-    private telephonyHelper() {
-    }
 
     public telephonyHelper( TelephonyManager teleMgr ) {
         tm = teleMgr;
@@ -87,19 +81,22 @@ class telephonyHelper {
         String mncString = tm.getNetworkOperator();
 
         if ((mncString == null) || (mncString.length() < 5) || (mncString.length() > 6)) {
-            if (DEBUG) Log.d(TAG, "legacyGetCellTowers(): mncString is NULL or not recognized.");
+            if (DEBUG)
+                Log.d(TAG, "legacyGetCellTowers(): mncString is NULL or not recognized.");
             return null;
         }
         int mcc = Integer.parseInt(mncString.substring(0,3));
         int mnc = Integer.parseInt(mncString.substring(3));
         final CellLocation cellLocation = tm.getCellLocation();
+
         if ((cellLocation != null) && (cellLocation instanceof GsmCellLocation)) {
             GsmCellLocation cell = (GsmCellLocation) cellLocation;
             Location cellLocInfo = db.query(mcc, mnc, cell.getCid(), cell.getLac());
             if (cellLocInfo != null)
                 rslt.add(cellLocInfo);
         } else {
-            if (DEBUG) Log.d(TAG, "getCellLocation() returned null or no GsmCellLocation.");
+            if (DEBUG)
+                Log.d(TAG, "getCellLocation() returned null or no GsmCellLocation.");
         }
 
         final List<NeighboringCellInfo> neighbours = tm.getNeighboringCellInfo();
@@ -136,11 +133,12 @@ class telephonyHelper {
     }
 
     public Location weightedAverage(String source, Collection<Location> locations) {
-        Location rslt = null;
+        Location rslt;
 
         if (locations == null || locations.size() == 0) {
             return null;
         }
+
         int num = locations.size();
         int totalWeight = 0;
         double latitude = 0;
@@ -148,6 +146,7 @@ class telephonyHelper {
         float accuracy = 0;
         int altitudes = 0;
         double altitude = 0;
+
         for (Location value : locations) {
             if (value != null) {
                 // Create weight value based on accuracy. Higher accuracy
@@ -155,6 +154,7 @@ class telephonyHelper {
                 float thisAcc = (float) value.getAccuracy();
                 if (thisAcc < 1f)
                     thisAcc = 1f;
+
                 int wgt = (int) (100000f / thisAcc);
                 if (wgt < 1)
                     wgt = 1;
@@ -179,6 +179,7 @@ class telephonyHelper {
         Bundle extras = new Bundle();
         extras.putInt("AVERAGED_OF", num);
 //        if (DEBUG) Log.d(TAG, "Location est (lat="+ latitude + ", lng=" + longitude + ", acc=" + accuracy);
+
         if (altitudes > 0) {
             rslt = LocationHelper.create(source,
                           latitude,
@@ -202,7 +203,6 @@ class telephonyHelper {
             return null;
         return weightedAverage("gsm",getTowerLocations());
     }
-
 }
 
 

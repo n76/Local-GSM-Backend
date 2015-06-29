@@ -5,19 +5,14 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 
 import android.content.Intent;
 
-import android.preference.EditTextPreference;
-import android.preference.Preference.OnPreferenceChangeListener;
-
 public class settings extends Activity {
+
     protected String TAG = appConstants.TAG_PREFIX+"settings";
     private static boolean DEBUG = appConstants.DEBUG;
 
@@ -31,7 +26,6 @@ public class settings extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        prefsFragment myFrag = new prefsFragment();
         getFragmentManager().beginTransaction().replace(android.R.id.content,
                                                         new prefsFragment()).commit();
     }
@@ -53,12 +47,13 @@ public class settings extends Activity {
             Log.d(TAG, "MCC filtering = " + mcc_filter_preference);
             Log.d(TAG, "MNC filtering = " + mnc_filter_preference);
         }
+
         if (oci_preference && oci_key_preference.equals("")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(getString(R.string.no_api_key));
             builder.setCancelable(false);
-            builder.setPositiveButton(getString(R.string.yes_string),
-                                      new DialogInterface.OnClickListener() {
+
+            builder.setPositiveButton(getString(R.string.yes_string), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     Log.d(TAG, "onClick = yes, OCI = " + String.valueOf(oci_preference));
                     oci_preference = false;
@@ -66,11 +61,12 @@ public class settings extends Activity {
                     Log.d(TAG, "onClick = yes, OCI = " + String.valueOf(oci_preference));
                 }
             });
-            builder.setNegativeButton(getString(R.string.no_string),
-                                      new DialogInterface.OnClickListener() {
+
+            builder.setNegativeButton(getString(R.string.no_string), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                 }
             });
+
             AlertDialog alert = builder.create();
             alert.show();
         } else {
@@ -83,34 +79,40 @@ public class settings extends Activity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(getString(R.string.no_data_requested));
             builder.setCancelable(false);
+
             builder.setNeutralButton(getString(R.string.okay_string),
                                       new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                 }
             });
+
             AlertDialog alert = builder.create();
             alert.show();
-            if (DEBUG) Log.d(TAG, "Neither OpenCellId nor Mozilla Location data selected");
+
+            if (DEBUG)
+                Log.d(TAG, "Neither OpenCellId nor Mozilla Location data selected");
+
             return;
         }
         genDatabase(oci_preference, mls_preference, oci_key_preference, mcc_filter_preference, mnc_filter_preference );
     }
 
     public void genDatabase(boolean useOCI, boolean useMLS, String OciKey, String MccFilter, String MncFilter) {
-        if (DEBUG) Log.d(TAG, "Inputs validated: Start background processing...");
         if (DEBUG) {
-            Log.d(TAG, "Use OpenCellID data = " + String.valueOf(oci_preference));
-            Log.d(TAG, "Use Mozilla data = " + String.valueOf(mls_preference));
-            Log.d(TAG, "OpenCellId API Key = " + oci_key_preference);
-            Log.d(TAG, "MCC filtering = " + mcc_filter_preference);
-            Log.d(TAG, "MNC filtering = " + mcc_filter_preference);
+            Log.d(TAG, "Inputs validated: Start background processing...");
+            Log.d(TAG, "Use OpenCellID data = " + String.valueOf(useOCI));
+            Log.d(TAG, "Use Mozilla data = " + String.valueOf(useMLS));
+            Log.d(TAG, "OpenCellId API Key = " + OciKey);
+            Log.d(TAG, "MCC filtering = " + MccFilter);
+            Log.d(TAG, "MNC filtering = " + MncFilter);
         }
+
         Intent myIntent = new Intent(this, dlActivity.class);
-        myIntent.putExtra("doOCI", oci_preference);
-        myIntent.putExtra("doMLS", mls_preference);
-        myIntent.putExtra("ociAPI", oci_key_preference);
-        myIntent.putExtra("mccFilter", mcc_filter_preference);
-        myIntent.putExtra("mncFilter", mnc_filter_preference);
+        myIntent.putExtra("doOCI", useOCI);
+        myIntent.putExtra("doMLS", useMLS);
+        myIntent.putExtra("ociAPI", OciKey);
+        myIntent.putExtra("mccFilter", MccFilter);
+        myIntent.putExtra("mncFilter", MncFilter);
         startActivity(myIntent);
     }
 }

@@ -2,8 +2,6 @@ package org.fitchfamily.android.gsmlocation;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.io.File;
 
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -16,9 +14,6 @@ public class prefsFragment extends PreferenceFragment {
 
     protected String TAG = appConstants.TAG_PREFIX+"settings";
     private static boolean DEBUG = appConstants.DEBUG;
-
-    public prefsFragment() {
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,17 +37,22 @@ public class prefsFragment extends PreferenceFragment {
                 }
             });
         } else {
-            if (DEBUG) Log.d(TAG, "prefsFragment.onCreate(): ociKeyPreference is null");
+            if (DEBUG)
+                Log.d(TAG, "prefsFragment.onCreate(): ociKeyPreference is null");
         }
 
         EditTextPreference mccFilterPreference = (EditTextPreference) this.findPreference("mcc_filter_preference");
+
         if (mccFilterPreference != null) {
-            if (DEBUG) Log.d(TAG, "prefsFragment.onCreate(): mccFilterPreference is "+mccFilterPreference.toString());
+            if (DEBUG)
+                Log.d(TAG, "prefsFragment.onCreate(): mccFilterPreference is "+mccFilterPreference.toString());
+
             if(mccFilterPreference.getText()==null) {
                 // to ensure we don't get a null value
                 // set first value by default
                 mccFilterPreference.setText("");
             }
+
             mccFilterPreference.setSummary(mccFilterPreference.getText());
             mccFilterPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
                 @Override
@@ -62,17 +62,21 @@ public class prefsFragment extends PreferenceFragment {
                 }
             });
         } else {
-            if (DEBUG) Log.d(TAG, "prefsFragment.onCreate(): mccFilterPreference is null");
+            if (DEBUG)
+                Log.d(TAG, "prefsFragment.onCreate(): mccFilterPreference is null");
         }
 
         EditTextPreference mncFilterPreference = (EditTextPreference) this.findPreference("mnc_filter_preference");
         if (mncFilterPreference != null) {
-            if (DEBUG) Log.d(TAG, "prefsFragment.onCreate(): mncFilterPreference is "+mncFilterPreference.toString());
+            if (DEBUG)
+                Log.d(TAG, "prefsFragment.onCreate(): mncFilterPreference is "+mncFilterPreference.toString());
+
             if(mncFilterPreference.getText()==null) {
                 // to ensure we don't get a null value
                 // set first value by default
                 mncFilterPreference.setText("");
             }
+
             mncFilterPreference.setSummary(mncFilterPreference.getText());
             mncFilterPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
                 @Override
@@ -82,19 +86,22 @@ public class prefsFragment extends PreferenceFragment {
                 }
             });
         } else {
-            if (DEBUG) Log.d(TAG, "prefsFragment.onCreate(): mncFilterPreference is null");
+            if (DEBUG)
+                Log.d(TAG, "prefsFragment.onCreate(): mncFilterPreference is null");
         }
 
         EditTextPreference currentDbPreference = (EditTextPreference) this.findPreference("db_date_preference");
+
         if (currentDbPreference != null) {
-            if(currentDbPreference.getText()==null) {
+            if(currentDbPreference.getText() == null) {
                 // to ensure we don't get a null value
                 // set first value by default
                 currentDbPreference.setText("");
             }
             currentDbPreference.setSummary(currentDbTimeStamp());
         } else {
-            if (DEBUG) Log.d(TAG, "prefsFragment.onCreate(): currentDbPreference is null");
+            if (DEBUG)
+                Log.d(TAG, "prefsFragment.onCreate(): currentDbPreference is null");
         }
 
     }
@@ -102,22 +109,26 @@ public class prefsFragment extends PreferenceFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (DEBUG) Log.d(TAG, "prefsFragment.onResume()");
+
+        if (DEBUG)
+            Log.d(TAG, "prefsFragment.onResume()");
+
         EditTextPreference currentDbPreference = (EditTextPreference) this.findPreference("db_date_preference");
         if (currentDbPreference != null) {
-            if(currentDbPreference.getText()==null) {
+            if(currentDbPreference.getText() == null) {
                 // to ensure we don't get a null value
                 // set first value by default
                 currentDbPreference.setText("");
             }
             currentDbPreference.setSummary(currentDbTimeStamp());
         } else {
-            if (DEBUG) Log.d(TAG, "prefsFragment.onResume(): currentDbPreference is null");
+            if (DEBUG)
+                Log.d(TAG, "prefsFragment.onResume(): currentDbPreference is null");
         }
     }
 
     private String currentDbTimeStamp() {
-        String currentDbInfo = "";
+        String currentDbInfo;
         if (appConstants.DB_NEW_FILE.exists() &&
             appConstants.DB_NEW_FILE.canRead()) {
                 DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance();
