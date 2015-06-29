@@ -50,10 +50,13 @@ public class GSMService extends LocationBackendService {
 
                         private boolean sameLoc(Location l1, Location l2) {
 
-                            if ((l1 == null) && (l2 == null))
+                            if (l1 == null && l2 == null)
                                 return true;
 
-                            if ((l1 == null) && (l2 != null))
+                            if (l1 == null && l2 != null)
+                                return false;
+
+                            if(l1 != null && l2 == null)
                                 return false;
 
                             return (l1.getLatitude() == l2.getLatitude()) &&
