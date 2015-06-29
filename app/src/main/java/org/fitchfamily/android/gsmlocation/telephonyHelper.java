@@ -19,7 +19,7 @@ import android.util.Log;
 import org.microg.nlp.api.LocationHelper;
 
 class telephonyHelper {
-    protected String TAG = appConstants.TAG_PREFIX+"telephonyHelper";
+    protected String TAG = appConstants.TAG_PREFIX + "telephonyHelper";
     private static boolean DEBUG = appConstants.DEBUG;
 
     private TelephonyManager tm = null;

@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.location.Location;
-import android.os.Handler;
 import android.os.Looper;
 import android.telephony.CellLocation;
 import android.telephony.PhoneStateListener;
@@ -108,7 +107,8 @@ public class GSMService extends LocationBackendService {
             };
             worker.start();
         } catch (Exception e) {
-            Log.e(TAG, "Start failed", e);
+            Log.e(TAG, "Start failed: " + e.getMessage());
+            e.printStackTrace();
             worker = null;
         }
     }
