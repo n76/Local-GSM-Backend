@@ -202,7 +202,6 @@ public class prefsFragment extends PreferenceFragment {
 
                 if (result.getStatusCode() == 200) {
                     String responseFromServer = result.getResponseFromServer();
-                    Log.d(TAG, responseFromServer);
                     return responseFromServer;
                 } else if (result.getStatusCode() == 503) {
                     // Check for HTTP error code 503 which is returned when user is trying to request
