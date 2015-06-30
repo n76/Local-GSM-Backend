@@ -36,7 +36,8 @@ public class prefsFragment extends PreferenceFragment {
             if (DEBUG)
                 Log.d(TAG, "prefsFragment.onCreate(): ociKeyPreference is " + ociKeyPreference.toString());
 
-            if (ociKeyPreference.getText().isEmpty()) {
+            if (ociKeyPreference.getText() == null ||
+                    ociKeyPreference.getText().isEmpty()){
                 // to ensure we don't get a null value
                 // set first value by default
                 ociKeyPreference.setText("");
@@ -47,13 +48,6 @@ public class prefsFragment extends PreferenceFragment {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     String value = newValue.toString();
-                    // Keys acquired from OCID website don't seem to fit same format with
-                    // 'dev-' prefix as ones requested through the API
-//                    if(isKeyValid(value) == false) {
-//                        Toast.makeText(mContext, mContext.getString(R.string.invalid_api_key), Toast.LENGTH_SHORT).show();
-//                        return false;
-//                    }
-
                     preference.setSummary(value);
                     return true;
                 }
@@ -68,17 +62,7 @@ public class prefsFragment extends PreferenceFragment {
             public boolean onPreferenceClick(Preference arg0) {
                 Log.i(TAG, "requesting new key");
                 try {
-                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
-                    String newKey = new GetOpenCellIDKeyTask().execute(mContext.getString(R.string.opencellid_api_get_key)).get();
-
-                    if (isKeyValid(newKey)) {
-                        Log.i(TAG, "NEW KEY IS VALID");
-                        sp.edit().putString("oci_key_preference", newKey).commit();
-                        ociKeyPreference.setSummary(newKey); //refresh summary
-                        Toast.makeText(mContext, mContext.getString(R.string.new_key_saved), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(mContext, mContext.getString(R.string.one_request_per_24h), Toast.LENGTH_SHORT).show();
-                    }
+                    new GetOpenCellIDKeyTask().execute(mContext.getString(R.string.opencellid_api_get_key));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -233,6 +217,22 @@ public class prefsFragment extends PreferenceFragment {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String newKey) {
+            if (isKeyValid(newKey)) {
+                Log.i(TAG, "New key is valid");
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+                EditTextPreference ociKeyPreference = (EditTextPreference) findPreference("oci_key_preference");
+                sp.edit().putString("oci_key_preference", newKey).commit();
+                ociKeyPreference.setSummary(newKey); //refresh summary
+                Toast.makeText(mContext, mContext.getString(R.string.new_key_saved), Toast.LENGTH_SHORT).show();
+            } else {
+                Log.e(TAG, "Invalid key: " + newKey);
+                Toast.makeText(mContext, mContext.getString(R.string.one_request_per_24h), Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 
