@@ -64,3 +64,4 @@ Update History
 ==============
 0.8.0   27June2015 -- Serbian translation (thanks to Mladen Pejaković) and conversion to use Android Studio and Gradle for building.
 0.9.0   29June2015 -- Add ability to acquire OpenCellID API key from within app (thanks to agilob)
+0.9.1   30June2015 -- Improve acquisition of OpenCellID API key.
