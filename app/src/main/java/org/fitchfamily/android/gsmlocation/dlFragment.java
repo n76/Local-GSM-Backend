@@ -531,6 +531,7 @@ public class dlFragment extends Fragment {
                             range = appConstants.MAX_RANGE;
                         stmt.bindString(7, Integer.toString(range));
                         stmt.bindString(8, rec.get(smpIndex));
+                        long entryID = stmt.executeInsert();
                         stmt.clearBindings();
                         insertedRecords++;
                     }
