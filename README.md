@@ -62,7 +62,9 @@ Mobile Country Codes (MCC) and Mobile Network Codes (MNC) can be found at http:/
 
 Update History
 ==============
-    0.8.0   27June2015 -- Serbian translation (thanks to Mladen Pejaković) and conversion to use Android Studio and Gradle for building.
-    0.9.0   29June2015 -- Add ability to acquire OpenCellID API key from within app (thanks to agilob)
-    0.9.1   30June2015 -- Improve acquisition of OpenCellID API key.
-    0.9.2   2Aug2015   -- Fix bug where on download where towers were not being inserted into database.
+|Version|Date|Comment|
+|:-------|:----:|:-------|
+0.8.0|27June2015|Serbian translation (thanks to Mladen Pejaković) and conversion to use Android Studio and Gradle for building.
+0.9.0|29June2015|Add ability to acquire OpenCellID API key from within app (thanks to agilob)
+0.9.1|30June2015|Improve acquisition of OpenCellID API key.
+0.9.2|2Aug2015|Fix bug where on download where towers were not being inserted into database.
