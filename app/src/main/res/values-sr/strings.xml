@@ -39,5 +39,31 @@
     <string name="yes_string">Да</string>
     <string name="okay_string">У реду</string>
     <string name="cancel_string">Одустани</string>
+
+    <string name="log_MCC_FILTER">MCC filter:</string>
+    <string name="log_MCC_WORLD">No MCC Filters, assume all countries</string>
+    <string name="log_MNC_FILTER">MNC Filter:</string>
+    <string name="log_MNC_WORLD">No MNC Filters, assume all networks</string>
+    <string name="log_GETTING_OCID">Getting Tower Data From Open Cell ID. . .</string>
+    <string name="log_GETTING_MOZ">Getting Tower Data From Mozilla Location Services. . .</string>
+    <string name="log_URL">URL is</string>
+    <string name="log_CONT_LENGTH">Content length =</string>
+    <string name="log_REC_READ">Records Read:</string>
+    <string name="log_REC_INSERTED">Inserted:</string>
+    <string name="log_INDICIES">Creating indicies for faster access.</string>
+    <string name="log_CLEANING">Cleaning up temp files.</string>
+    <string name="log_TOT_TIME">Total Time:</string>
+    <string name="log_MILLISEC">ms</string>
+    <string name="log_MILLISEC_PER_REC">ms/record</string>
+    <string name="log_FINISHED">Finished.</string>
+    <string name="log_TOTAL_TIME">Total Time:</string>
+    <string name="log_ABORTED">Aborted by state change, state=</string>
+
+    <string name="st_RUNNING">RUNNING</string>
+    <string name="st_CANCELED">CANCELED</string>
+    <string name="st_FAILED">FAILED</string>
+    <string name="st_SUCCESS">SUCCESS</string>
+    <string name="st_UNKNOWN">UNKNOWN</string>
+
 </resources>
 

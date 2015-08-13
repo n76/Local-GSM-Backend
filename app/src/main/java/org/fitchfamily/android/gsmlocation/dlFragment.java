@@ -121,10 +121,10 @@ public class dlFragment extends Fragment {
      * @param MCCfilter
      * @param MNCfilter
      */
-    public void start(boolean doOCI, boolean doMLS, String OpenCellId_API, String MCCfilter, String MNCfilter) {
+    public void start(boolean doOCI, boolean doMLS, String OpenCellId_API, String MCCfilter, String MNCfilter, Context myCtx) {
         if (mTask == null) {
             mTask = new downloadDataAsync();
-            mTask.initialize(doOCI, doMLS, OpenCellId_API, MCCfilter, MNCfilter);
+            mTask.initialize(doOCI, doMLS, OpenCellId_API, MCCfilter, MNCfilter, myCtx);
             mTask.execute();
         }
     }
@@ -214,11 +214,13 @@ public class dlFragment extends Fragment {
         public static final int FAILED = 2;
         public static final int SUCCESS = 3;
         private int mState = RUNNING;
+        private Context ctx;
 
 
-        void initialize(boolean doOCI, boolean doMLS, String OpenCellId_API, String MCCfilter, String MNCfilter) {
+        void initialize(boolean doOCI, boolean doMLS, String OpenCellId_API, String MCCfilter, String MNCfilter, Context my_ctx) {
 
             // Clear logging when starting new download
+            ctx = my_ctx;
             percentComplete = 0;
             logText = "";
             if (appConstants.GEN_LOG_FILE.exists())
@@ -247,7 +249,7 @@ public class dlFragment extends Fragment {
             int enableCount = 0;
 
             if (!MCCfilter.equals("")) {
-                doLog("MCC filter: " + MCCfilter);
+                doLog(ctx.getString(R.string.log_MCC_FILTER) + " " + MCCfilter);
                 String[] mccCodes = MCCfilter.split(",");
 
                 for (String c : mccCodes) {
@@ -262,7 +264,7 @@ public class dlFragment extends Fragment {
             if (enableCount == 0) {
                 for (int i = 0; i < 1000; i++)
                     mccEnable[i] = true;
-                doLog("No MCC Filters, assume world");
+                doLog(ctx.getString(R.string.log_MCC_WORLD));
             }
 
             // mnc filtering is a boolean array. Fill with false (don't use)
@@ -272,7 +274,7 @@ public class dlFragment extends Fragment {
 
             enableCount = 0;
             if (!MNCfilter.equals("")) {
-                doLog("MNC filter: " + MNCfilter);
+                doLog(ctx.getString(R.string.log_MCC_FILTER) + " " + MNCfilter);
                 String[] mncCodes = MNCfilter.split(",");
                 for (String c : mncCodes) {
                     if ((c != null) && (c.length() > 0)) {
@@ -286,7 +288,7 @@ public class dlFragment extends Fragment {
             if (enableCount == 0) {
                 for (int i = 0; i < 1000; i++)
                     mncEnable[i] = true;
-                doLog("No MNC Filters, assume world");
+                doLog(ctx.getString(R.string.log_MNC_WORLD));
             }
         }
 
@@ -345,12 +347,12 @@ public class dlFragment extends Fragment {
                 database.execSQL("CREATE TABLE cells(mcc INTEGER, mnc INTEGER, lac INTEGER, cid INTEGER, longitude REAL, latitude REAL, accuracy REAL, samples INTEGER, altitude REAL);");
 
                 if (doOCI && (getState() == RUNNING)) {
-                    doLog("Getting Tower Data From Open Cell ID. . .");
+                    doLog(ctx.getString(R.string.log_GETTING_OCID));
                     getData(appConstants.OCI_URL_PREFIX + OpenCellId_API + appConstants.OCI_URL_SUFFIX);
                 }
 
                 if (doMLS && (getState() == RUNNING)) {
-                    doLog("Getting Tower Data From Mozilla Location Services. . .");
+                    doLog(ctx.getString(R.string.log_GETTING_MOZ));
                     SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd");
                     // Mozilla publishes new CSV files at a bit after the beginning of
                     // a new day in GMT time. Get the time for a place a couple hours
@@ -360,7 +362,7 @@ public class dlFragment extends Fragment {
                 }
 
                 if (getState() == RUNNING) {
-                    doLog("Creating indicies for faster access.");
+                    doLog(ctx.getString(R.string.log_INDICIES));
                     database.execSQL("CREATE INDEX _idx1 ON cells (mcc, mnc, lac, cid);");
                     database.execSQL("CREATE INDEX _idx2 ON cells (lac, cid);");
                 }
@@ -374,13 +376,22 @@ public class dlFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            if (database != null)
-                database.close();
+            // Close the database
+            try {
+                if (database != null)
+                    database.close();
+            } catch (Exception e) {
+                doLog(e.getMessage());
+            }
 
             // Remove database journal file regardless of how we finished
-            File jFile = new File(newDbFile.getAbsolutePath() + "-journal");
-            if (jFile.exists())
-                jFile.delete();
+            try {
+                File jFile = new File(newDbFile.getAbsolutePath() + "-journal");
+                if (jFile.exists())
+                    jFile.delete();
+            } catch (Exception e) {
+                doLog(e.getMessage());
+            }
 
             // On successful completion, set result into new database file
             // On any failure, remove the result file.
@@ -390,6 +401,7 @@ public class dlFragment extends Fragment {
                 newDbFile.renameTo(appConstants.DB_NEW_FILE);
                 setState(SUCCESS);
             } else {
+                doLog(ctx.getString(R.string.log_CLEANING));
                 if ((newDbFile != null) && newDbFile.exists()) {
                     newDbFile.delete();
                     newDbFile = null;
@@ -397,9 +409,10 @@ public class dlFragment extends Fragment {
             }
             long exitTime = System.currentTimeMillis();
             long execTime = exitTime - entryTime;
-            doLog("Total Time: " + execTime + "ms");
+            doLog(ctx.getString(R.string.log_TOT_TIME) + " " +
+                    execTime + ctx.getString(R.string.log_MILLISEC));
 
-            doLog("Finished.");
+            doLog(ctx.getString(R.string.log_FINISHED));
             return null;
         }
 
@@ -441,7 +454,7 @@ public class dlFragment extends Fragment {
 
                 long entryTime = System.currentTimeMillis();
 
-                doLog("URL is " + mUrl);
+                doLog(ctx.getString(R.string.log_URL) + " " + mUrl);
 
                 HttpURLConnection c;
                 URL u = new URL(mUrl);
@@ -455,7 +468,7 @@ public class dlFragment extends Fragment {
                 c.connect();
 
                 // Looks like .gz is about a 4 to 1 compression ratio
-                doLog("Content length = " + c.getContentLength());
+                doLog(ctx.getString(R.string.log_CONT_LENGTH) + " " + c.getContentLength());
                 maxLength = c.getContentLength() * 4;
 
                 csvParser cvs = new csvParser(
@@ -494,6 +507,8 @@ public class dlFragment extends Fragment {
                 database.beginTransaction();
 
                 List<String> rec = null;
+                String RecsReadStr = ctx.getString(R.string.log_REC_READ);
+                String RecsInsertedStr = ctx.getString(R.string.log_REC_INSERTED);
 
                 while (((rec = cvs.parseLine()) != null) &&
                         (rec.size() > 8) &&
@@ -502,8 +517,8 @@ public class dlFragment extends Fragment {
 
                     int percentComplete = (int) ((100l * cvs.bytesRead()) / maxLength);
                     if ((totalRecords % 1000) == 0) {
-                        String statusText = "Records Read: " + Integer.toString(totalRecords) +
-                                ", Inserted: " + Integer.toString(insertedRecords);
+                        String statusText = RecsReadStr + " " + Integer.toString(totalRecords) +
+                                ", " + RecsInsertedStr + " " + Integer.toString(insertedRecords);
                         String l = logText + statusText;
                         publishProgress(new progressInfo(percentComplete, l));
                     }
@@ -537,11 +552,14 @@ public class dlFragment extends Fragment {
                     }
                 }
                 if (getState() != RUNNING) {
-                    doLog("Aborted by state change, state=" + stateString(getState()));
+                    doLog(ctx.getString(R.string.log_ABORTED) + stateString(getState()));
                 }
                 database.setTransactionSuccessful();
                 database.endTransaction();
-                doLog("Records Read: " + Integer.toString(totalRecords) + ", Inserted: " + Integer.toString(insertedRecords));
+                doLog(RecsReadStr +
+                        " " + Integer.toString(totalRecords) +
+                        ", " + RecsInsertedStr +
+                        " " + Integer.toString(insertedRecords));
 
                 long exitTime = System.currentTimeMillis();
                 long execTime = exitTime - entryTime;
@@ -550,10 +568,18 @@ public class dlFragment extends Fragment {
                     totalRecords = 1;
 
                 float f = (Math.round((1000.0f * execTime) / totalRecords) / 1000.0f);
-                doLog("Total Time: " + execTime + "ms (" + f + "ms/record)");
+                doLog(ctx.getString(R.string.log_TOTAL_TIME) +
+                        " " + execTime +
+                        " " + ctx.getString(R.string.log_MILLISEC) +
+                        " (" + f + ctx.getString(R.string.log_MILLISEC_PER_REC) + ")");
             } catch (MalformedURLException e) {
                 doLog("getData('" + mUrl + "') failed: " + e.getMessage());
                 setState(FAILED);
+                throw e;
+            } catch (Exception e) {
+                setState(FAILED);
+                doLog(e.getMessage());
+                e.printStackTrace();
                 throw e;
             }
         }
@@ -570,14 +596,14 @@ public class dlFragment extends Fragment {
 
         public synchronized String stateString(int st) {
             if (st == RUNNING)
-                return "RUNNING";
+                return ctx.getString(R.string.st_RUNNING);
             if (st == CANCELED)
-                return "CANCELED";
+                return ctx.getString(R.string.st_CANCELED);
             if (st == FAILED)
-                return "FAILED";
+                return ctx.getString(R.string.st_FAILED);
             if (st == SUCCESS)
-                return "SUCCESS";
-            return "UNKNOWN(" + st + ")";
+                return ctx.getString(R.string.st_SUCCESS);
+            return ctx.getString(R.string.st_UNKNOWN)+ "(" + st + ")";
         }
     }
 }

@@ -69,3 +69,4 @@ Update History
 0.9.1|30June2015|Improve acquisition of OpenCellID API key.
 0.9.2|2Aug2015|Fix bug where on download where towers were not being inserted into database.
 0.9.3|3Aug2015|Update Serbian translation.
+0.9.4|13Aug2015|Slight revision to clean up logic, might help on https://github.com/n76/Local-GSM-Backend/issues/31 however the largest change is moving many text strings into string resources so that internationalization is better.

@@ -95,7 +95,7 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
             mTaskFragment = new dlFragment();
             fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
             mRunning = true;
-            mTaskFragment.start(doOCI, doMLS, OpenCellId_API, MCCfilter, MNCfilter);
+            mTaskFragment.start(doOCI, doMLS, OpenCellId_API, MCCfilter, MNCfilter, this);
         }
     }
 
