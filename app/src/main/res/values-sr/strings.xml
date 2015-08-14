@@ -40,30 +40,30 @@
     <string name="okay_string">У реду</string>
     <string name="cancel_string">Одустани</string>
 
-    <string name="log_MCC_FILTER">MCC filter:</string>
-    <string name="log_MCC_WORLD">No MCC Filters, assume all countries</string>
-    <string name="log_MNC_FILTER">MNC Filter:</string>
-    <string name="log_MNC_WORLD">No MNC Filters, assume all networks</string>
-    <string name="log_GETTING_OCID">Getting Tower Data From Open Cell ID. . .</string>
-    <string name="log_GETTING_MOZ">Getting Tower Data From Mozilla Location Services. . .</string>
-    <string name="log_URL">URL is</string>
-    <string name="log_CONT_LENGTH">Content length =</string>
-    <string name="log_REC_READ">Records Read:</string>
-    <string name="log_REC_INSERTED">Inserted:</string>
-    <string name="log_INDICIES">Creating indicies for faster access.</string>
-    <string name="log_CLEANING">Cleaning up temp files.</string>
-    <string name="log_TOT_TIME">Total Time:</string>
+    <string name="log_MCC_FILTER">МЦЦ филтер:</string>
+    <string name="log_MCC_WORLD">Без МЦЦ филтера, претпостављам све државе</string>
+    <string name="log_MNC_FILTER">МНЦ филтер:</string>
+    <string name="log_MNC_WORLD">Без МНЦ филтера, претпостављам све мреже</string>
+    <string name="log_GETTING_OCID">Добављам податке о базним станицама са OpenCell ID. . .</string>
+    <string name="log_GETTING_MOZ">Добављам податке о базним станицама са Мозилиних услуга лоцирања. . .</string>
+    <string name="log_URL">УРЛ је</string>
+    <string name="log_CONT_LENGTH">Дужина садржаја =</string>
+    <string name="log_REC_READ">Уноса прочитано:</string>
+    <string name="log_REC_INSERTED">Уметнуто:</string>
+    <string name="log_INDICIES">Стварам индексе за бржи приступ.</string>
+    <string name="log_CLEANING">Чистим привремене фајлове.</string>
+    <string name="log_TOT_TIME">Укупно време:</string>
     <string name="log_MILLISEC">ms</string>
-    <string name="log_MILLISEC_PER_REC">ms/record</string>
-    <string name="log_FINISHED">Finished.</string>
-    <string name="log_TOTAL_TIME">Total Time:</string>
-    <string name="log_ABORTED">Aborted by state change, state=</string>
+    <string name="log_MILLISEC_PER_REC">ms/унос</string>
+    <string name="log_FINISHED">Завршено.</string>
+    <string name="log_TOTAL_TIME">Укупно време:</string>
+    <string name="log_ABORTED">Прекинуто променом стања, стање =</string>
 
-    <string name="st_RUNNING">RUNNING</string>
-    <string name="st_CANCELED">CANCELED</string>
-    <string name="st_FAILED">FAILED</string>
-    <string name="st_SUCCESS">SUCCESS</string>
-    <string name="st_UNKNOWN">UNKNOWN</string>
+    <string name="st_RUNNING">ПОКРЕНУТО</string>
+    <string name="st_CANCELED">ОТКАЗАНО</string>
+    <string name="st_FAILED">НЕУСПЕХ</string>
+    <string name="st_SUCCESS">УСПЕХ</string>
+    <string name="st_UNKNOWN">НЕПОЗНАТО</string>
 
 </resources>
 
