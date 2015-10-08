@@ -1,5 +1,7 @@
 package org.fitchfamily.android.gsmlocation;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -7,9 +9,7 @@ import java.util.List;
 import android.location.Location;
 import android.os.Bundle;
 import android.telephony.CellIdentityGsm;
-import android.telephony.CellIdentityWcdma;
 import android.telephony.CellInfoGsm;
-import android.telephony.CellInfoWcdma;
 import android.telephony.CellLocation;
 import android.telephony.gsm.GsmCellLocation;
 import android.telephony.NeighboringCellInfo;
@@ -19,6 +19,98 @@ import android.util.Log;
 import org.microg.nlp.api.LocationHelper;
 
 class telephonyHelper {
+
+    /* Reflection-based shims to use CellInfoWcdma and stay compatible with API level 17 */
+    private static class CellIdentityWcdma {
+        private static Class<?> mCls;
+        private static Method mGetCid;
+        private static Method mGetLac;
+        private static Method mGetMcc;
+        private static Method mGetMnc;
+        private static Method mGetPsc;
+        static {
+            try {
+                mCls = Class.forName("android.telephony.CellIdentityWcdma");
+                mGetCid = mCls.getMethod("getCid");
+                mGetLac = mCls.getMethod("getLac");
+                mGetMcc = mCls.getMethod("getMcc");
+                mGetMnc = mCls.getMethod("getMnc");
+                mGetPsc = mCls.getMethod("getPsc");
+            } catch (final ClassNotFoundException e) {
+            } catch (final NoSuchMethodException e) {
+            }
+        }
+        private final Object mObj;
+        public CellIdentityWcdma(final Object obj) {
+            mObj = obj;
+        }
+        public int getCid() throws IllegalAccessException, InvocationTargetException {
+            return ((Integer)mGetCid.invoke(mObj)).intValue();
+        }
+        public int getLac() throws IllegalAccessException, InvocationTargetException {
+            return ((Integer)mGetLac.invoke(mObj)).intValue();
+        }
+        public int getMcc() throws IllegalAccessException, InvocationTargetException {
+            return ((Integer)mGetMcc.invoke(mObj)).intValue();
+        }
+        public int getMnc() throws IllegalAccessException, InvocationTargetException {
+            return ((Integer)mGetMnc.invoke(mObj)).intValue();
+        }
+        public int getPsc() throws IllegalAccessException, InvocationTargetException {
+            return ((Integer)mGetPsc.invoke(mObj)).intValue();
+        }
+    }
+
+    private static class CellSignalStrengthWcdma {
+        private static Class<?> mCls;
+        private static Method mGetAsuLevel;
+        static {
+            try {
+                mCls = Class.forName("android.telephony.CellSignalStrengthWcdma");
+                mGetAsuLevel = mCls.getMethod("getAsuLevel");
+            } catch (final ClassNotFoundException e) {
+            } catch (final NoSuchMethodException e) {
+            }
+        }
+        private final Object mObj;
+        public CellSignalStrengthWcdma(final Object obj) {
+            mObj = obj;
+        }
+        public int getAsuLevel() throws IllegalAccessException, InvocationTargetException {
+            return ((Integer)mGetAsuLevel.invoke(mObj)).intValue();
+        }
+    }
+
+    private static class CellInfoWcdma {
+        private static Class<?> mCls;
+        private static Method mGetCellIdentity;
+        private static Method mGetCellSignalStrength;
+        static {
+            try {
+                mCls = Class.forName("android.telephony.CellInfoWcdma");
+                mGetCellIdentity = mCls.getMethod("getCellIdentity");
+                mGetCellSignalStrength = mCls.getMethod("getCellSignalStrength");
+            } catch (final ClassNotFoundException e) {
+            } catch (final NoSuchMethodException e) {
+            }
+        }
+        private final Object mObj;
+        public CellInfoWcdma(final Object obj) {
+            mObj = obj;
+        }
+        public static boolean isInstance(final Object obj) {
+            return null != mCls && mCls.isInstance(obj);
+        }
+        public CellIdentityWcdma getCellIdentity()
+                throws IllegalAccessException, InvocationTargetException {
+            return new CellIdentityWcdma(mGetCellIdentity.invoke(mObj));
+        }
+        public CellSignalStrengthWcdma getCellSignalStrength()
+                throws IllegalAccessException, InvocationTargetException {
+            return new CellSignalStrengthWcdma(mGetCellSignalStrength.invoke(mObj));
+        }
+    }
+
     private String TAG = appConstants.TAG_PREFIX + "telephonyHelper";
     private static boolean DEBUG = appConstants.DEBUG;
 
@@ -57,10 +149,18 @@ class telephonyHelper {
                 CellInfoGsm gsm = (CellInfoGsm) inputCellInfo;
                 CellIdentityGsm id = gsm.getCellIdentity();
                 cellLocation = db.query(id.getMcc(), id.getMnc(), id.getCid(), id.getLac());
-            } else if (inputCellInfo instanceof CellInfoWcdma) {
-                CellInfoWcdma wcdma = (CellInfoWcdma) inputCellInfo;
-                CellIdentityWcdma id = wcdma.getCellIdentity();
-                cellLocation = db.query(id.getMcc(), id.getMnc(), id.getCid(), id.getLac());
+            } else if (CellInfoWcdma.isInstance(inputCellInfo)) {
+                try {
+                    CellInfoWcdma wcdma = new CellInfoWcdma(inputCellInfo);
+                    CellIdentityWcdma id = wcdma.getCellIdentity();
+                    cellLocation = db.query(id.getMcc(), id.getMnc(), id.getCid(), id.getLac());
+                } catch(IllegalAccessException e) {
+                    if (DEBUG)
+                        Log.d(TAG, "getAllCellInfoWrapper(), Wcdma: " + e.toString());
+                } catch(InvocationTargetException e) {
+                    if (DEBUG)
+                        Log.d(TAG, "getAllCellInfoWrapper(), Wcdma: " + e.toString());
+                }
             }
 
             if ((cellLocation != null)) {

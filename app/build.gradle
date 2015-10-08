@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 18
+    compileSdkVersion 17
     buildToolsVersion "22.0.1"
 
     defaultConfig {
         applicationId "org.fitchfamily.android.gsmlocation"
-        minSdkVersion 18
-        targetSdkVersion 18
+        minSdkVersion 17
+        targetSdkVersion 17
     }
 
     buildTypes {
