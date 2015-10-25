@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Vector;
 import java.io.InputStream;
 
+import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
+
 public class csvParser {
-    protected String TAG = appConstants.TAG_PREFIX+"csvParser";
-    private static boolean DEBUG = appConstants.DEBUG;
+    private static final String TAG = makeLogTag(csvParser.class);
+    private static final boolean DEBUG = appConstants.DEBUG;
 
     private InputStream r = null;
 

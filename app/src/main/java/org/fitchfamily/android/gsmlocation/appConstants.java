@@ -4,10 +4,7 @@ import java.io.File;
 import android.os.Environment;
 
 class appConstants {
-
-    // Logging related values
-    public static final String TAG_PREFIX = "gsm-backend-";
-    public static boolean DEBUG = false;
+    public static final boolean DEBUG = false;
 
     // Location of database
     public static final String DB_NAME = "lacells.db";

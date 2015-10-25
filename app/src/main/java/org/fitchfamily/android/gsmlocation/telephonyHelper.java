@@ -18,7 +18,11 @@ import android.util.Log;
 
 import org.microg.nlp.api.LocationHelper;
 
+import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
+
 class telephonyHelper {
+    private static final String TAG = makeLogTag(telephonyHelper.class);
+    private static final boolean DEBUG = appConstants.DEBUG;
 
     /* Reflection-based shims to use CellInfoWcdma and stay compatible with API level 17 */
     private static class CellIdentityWcdma {
@@ -110,9 +114,6 @@ class telephonyHelper {
             return new CellSignalStrengthWcdma(mGetCellSignalStrength.invoke(mObj));
         }
     }
-
-    private String TAG = appConstants.TAG_PREFIX + "telephonyHelper";
-    private static boolean DEBUG = appConstants.DEBUG;
 
     private TelephonyManager tm;
     private CellLocationFile db = new CellLocationFile();

@@ -9,14 +9,16 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
+
 /**
  * MainActivity displays the screen's UI and starts a dlFragment which will
  * execute an asynchronous task and will retain itself when configuration
  * changes occur.
  */
 public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
-    private static String TAG = appConstants.TAG_PREFIX+"dlActivity";
-    private static boolean DEBUG = appConstants.DEBUG;
+    private static final String TAG = makeLogTag(dlActivity.class);
+    private static final boolean DEBUG = appConstants.DEBUG;
 
     private static final String KEY_CURRENT_PROGRESS = "current_progress";
     private static final String KEY_LOG_PROGRESS = "log_progress";

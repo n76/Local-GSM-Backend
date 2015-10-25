@@ -13,13 +13,14 @@ import android.util.Log;
 
 import org.microg.nlp.api.LocationBackendService;
 
+import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
+
 public class GSMService extends LocationBackendService {
+    private static final String TAG = makeLogTag("service");
+    private static final boolean DEBUG = appConstants.DEBUG;
 
     private TelephonyManager tm;
     private telephonyHelper th;
-
-    protected String TAG = appConstants.TAG_PREFIX+"service";
-    private static boolean DEBUG = appConstants.DEBUG;
 
     protected Thread worker = null;
 

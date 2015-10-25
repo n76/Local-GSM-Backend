@@ -12,7 +12,11 @@ import android.util.LruCache;
 
 import org.microg.nlp.api.LocationHelper;
 
+import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
+
 class CellLocationFile {
+    private static final String TAG = makeLogTag("database");
+    private static final boolean DEBUG = appConstants.DEBUG;
 
     private static final String TABLE_CELLS = "cells";
     private static final String COL_LATITUDE = "latitude";
@@ -25,9 +29,6 @@ class CellLocationFile {
     private static final String COL_CID = "cid";
     private static File file;
     private SQLiteDatabase database;
-
-    protected String TAG = appConstants.TAG_PREFIX+"database";
-    private static boolean DEBUG = appConstants.DEBUG;
 
     /**
      * Used internally for caching. HashMap compatible entity class.

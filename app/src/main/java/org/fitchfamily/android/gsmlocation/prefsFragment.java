@@ -20,10 +20,12 @@ import android.widget.Toast;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-public class prefsFragment extends PreferenceFragment {
+import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
-    protected String TAG = appConstants.TAG_PREFIX + "settings";
-    private static boolean DEBUG = appConstants.DEBUG;
+public class prefsFragment extends PreferenceFragment {
+    private static final String TAG = makeLogTag(prefsFragment.class);
+    private static final boolean DEBUG = appConstants.DEBUG;
+
     private Context mContext;
 
     @Override

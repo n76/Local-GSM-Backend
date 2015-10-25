@@ -26,6 +26,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
+
 /*
  * TaskFragment manages a single background task and retains itself across
  * configuration changes.
@@ -40,8 +42,8 @@ import android.util.Log;
  * and then move the old file to backup and the new file to active.
  */
 public class dlFragment extends Fragment {
-    private static String TAG = appConstants.TAG_PREFIX + "dlFragment";
-    private static boolean DEBUG = appConstants.DEBUG;
+    private static final String TAG = makeLogTag(dlFragment.class);
+    private static final boolean DEBUG = appConstants.DEBUG;
 
     /**
      * Callback interface through which the fragment can report the task's

@@ -10,10 +10,11 @@ import android.util.Log;
 import android.view.View;
 import android.content.Intent;
 
-public class settings extends Activity {
+import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
-    protected String TAG = appConstants.TAG_PREFIX + "settings";
-    private static boolean DEBUG = appConstants.DEBUG;
+public class settings extends Activity {
+    private static final String TAG = makeLogTag(settings.class);
+    private static final boolean DEBUG = appConstants.DEBUG;
 
     private boolean oci_preference;
     private boolean mls_preference;
