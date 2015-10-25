@@ -1,7 +1,5 @@
 package org.fitchfamily.android.gsmlocation;
 
-import java.util.List;
-
 import android.content.Context;
 import android.location.Location;
 import android.os.Looper;
@@ -13,13 +11,16 @@ import android.util.Log;
 
 import org.microg.nlp.api.LocationBackendService;
 
-public class GSMService extends LocationBackendService {
+import java.util.List;
+
+import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
+
+public class GsmService extends LocationBackendService {
+    private static final String TAG = makeLogTag("service");
+    private static final boolean DEBUG = Config.DEBUG;
 
     private TelephonyManager tm;
-    private telephonyHelper th;
-
-    protected String TAG = appConstants.TAG_PREFIX+"service";
-    private static boolean DEBUG = appConstants.DEBUG;
+    private TelephonyHelper th;
 
     protected Thread worker = null;
 
@@ -35,7 +36,7 @@ public class GSMService extends LocationBackendService {
 
         final Context ctx = getApplicationContext();
         tm = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        th = new telephonyHelper(tm);
+        th = new TelephonyHelper(tm);
 
         try {
             if (worker != null && worker.isAlive()) worker.interrupt();

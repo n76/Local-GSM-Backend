@@ -5,7 +5,6 @@
 
     <!-- Strings for settings -->
     <string name="data_sources">Извори података</string>
-    <string name="use_oci">OpenCellID</string>
     <string name="use_mls">Мозилине услуге лоцирања</string>
 
     <string name="dl_data">Преузми податке о базним станицама</string>
@@ -23,7 +22,6 @@
     <string name="mnc_default">1,2,3,4,5,7,10,12,90</string>
     <string name="mnc_filter_description">Списак кôдова мобилних мрежа (MNC) за коришћење, одвојених зарезом. Погледајте http://en.wikipedia.org/wiki/Mobile_country_code</string>
 
-    <string name="opencellid_api_get_key">http://opencellid.org/gsmCell/user/generateApiKey</string>
     <string name="request_new_api_key">Захтевај нови АПИ кључ</string>
     <string name="new_key_saved">Нови АПИ кључ сачуван!</string>
     <string name="one_request_per_24h">Можете да захтевате један нови АПИ кључ свака 24 сата. Покушајте поново касније.</string>
@@ -35,10 +33,6 @@
 
     <string name="no_api_key">Изабран OpenCellId за извор података али није наведен АПИ кључ. Да наставим без коришћења OpenCellId података?</string>
     <string name="no_data_requested">Ниједан извор података није изабран. Немам шта да радим.</string>
-    <string name="no_string">Не</string>
-    <string name="yes_string">Да</string>
-    <string name="okay_string">У реду</string>
-    <string name="cancel_string">Одустани</string>
 
     <string name="log_MCC_FILTER">МЦЦ филтер:</string>
     <string name="log_MCC_WORLD">Без МЦЦ филтера, претпостављам све државе</string>

@@ -1,13 +1,11 @@
 package org.fitchfamily.android.gsmlocation;
 
-import java.io.File;
 import android.os.Environment;
 
-class appConstants {
+import java.io.File;
 
-    // Logging related values
-    public static final String TAG_PREFIX = "gsm-backend-";
-    public static boolean DEBUG = false;
+public class Config {
+    public static final boolean DEBUG = false;
 
     // Location of database
     public static final String DB_NAME = "lacells.db";
@@ -25,13 +23,14 @@ class appConstants {
     // Strings for building URLs
     // Open Cell ID uses:
     // "http://opencellid.org/downloads/?apiKey=${API_KEY}&filename=cell_towers.csv.gz"
-    public static final String OCI_URL_PREFIX = "http://opencellid.org/downloads/?apiKey=";
-    public static final String OCI_URL_SUFFIX = "&filename=cell_towers.csv.gz";
+    public static final String OCI_URL_FMT = "http://opencellid.org/downloads/?apiKey=%s&filename=cell_towers.csv.gz";
+
+    // URL for requesting new OpenCellID API key
+    public static final String OCI_API_GET_KEY_URL = "http://opencellid.org/gsmCell/user/generateApiKey";
 
     // Mozilla Location Services uses:
     // "https://d17pt8qph6ncyq.cloudfront.net/export/MLS-full-cell-export-${NOW}T000000.csv.gz"
-    public static final String MLS_URL_PREFIX = "https://d17pt8qph6ncyq.cloudfront.net/export/MLS-full-cell-export-";
-    public static final String MLS_URL_SUFFIX = "T000000.csv.gz";
+    public static final String MLS_URL_FMT = "https://d17pt8qph6ncyq.cloudfront.net/export/MLS-full-cell-export-%sT000000.csv.gz";
 
     public static final int MIN_RANGE = 500;
     public static final int MAX_RANGE = 100000;

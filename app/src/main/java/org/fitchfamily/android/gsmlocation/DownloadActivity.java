@@ -9,32 +9,27 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
+
 /**
- * MainActivity displays the screen's UI and starts a dlFragment which will
+ * MainActivity displays the screen's UI and starts DownloadTaskFragment which will
  * execute an asynchronous task and will retain itself when configuration
  * changes occur.
  */
-public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
-    private static String TAG = appConstants.TAG_PREFIX+"dlActivity";
-    private static boolean DEBUG = appConstants.DEBUG;
+public class DownloadActivity extends Activity implements DownloadTaskFragment.TaskCallbacks {
+    private static final String TAG = makeLogTag(DownloadActivity.class);
+    private static final boolean DEBUG = Config.DEBUG;
 
     private static final String KEY_CURRENT_PROGRESS = "current_progress";
     private static final String KEY_LOG_PROGRESS = "log_progress";
     private static final String TAG_TASK_FRAGMENT = "dl_task_fragment";
 
-    private dlFragment mTaskFragment;
+    private DownloadTaskFragment mTaskFragment;
 
 
     private Button mButton;
     private ProgressBar mProgressBar;
     private TextView mTextView;
-    private String logText;
-
-    private String OpenCellId_API;
-    private String MCCfilter;
-    private String MNCfilter;
-    private boolean doOCI;
-    private boolean doMLS;
 
     private boolean mRunning = false;
 
@@ -42,17 +37,17 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
     protected void onCreate(Bundle savedInstanceState) {
         if (DEBUG) Log.i(TAG, "onCreate(Bundle)");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.download);
+        setContentView(R.layout.activity_download);
 
-        OpenCellId_API  = getIntent().getExtras().getString("ociAPI");
-        MCCfilter       = getIntent().getExtras().getString("mccFilter");
-        MNCfilter       = getIntent().getExtras().getString("mncFilter");
-        doOCI           = getIntent().getExtras().getBoolean("doOCI");
-        doMLS           = getIntent().getExtras().getBoolean("doMLS");
+        String openCellIdAPI = getIntent().getExtras().getString("ociAPI");
+        String MCCfilter = getIntent().getExtras().getString("mccFilter");
+        String MNCfilter = getIntent().getExtras().getString("mncFilter");
+        boolean doOCI = getIntent().getExtras().getBoolean("doOCI");
+        boolean doMLS = getIntent().getExtras().getBoolean("doMLS");
         if (DEBUG) {
-            Log.d(TAG, "Use OpenCellID data = " + String.valueOf(doOCI));
-            Log.d(TAG, "Use Mozilla data = " + String.valueOf(doMLS));
-            Log.d(TAG, "OpenCellId API Key = " + OpenCellId_API);
+            Log.d(TAG, "Use OpenCellID data = " + doOCI);
+            Log.d(TAG, "Use Mozilla data = " + doMLS);
+            Log.d(TAG, "OpenCellId API Key = " + openCellIdAPI);
             Log.d(TAG, "MCC filtering = " + MCCfilter);
             Log.d(TAG, "MNC filtering = " + MNCfilter);
         }
@@ -61,8 +56,6 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
         mProgressBar=(ProgressBar) findViewById(R.id.progress);
 
         mTextView = (TextView)findViewById(R.id.logText);
-        logText = "";
-        mTextView.setText(logText);
 
         mButton = (Button) findViewById(R.id.cancel_button);
         mButton.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +71,7 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
                 }
             }
         });
-        mButton.setText(getString(R.string.cancel_string));
+        mButton.setText(getString(android.R.string.cancel));
 
         // Restore saved state.
         if (savedInstanceState != null) {
@@ -87,15 +80,15 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
         }
 
         FragmentManager fm = getFragmentManager();
-        mTaskFragment = (dlFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+        mTaskFragment = (DownloadTaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
 
         // If the Fragment is non-null, then it is being retained
         // over a configuration change.
         if (mTaskFragment == null) {
-            mTaskFragment = new dlFragment();
+            mTaskFragment = new DownloadTaskFragment();
             fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
             mRunning = true;
-            mTaskFragment.start(doOCI, doMLS, OpenCellId_API, MCCfilter, MNCfilter, this);
+            mTaskFragment.start(doOCI, doMLS, openCellIdAPI, MCCfilter, MNCfilter, this);
         }
     }
 
@@ -116,7 +109,7 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
     public void onPreExecute() {
         if (DEBUG)
             Log.i(TAG, "onPreExecute()");
-        mButton.setText(getString(R.string.cancel_string));
+        mButton.setText(getString(android.R.string.cancel));
         mRunning = true;
     }
 
@@ -130,7 +123,7 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
     public void onCancelled() {
         if (DEBUG)
             Log.i(TAG, "onCancelled()");
-        mButton.setText(getString(R.string.okay_string));
+        mButton.setText(getString(android.R.string.ok));
         mProgressBar.setProgress(0);
         mRunning = false;
     }
@@ -140,66 +133,7 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
         if (DEBUG)
             Log.i(TAG, "onPostExecute()");
         mProgressBar.setProgress(mProgressBar.getMax());
-        mButton.setText(getString(R.string.okay_string));
+        mButton.setText(getString(android.R.string.ok));
         mRunning = false;
     }
-
-    /************************/
-    /***** OPTIONS MENU *****/
-    /************************/
-/*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_trigger_config_change:
-                // Simulate a configuration change. Only available on
-                // Honeycomb and above.
-                recreate();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-*/
-
-    /************************/
-    /***** LOGS & STUFF *****/
-    /************************/
-
-    @Override
-    protected void onStart() {
-        if (DEBUG) Log.i(TAG, "onStart()");
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        if (DEBUG) Log.i(TAG, "onResume()");
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        if (DEBUG) Log.i(TAG, "onPause()");
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        if (DEBUG) Log.i(TAG, "onStop()");
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (DEBUG) Log.i(TAG, "onDestroy()");
-        super.onDestroy();
-    }
-
 }

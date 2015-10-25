@@ -1,24 +1,28 @@
 package org.fitchfamily.android.gsmlocation;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import android.location.Location;
 import android.os.Bundle;
 import android.telephony.CellIdentityGsm;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellLocation;
-import android.telephony.gsm.GsmCellLocation;
 import android.telephony.NeighboringCellInfo;
 import android.telephony.TelephonyManager;
+import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 
 import org.microg.nlp.api.LocationHelper;
 
-class telephonyHelper {
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
+
+public class TelephonyHelper {
+    private static final String TAG = makeLogTag(TelephonyHelper.class);
+    private static final boolean DEBUG = Config.DEBUG;
 
     /* Reflection-based shims to use CellInfoWcdma and stay compatible with API level 17 */
     private static class CellIdentityWcdma {
@@ -111,13 +115,10 @@ class telephonyHelper {
         }
     }
 
-    private String TAG = appConstants.TAG_PREFIX + "telephonyHelper";
-    private static boolean DEBUG = appConstants.DEBUG;
-
     private TelephonyManager tm;
-    private CellLocationFile db = new CellLocationFile();
+    private CellLocationDatabase db = new CellLocationDatabase();
 
-    public telephonyHelper(TelephonyManager teleMgr) {
+    public TelephonyHelper(TelephonyManager teleMgr) {
         tm = teleMgr;
     }
 
@@ -167,7 +168,7 @@ class telephonyHelper {
                 rslt.add(cellLocation);
             }
         }
-        if ((rslt != null) && rslt.isEmpty())
+        if (rslt.isEmpty())
             return null;
         return rslt;
     }
@@ -209,7 +210,7 @@ class telephonyHelper {
         } else {
             if (DEBUG) Log.d(TAG, "getNeighboringCellInfo() returned null or empty set.");
         }
-        if ((rslt != null) && rslt.isEmpty())
+        if (rslt.isEmpty())
             return null;
         return rslt;
     }

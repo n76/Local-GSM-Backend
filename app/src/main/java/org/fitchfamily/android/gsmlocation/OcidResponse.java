@@ -9,10 +9,10 @@ import java.io.InputStream;
 /**
  * Created by Marvin Arnold on 7/06/15.
  */
-public class OCIDResponse {
+public class OcidResponse {
     private final HttpResponse httpResponse;
 
-    public OCIDResponse(HttpResponse httpResponse) {
+    public OcidResponse(HttpResponse httpResponse) {
         this.httpResponse = httpResponse;
     }
 

@@ -44,5 +44,5 @@
         android:title="@string/db_date_label" />
     <Preference
         android:key="genButtons"
-        android:layout="@layout/settings"></Preference>
+        android:layout="@layout/settings_gen_db_button"></Preference>
 </PreferenceScreen>

@@ -1,18 +1,20 @@
 package org.fitchfamily.android.gsmlocation;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Vector;
-import java.io.InputStream;
 
-public class csvParser {
-    protected String TAG = appConstants.TAG_PREFIX+"csvParser";
-    private static boolean DEBUG = appConstants.DEBUG;
+import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
+
+public class CsvParser {
+    private static final String TAG = makeLogTag(CsvParser.class);
+    private static final boolean DEBUG = Config.DEBUG;
 
     private InputStream r = null;
 
     private int chCount = 0;
 
-    public csvParser(InputStream r) {
+    public CsvParser(InputStream r) {
         this.r = r;
     }
 
@@ -20,13 +22,13 @@ public class csvParser {
         return chCount;
     }
 
-    public List parseLine() throws Exception {
+    public List<String> parseLine() throws Exception {
         return parseLine(r);
     }
     /**
     * Returns a null when the input stream is empty
     */
-    public List parseLine(InputStream r) throws Exception {
+    public List<String> parseLine(InputStream r) throws Exception {
         int ch = r.read();
         chCount++;
         while (ch == '\r') {
@@ -36,7 +38,7 @@ public class csvParser {
         if (ch<0) {
             return null;
         }
-        Vector store = new Vector();
+        Vector<String> store = new Vector<String>();
         StringBuffer curVal = new StringBuffer();
         boolean inquotes = false;
         boolean started = false;

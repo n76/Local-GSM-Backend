@@ -3,17 +3,18 @@ package org.fitchfamily.android.gsmlocation;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.content.Intent;
 
-public class settings extends Activity {
+import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
-    protected String TAG = appConstants.TAG_PREFIX + "settings";
-    private static boolean DEBUG = appConstants.DEBUG;
+public class SettingsActivity extends Activity {
+    private static final String TAG = makeLogTag(SettingsActivity.class);
+    private static final boolean DEBUG = Config.DEBUG;
 
     private boolean oci_preference;
     private boolean mls_preference;
@@ -25,7 +26,7 @@ public class settings extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getFragmentManager().beginTransaction().replace(android.R.id.content, new prefsFragment()).commit();
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
     }
 
     public void doCheckParameters(View theButton) {
@@ -51,7 +52,7 @@ public class settings extends Activity {
             builder.setMessage(getString(R.string.no_api_key));
             builder.setCancelable(false);
 
-            builder.setPositiveButton(getString(R.string.yes_string), new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(getString(android.R.string.yes), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     Log.d(TAG, "onClick = yes, OCI = " + String.valueOf(oci_preference));
                     oci_preference = false;
@@ -60,7 +61,7 @@ public class settings extends Activity {
                 }
             });
 
-            builder.setNegativeButton(getString(R.string.no_string), new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(getString(android.R.string.no), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                 }
             });
@@ -78,7 +79,7 @@ public class settings extends Activity {
             builder.setMessage(getString(R.string.no_data_requested));
             builder.setCancelable(false);
 
-            builder.setNeutralButton(getString(R.string.okay_string),
+            builder.setNeutralButton(getString(android.R.string.ok),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                         }
@@ -105,7 +106,7 @@ public class settings extends Activity {
             Log.d(TAG, "MNC filtering = " + MncFilter);
         }
 
-        Intent myIntent = new Intent(this, dlActivity.class);
+        Intent myIntent = new Intent(this, DownloadActivity.class);
         myIntent.putExtra("doOCI", useOCI);
         myIntent.putExtra("doMLS", useMLS);
         myIntent.putExtra("ociAPI", OciKey);

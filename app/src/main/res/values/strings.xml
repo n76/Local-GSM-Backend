@@ -5,7 +5,7 @@
 
     <!-- Strings for settings -->
     <string name="data_sources">Data Sources</string>
-    <string name="use_oci">OpenCellID</string>
+    <string name="use_oci" translatable="false">OpenCellID</string>
     <string name="use_mls">Mozilla Location Services</string>
 
     <string name="dl_data">Download Cell Tower Data</string>
@@ -23,7 +23,6 @@
     <string name="mnc_default"></string>
     <string name="mnc_filter_description">Comma separated list of numeric Mobile Network Codes (MNC) to be used. See http://en.wikipedia.org/wiki/Mobile_country_code</string>
 
-    <string name="opencellid_api_get_key">http://opencellid.org/gsmCell/user/generateApiKey</string>
     <string name="request_new_api_key">Request new OpenCellID key</string>
     <string name="new_key_saved">New API key saved!</string>
     <string name="one_request_per_24h">You can request one new API key per 24 hours. Please try again later.</string>
@@ -35,16 +34,12 @@
 
     <string name="no_api_key">OpenCellId data selected but no API key given. Continue without using OpenCellId data?</string>
     <string name="no_data_requested">Neither OpenCellId data nor Mozilla Location Services data selected. Nothing to do.</string>
-    <string name="no_string">No</string>
-    <string name="yes_string">Yes</string>
-    <string name="okay_string">Okay</string>
-    <string name="cancel_string">Cancel</string>
 
     <string name="log_MCC_FILTER">MCC filter:</string>
     <string name="log_MCC_WORLD">No MCC Filters, assume all countries</string>
     <string name="log_MNC_FILTER">MNC Filter:</string>
     <string name="log_MNC_WORLD">No MNC Filters, assume all networks</string>
-    <string name="log_GETTING_OCID">Getting Tower Data From Open Cell ID. . .</string>
+    <string name="log_GETTING_OCID">Getting Tower Data From OpenCellID. . .</string>
     <string name="log_GETTING_MOZ">Getting Tower Data From Mozilla Location Services. . .</string>
     <string name="log_URL">URL is</string>
     <string name="log_CONT_LENGTH">Content length =</string>

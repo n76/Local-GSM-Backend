@@ -6,6 +6,6 @@
     <Button android:text="@string/gen_db_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:onClick="doCheckParameters" />
 </LinearLayout>
