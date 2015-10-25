@@ -3,12 +3,12 @@ package org.fitchfamily.android.gsmlocation;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.content.Intent;
 
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 

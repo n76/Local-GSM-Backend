@@ -1,11 +1,19 @@
 package org.fitchfamily.android.gsmlocation;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.IllegalStateException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -17,15 +25,6 @@ import java.util.TimeZone;
 import java.util.zip.GZIPInputStream;
 
 import javax.net.ssl.HttpsURLConnection;
-
-import android.app.Activity;
-import android.app.Fragment;
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
 
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
@@ -91,13 +90,6 @@ public class DownloadTaskFragment extends Fragment {
         setRetainInstance(true);
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) throws IllegalStateException {
-        if (DEBUG)
-            Log.i(TAG, "onCreate(Bundle)");
-        super.onActivityCreated(savedInstanceState);
-    }
-
     /**
      * Note that this method is <em>not</em> called when the Fragment is being
      * retained across Activity instances. It will, however, be called when its
@@ -137,41 +129,7 @@ public class DownloadTaskFragment extends Fragment {
      */
     public void cancel() {
         if (DEBUG) Log.i(TAG, "cancel()");
-        mTask.setState(mTask.CANCELED);
-    }
-
-    /************************/
-    /***** LOGS & STUFF *****/
-    /**
-     * ********************
-     */
-
-    @Override
-    public void onStart() {
-        if (DEBUG)
-            Log.i(TAG, "onStart()");
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        if (DEBUG)
-            Log.i(TAG, "onResume()");
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        if (DEBUG)
-            Log.i(TAG, "onPause()");
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        if (DEBUG)
-            Log.i(TAG, "onStop()");
-        super.onStop();
+        mTask.setState(DownloadDataTask.CANCELED);
     }
 
     /***************************/
@@ -355,7 +313,7 @@ public class DownloadTaskFragment extends Fragment {
 
                 if (doMLS && (getState() == RUNNING)) {
                     doLog(ctx.getString(R.string.log_GETTING_MOZ));
-                    SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                     // Mozilla publishes new CSV files at a bit after the beginning of
                     // a new day in GMT time. Get the time for a place a couple hours
                     // west of Greenwich to allow time for the data to be posted.
@@ -450,7 +408,7 @@ public class DownloadTaskFragment extends Fragment {
 
         private void getData(String mUrl) throws Exception {
             try {
-                long maxLength = 0;
+                long maxLength;
                 int totalRecords = 0;
                 int insertedRecords = 0;
 
@@ -508,7 +466,7 @@ public class DownloadTaskFragment extends Fragment {
                 SQLiteStatement stmt = database.compileStatement(sql);
                 database.beginTransaction();
 
-                List<String> rec = null;
+                List<String> rec;
                 String RecsReadStr = ctx.getString(R.string.log_REC_READ);
                 String RecsInsertedStr = ctx.getString(R.string.log_REC_INSERTED);
 
@@ -525,8 +483,8 @@ public class DownloadTaskFragment extends Fragment {
                         publishProgress(new ProgressInfo(percentComplete, l));
                     }
 
-                    int mcc = Integer.parseInt((String) rec.get(mccIndex));
-                    int mnc = Integer.parseInt((String) rec.get(mncIndex));
+                    int mcc = Integer.parseInt(rec.get(mccIndex));
+                    int mnc = Integer.parseInt(rec.get(mncIndex));
                     if ((mcc >= 0) && (mcc <= 999) && mccEnable[mcc] &&
                             (mnc >= 0) && (mnc <= 999) && mncEnable[mnc]) {
                         // Keep transaction size limited

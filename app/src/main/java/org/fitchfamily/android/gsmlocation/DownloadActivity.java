@@ -30,13 +30,6 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
     private Button mButton;
     private ProgressBar mProgressBar;
     private TextView mTextView;
-    private String logText;
-
-    private String OpenCellId_API;
-    private String MCCfilter;
-    private String MNCfilter;
-    private boolean doOCI;
-    private boolean doMLS;
 
     private boolean mRunning = false;
 
@@ -46,15 +39,15 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download);
 
-        OpenCellId_API  = getIntent().getExtras().getString("ociAPI");
-        MCCfilter       = getIntent().getExtras().getString("mccFilter");
-        MNCfilter       = getIntent().getExtras().getString("mncFilter");
-        doOCI           = getIntent().getExtras().getBoolean("doOCI");
-        doMLS           = getIntent().getExtras().getBoolean("doMLS");
+        String openCellIdAPI = getIntent().getExtras().getString("ociAPI");
+        String MCCfilter = getIntent().getExtras().getString("mccFilter");
+        String MNCfilter = getIntent().getExtras().getString("mncFilter");
+        boolean doOCI = getIntent().getExtras().getBoolean("doOCI");
+        boolean doMLS = getIntent().getExtras().getBoolean("doMLS");
         if (DEBUG) {
-            Log.d(TAG, "Use OpenCellID data = " + String.valueOf(doOCI));
-            Log.d(TAG, "Use Mozilla data = " + String.valueOf(doMLS));
-            Log.d(TAG, "OpenCellId API Key = " + OpenCellId_API);
+            Log.d(TAG, "Use OpenCellID data = " + doOCI);
+            Log.d(TAG, "Use Mozilla data = " + doMLS);
+            Log.d(TAG, "OpenCellId API Key = " + openCellIdAPI);
             Log.d(TAG, "MCC filtering = " + MCCfilter);
             Log.d(TAG, "MNC filtering = " + MNCfilter);
         }
@@ -63,8 +56,6 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
         mProgressBar=(ProgressBar) findViewById(R.id.progress);
 
         mTextView = (TextView)findViewById(R.id.logText);
-        logText = "";
-        mTextView.setText(logText);
 
         mButton = (Button) findViewById(R.id.cancel_button);
         mButton.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +88,7 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
             mTaskFragment = new DownloadTaskFragment();
             fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
             mRunning = true;
-            mTaskFragment.start(doOCI, doMLS, OpenCellId_API, MCCfilter, MNCfilter, this);
+            mTaskFragment.start(doOCI, doMLS, openCellIdAPI, MCCfilter, MNCfilter, this);
         }
     }
 
@@ -145,63 +136,4 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
         mButton.setText(getString(android.R.string.ok));
         mRunning = false;
     }
-
-    /************************/
-    /***** OPTIONS MENU *****/
-    /************************/
-/*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_trigger_config_change:
-                // Simulate a configuration change. Only available on
-                // Honeycomb and above.
-                recreate();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-*/
-
-    /************************/
-    /***** LOGS & STUFF *****/
-    /************************/
-
-    @Override
-    protected void onStart() {
-        if (DEBUG) Log.i(TAG, "onStart()");
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        if (DEBUG) Log.i(TAG, "onResume()");
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        if (DEBUG) Log.i(TAG, "onPause()");
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        if (DEBUG) Log.i(TAG, "onStop()");
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (DEBUG) Log.i(TAG, "onDestroy()");
-        super.onDestroy();
-    }
-
 }

@@ -1,9 +1,5 @@
 package org.fitchfamily.android.gsmlocation;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -19,6 +15,10 @@ import android.widget.Toast;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
@@ -203,8 +203,7 @@ public class SettingsFragment extends PreferenceFragment {
                 result = new OcidResponse(httpclient.execute(httpGet));
 
                 if (result.getStatusCode() == 200) {
-                    String responseFromServer = result.getResponseFromServer();
-                    return responseFromServer;
+                    return result.getResponseFromServer();
                 } else if (result.getStatusCode() == 503) {
                     // Check for HTTP error code 503 which is returned when user is trying to request
                     String responseFromServer = result.getResponseFromServer();
@@ -226,7 +225,7 @@ public class SettingsFragment extends PreferenceFragment {
                 Log.i(TAG, "New key is valid");
                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
                 EditTextPreference ociKeyPreference = (EditTextPreference) findPreference("oci_key_preference");
-                sp.edit().putString("oci_key_preference", newKey).commit();
+                sp.edit().putString("oci_key_preference", newKey).apply();
                 ociKeyPreference.setSummary(newKey); //refresh summary
                 Toast.makeText(mContext, mContext.getString(R.string.new_key_saved), Toast.LENGTH_SHORT).show();
             } else {

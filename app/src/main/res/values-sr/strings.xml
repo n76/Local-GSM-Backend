@@ -5,7 +5,6 @@
 
     <!-- Strings for settings -->
     <string name="data_sources">Извори података</string>
-    <string name="use_oci">OpenCellID</string>
     <string name="use_mls">Мозилине услуге лоцирања</string>
 
     <string name="dl_data">Преузми податке о базним станицама</string>

@@ -10,8 +10,6 @@
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             />
     <FrameLayout
@@ -20,8 +18,7 @@
 
         <TextView android:id="@+id/logText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:layout_height="wrap_content" />
         <Button
                 android:id="@+id/cancel_button"
                 android:text="@android:string/cancel"

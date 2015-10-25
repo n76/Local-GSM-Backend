@@ -1,26 +1,26 @@
 package org.fitchfamily.android.gsmlocation;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import android.location.Location;
 import android.os.Bundle;
 import android.telephony.CellIdentityGsm;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellLocation;
-import android.telephony.gsm.GsmCellLocation;
 import android.telephony.NeighboringCellInfo;
 import android.telephony.TelephonyManager;
+import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 
 import org.microg.nlp.api.LocationHelper;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
-class TelephonyHelper {
+public class TelephonyHelper {
     private static final String TAG = makeLogTag(TelephonyHelper.class);
     private static final boolean DEBUG = Config.DEBUG;
 
@@ -168,7 +168,7 @@ class TelephonyHelper {
                 rslt.add(cellLocation);
             }
         }
-        if ((rslt != null) && rslt.isEmpty())
+        if (rslt.isEmpty())
             return null;
         return rslt;
     }
@@ -210,7 +210,7 @@ class TelephonyHelper {
         } else {
             if (DEBUG) Log.d(TAG, "getNeighboringCellInfo() returned null or empty set.");
         }
-        if ((rslt != null) && rslt.isEmpty())
+        if (rslt.isEmpty())
             return null;
         return rslt;
     }

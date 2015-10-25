@@ -1,8 +1,5 @@
 package org.fitchfamily.android.gsmlocation;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
@@ -12,9 +9,12 @@ import android.util.LruCache;
 
 import org.microg.nlp.api.LocationHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
-class CellLocationDatabase {
+public class CellLocationDatabase {
     private static final String TAG = makeLogTag("database");
     private static final boolean DEBUG = Config.DEBUG;
 
@@ -27,7 +27,6 @@ class CellLocationDatabase {
     private static final String COL_MNC = "mnc";
     private static final String COL_LAC = "lac";
     private static final String COL_CID = "cid";
-    private static File file;
     private SQLiteDatabase database;
 
     /**
@@ -112,10 +111,8 @@ class CellLocationDatabase {
             if (DEBUG)
                 Log.d(TAG, "Attempting to open database.");
 
-            this.file = Config.DB_FILE;
-
-            if (file.exists() && file.canRead()) {
-                database = SQLiteDatabase.openDatabase(file.getAbsolutePath(),
+            if (Config.DB_FILE.exists() && Config.DB_FILE.canRead()) {
+                database = SQLiteDatabase.openDatabase(Config.DB_FILE.getAbsolutePath(),
                                                        null,
                                                        SQLiteDatabase.NO_LOCALIZED_COLLATORS);
             } else {
@@ -134,7 +131,7 @@ class CellLocationDatabase {
         QueryArgs args = new QueryArgs(mcc, mnc, cid, lac);
         Boolean negative = queryResultNegativeCache.get(args);
 
-        if (negative != null && negative.booleanValue())
+        if (negative != null && negative)
             return null;
 
         Location cached = queryResultCache.get(args);

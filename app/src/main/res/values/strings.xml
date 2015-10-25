@@ -5,7 +5,7 @@
 
     <!-- Strings for settings -->
     <string name="data_sources">Data Sources</string>
-    <string name="use_oci">OpenCellID</string>
+    <string name="use_oci" translatable="false">OpenCellID</string>
     <string name="use_mls">Mozilla Location Services</string>
 
     <string name="dl_data">Download Cell Tower Data</string>
@@ -39,7 +39,7 @@
     <string name="log_MCC_WORLD">No MCC Filters, assume all countries</string>
     <string name="log_MNC_FILTER">MNC Filter:</string>
     <string name="log_MNC_WORLD">No MNC Filters, assume all networks</string>
-    <string name="log_GETTING_OCID">Getting Tower Data From Open Cell ID. . .</string>
+    <string name="log_GETTING_OCID">Getting Tower Data From OpenCellID. . .</string>
     <string name="log_GETTING_MOZ">Getting Tower Data From Mozilla Location Services. . .</string>
     <string name="log_URL">URL is</string>
     <string name="log_CONT_LENGTH">Content length =</string>

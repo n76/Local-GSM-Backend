@@ -1,7 +1,5 @@
 package org.fitchfamily.android.gsmlocation;
 
-import java.util.List;
-
 import android.content.Context;
 import android.location.Location;
 import android.os.Looper;
@@ -12,6 +10,8 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import org.microg.nlp.api.LocationBackendService;
+
+import java.util.List;
 
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
