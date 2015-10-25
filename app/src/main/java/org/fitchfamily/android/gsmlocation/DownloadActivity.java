@@ -44,7 +44,7 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
     protected void onCreate(Bundle savedInstanceState) {
         if (DEBUG) Log.i(TAG, "onCreate(Bundle)");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.download);
+        setContentView(R.layout.activity_download);
 
         OpenCellId_API  = getIntent().getExtras().getString("ociAPI");
         MCCfilter       = getIntent().getExtras().getString("mccFilter");
