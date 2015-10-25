@@ -15,12 +15,12 @@ import org.microg.nlp.api.LocationBackendService;
 
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
-public class GSMService extends LocationBackendService {
+public class GsmService extends LocationBackendService {
     private static final String TAG = makeLogTag("service");
-    private static final boolean DEBUG = appConstants.DEBUG;
+    private static final boolean DEBUG = Config.DEBUG;
 
     private TelephonyManager tm;
-    private telephonyHelper th;
+    private TelephonyHelper th;
 
     protected Thread worker = null;
 
@@ -36,7 +36,7 @@ public class GSMService extends LocationBackendService {
 
         final Context ctx = getApplicationContext();
         tm = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        th = new telephonyHelper(tm);
+        th = new TelephonyHelper(tm);
 
         try {
             if (worker != null && worker.isAlive()) worker.interrupt();

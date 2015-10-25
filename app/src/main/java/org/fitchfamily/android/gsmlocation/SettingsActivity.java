@@ -12,9 +12,9 @@ import android.content.Intent;
 
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
-public class settings extends Activity {
-    private static final String TAG = makeLogTag(settings.class);
-    private static final boolean DEBUG = appConstants.DEBUG;
+public class SettingsActivity extends Activity {
+    private static final String TAG = makeLogTag(SettingsActivity.class);
+    private static final boolean DEBUG = Config.DEBUG;
 
     private boolean oci_preference;
     private boolean mls_preference;
@@ -26,7 +26,7 @@ public class settings extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getFragmentManager().beginTransaction().replace(android.R.id.content, new prefsFragment()).commit();
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
     }
 
     public void doCheckParameters(View theButton) {
@@ -106,7 +106,7 @@ public class settings extends Activity {
             Log.d(TAG, "MNC filtering = " + MncFilter);
         }
 
-        Intent myIntent = new Intent(this, dlActivity.class);
+        Intent myIntent = new Intent(this, DownloadActivity.class);
         myIntent.putExtra("doOCI", useOCI);
         myIntent.putExtra("doMLS", useMLS);
         myIntent.putExtra("ociAPI", OciKey);

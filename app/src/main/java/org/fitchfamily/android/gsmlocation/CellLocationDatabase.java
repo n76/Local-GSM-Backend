@@ -14,9 +14,9 @@ import org.microg.nlp.api.LocationHelper;
 
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
-class CellLocationFile {
+class CellLocationDatabase {
     private static final String TAG = makeLogTag("database");
-    private static final boolean DEBUG = appConstants.DEBUG;
+    private static final boolean DEBUG = Config.DEBUG;
 
     private static final String TABLE_CELLS = "cells";
     private static final String COL_LATITUDE = "latitude";
@@ -92,7 +92,7 @@ class CellLocationFile {
 
 
     public void checkForNewDatabase() {
-        if (appConstants.DB_NEW_FILE.exists() && appConstants.DB_NEW_FILE.canRead()) {
+        if (Config.DB_NEW_FILE.exists() && Config.DB_NEW_FILE.canRead()) {
             if (DEBUG)
                 Log.d(TAG, "New database file detected.");
             if (database != null)
@@ -102,8 +102,8 @@ class CellLocationFile {
             queryResultCache = new LruCache<QueryArgs, Location>(10000);
             queryResultNegativeCache = new LruCache<QueryArgs, Boolean>(10000);
 
-            appConstants.DB_FILE.renameTo(appConstants.DB_BAK_FILE);
-            appConstants.DB_NEW_FILE.renameTo(appConstants.DB_FILE);
+            Config.DB_FILE.renameTo(Config.DB_BAK_FILE);
+            Config.DB_NEW_FILE.renameTo(Config.DB_FILE);
         }
     }
 
@@ -112,14 +112,14 @@ class CellLocationFile {
             if (DEBUG)
                 Log.d(TAG, "Attempting to open database.");
 
-            this.file = appConstants.DB_FILE;
+            this.file = Config.DB_FILE;
 
             if (file.exists() && file.canRead()) {
                 database = SQLiteDatabase.openDatabase(file.getAbsolutePath(),
                                                        null,
                                                        SQLiteDatabase.NO_LOCALIZED_COLLATORS);
             } else {
-                Log.i(TAG, "Unable to open database "+appConstants.DB_FILE);
+                Log.i(TAG, "Unable to open database "+ Config.DB_FILE);
                 database = null;
             }
         }

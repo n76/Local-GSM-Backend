@@ -6,15 +6,15 @@ import java.io.InputStream;
 
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
-public class csvParser {
-    private static final String TAG = makeLogTag(csvParser.class);
-    private static final boolean DEBUG = appConstants.DEBUG;
+public class CsvParser {
+    private static final String TAG = makeLogTag(CsvParser.class);
+    private static final boolean DEBUG = Config.DEBUG;
 
     private InputStream r = null;
 
     private int chCount = 0;
 
-    public csvParser(InputStream r) {
+    public CsvParser(InputStream r) {
         this.r = r;
     }
 

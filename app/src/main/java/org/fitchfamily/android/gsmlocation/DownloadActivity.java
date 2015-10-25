@@ -12,19 +12,19 @@ import android.widget.TextView;
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
 /**
- * MainActivity displays the screen's UI and starts a dlFragment which will
+ * MainActivity displays the screen's UI and starts DownloadTaskFragment which will
  * execute an asynchronous task and will retain itself when configuration
  * changes occur.
  */
-public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
-    private static final String TAG = makeLogTag(dlActivity.class);
-    private static final boolean DEBUG = appConstants.DEBUG;
+public class DownloadActivity extends Activity implements DownloadTaskFragment.TaskCallbacks {
+    private static final String TAG = makeLogTag(DownloadActivity.class);
+    private static final boolean DEBUG = Config.DEBUG;
 
     private static final String KEY_CURRENT_PROGRESS = "current_progress";
     private static final String KEY_LOG_PROGRESS = "log_progress";
     private static final String TAG_TASK_FRAGMENT = "dl_task_fragment";
 
-    private dlFragment mTaskFragment;
+    private DownloadTaskFragment mTaskFragment;
 
 
     private Button mButton;
@@ -89,12 +89,12 @@ public class dlActivity extends Activity implements dlFragment.TaskCallbacks {
         }
 
         FragmentManager fm = getFragmentManager();
-        mTaskFragment = (dlFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+        mTaskFragment = (DownloadTaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
 
         // If the Fragment is non-null, then it is being retained
         // over a configuration change.
         if (mTaskFragment == null) {
-            mTaskFragment = new dlFragment();
+            mTaskFragment = new DownloadTaskFragment();
             fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
             mRunning = true;
             mTaskFragment.start(doOCI, doMLS, OpenCellId_API, MCCfilter, MNCfilter, this);

@@ -3,7 +3,7 @@ package org.fitchfamily.android.gsmlocation;
 import java.io.File;
 import android.os.Environment;
 
-class appConstants {
+class Config {
     public static final boolean DEBUG = false;
 
     // Location of database

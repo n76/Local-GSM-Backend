@@ -20,9 +20,9 @@ import org.microg.nlp.api.LocationHelper;
 
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
-class telephonyHelper {
-    private static final String TAG = makeLogTag(telephonyHelper.class);
-    private static final boolean DEBUG = appConstants.DEBUG;
+class TelephonyHelper {
+    private static final String TAG = makeLogTag(TelephonyHelper.class);
+    private static final boolean DEBUG = Config.DEBUG;
 
     /* Reflection-based shims to use CellInfoWcdma and stay compatible with API level 17 */
     private static class CellIdentityWcdma {
@@ -116,9 +116,9 @@ class telephonyHelper {
     }
 
     private TelephonyManager tm;
-    private CellLocationFile db = new CellLocationFile();
+    private CellLocationDatabase db = new CellLocationDatabase();
 
-    public telephonyHelper(TelephonyManager teleMgr) {
+    public TelephonyHelper(TelephonyManager teleMgr) {
         tm = teleMgr;
     }
 

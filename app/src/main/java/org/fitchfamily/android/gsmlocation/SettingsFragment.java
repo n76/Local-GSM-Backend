@@ -22,9 +22,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
-public class prefsFragment extends PreferenceFragment {
-    private static final String TAG = makeLogTag(prefsFragment.class);
-    private static final boolean DEBUG = appConstants.DEBUG;
+public class SettingsFragment extends PreferenceFragment {
+    private static final String TAG = makeLogTag(SettingsFragment.class);
+    private static final boolean DEBUG = Config.DEBUG;
 
     private Context mContext;
 
@@ -36,7 +36,7 @@ public class prefsFragment extends PreferenceFragment {
         final EditTextPreference ociKeyPreference = (EditTextPreference) this.findPreference("oci_key_preference");
         if (ociKeyPreference != null) {
             if (DEBUG)
-                Log.d(TAG, "prefsFragment.onCreate(): ociKeyPreference is " + ociKeyPreference.toString());
+                Log.d(TAG, "onCreate(): ociKeyPreference is " + ociKeyPreference.toString());
 
             if (ociKeyPreference.getText() == null ||
                     ociKeyPreference.getText().isEmpty()){
@@ -56,7 +56,7 @@ public class prefsFragment extends PreferenceFragment {
             });
         } else {
             if (DEBUG)
-                Log.d(TAG, "prefsFragment.onCreate(): ociKeyPreference is null");
+                Log.d(TAG, "onCreate(): ociKeyPreference is null");
         }
 
         Preference preference = this.findPreference("request_new_api_key");
@@ -76,7 +76,7 @@ public class prefsFragment extends PreferenceFragment {
         EditTextPreference mccFilterPreference = (EditTextPreference) this.findPreference("mcc_filter_preference");
         if (mccFilterPreference != null) {
             if (DEBUG)
-                Log.d(TAG, "prefsFragment.onCreate(): mccFilterPreference is " + mccFilterPreference.toString());
+                Log.d(TAG, "onCreate(): mccFilterPreference is " + mccFilterPreference.toString());
 
             if (mccFilterPreference.getText() == null) {
                 // to ensure we don't get a null value
@@ -94,13 +94,13 @@ public class prefsFragment extends PreferenceFragment {
             });
         } else {
             if (DEBUG)
-                Log.d(TAG, "prefsFragment.onCreate(): mccFilterPreference is null");
+                Log.d(TAG, "onCreate(): mccFilterPreference is null");
         }
 
         EditTextPreference mncFilterPreference = (EditTextPreference) this.findPreference("mnc_filter_preference");
         if (mncFilterPreference != null) {
             if (DEBUG)
-                Log.d(TAG, "prefsFragment.onCreate(): mncFilterPreference is " + mncFilterPreference.toString());
+                Log.d(TAG, "onCreate(): mncFilterPreference is " + mncFilterPreference.toString());
 
             if (mncFilterPreference.getText() == null) {
                 // to ensure we don't get a null value
@@ -118,7 +118,7 @@ public class prefsFragment extends PreferenceFragment {
             });
         } else {
             if (DEBUG)
-                Log.d(TAG, "prefsFragment.onCreate(): mncFilterPreference is null");
+                Log.d(TAG, "onCreate(): mncFilterPreference is null");
         }
 
         EditTextPreference currentDbPreference = (EditTextPreference) this.findPreference("db_date_preference");
@@ -132,7 +132,7 @@ public class prefsFragment extends PreferenceFragment {
             currentDbPreference.setSummary(currentDbTimeStamp());
         } else {
             if (DEBUG)
-                Log.d(TAG, "prefsFragment.onCreate(): currentDbPreference is null");
+                Log.d(TAG, "onCreate(): currentDbPreference is null");
         }
 
     }
@@ -148,7 +148,7 @@ public class prefsFragment extends PreferenceFragment {
         super.onResume();
 
         if (DEBUG)
-            Log.d(TAG, "prefsFragment.onResume()");
+            Log.d(TAG, "onResume()");
 
         EditTextPreference currentDbPreference = (EditTextPreference) this.findPreference("db_date_preference");
         if (currentDbPreference != null) {
@@ -160,20 +160,20 @@ public class prefsFragment extends PreferenceFragment {
             currentDbPreference.setSummary(currentDbTimeStamp());
         } else {
             if (DEBUG)
-                Log.d(TAG, "prefsFragment.onResume(): currentDbPreference is null");
+                Log.d(TAG, "onResume(): currentDbPreference is null");
         }
     }
 
     private String currentDbTimeStamp() {
         String currentDbInfo;
-        if (appConstants.DB_NEW_FILE.exists() &&
-                appConstants.DB_NEW_FILE.canRead()) {
+        if (Config.DB_NEW_FILE.exists() &&
+                Config.DB_NEW_FILE.canRead()) {
             DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance();
-            currentDbInfo = "Last Modified: " + dateTimeInstance.format(appConstants.DB_NEW_FILE.lastModified());
-        } else if (appConstants.DB_FILE.exists()) {
-            if (appConstants.DB_FILE.canRead()) {
+            currentDbInfo = "Last Modified: " + dateTimeInstance.format(Config.DB_NEW_FILE.lastModified());
+        } else if (Config.DB_FILE.exists()) {
+            if (Config.DB_FILE.canRead()) {
                 DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance();
-                currentDbInfo = "Last Modified: " + dateTimeInstance.format(appConstants.DB_FILE.lastModified());
+                currentDbInfo = "Last Modified: " + dateTimeInstance.format(Config.DB_FILE.lastModified());
             } else {
                 currentDbInfo = "No read permission on database.";
             }
@@ -198,9 +198,9 @@ public class prefsFragment extends PreferenceFragment {
             try {
                 DefaultHttpClient httpclient = new DefaultHttpClient();
                 HttpGet httpGet = new HttpGet(mContext.getString(R.string.opencellid_api_get_key));
-                OCIDResponse result;
+                OcidResponse result;
 
-                result = new OCIDResponse(httpclient.execute(httpGet));
+                result = new OcidResponse(httpclient.execute(httpGet));
 
                 if (result.getStatusCode() == 200) {
                     String responseFromServer = result.getResponseFromServer();
