@@ -80,7 +80,7 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
                 }
             }
         });
-        mButton.setText(getString(R.string.cancel_string));
+        mButton.setText(getString(android.R.string.cancel));
 
         // Restore saved state.
         if (savedInstanceState != null) {
@@ -118,7 +118,7 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
     public void onPreExecute() {
         if (DEBUG)
             Log.i(TAG, "onPreExecute()");
-        mButton.setText(getString(R.string.cancel_string));
+        mButton.setText(getString(android.R.string.cancel));
         mRunning = true;
     }
 
@@ -132,7 +132,7 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
     public void onCancelled() {
         if (DEBUG)
             Log.i(TAG, "onCancelled()");
-        mButton.setText(getString(R.string.okay_string));
+        mButton.setText(getString(android.R.string.ok));
         mProgressBar.setProgress(0);
         mRunning = false;
     }
@@ -142,7 +142,7 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
         if (DEBUG)
             Log.i(TAG, "onPostExecute()");
         mProgressBar.setProgress(mProgressBar.getMax());
-        mButton.setText(getString(R.string.okay_string));
+        mButton.setText(getString(android.R.string.ok));
         mRunning = false;
     }
 

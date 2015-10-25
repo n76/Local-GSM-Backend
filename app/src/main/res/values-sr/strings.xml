@@ -35,10 +35,6 @@
 
     <string name="no_api_key">Изабран OpenCellId за извор података али није наведен АПИ кључ. Да наставим без коришћења OpenCellId података?</string>
     <string name="no_data_requested">Ниједан извор података није изабран. Немам шта да радим.</string>
-    <string name="no_string">Не</string>
-    <string name="yes_string">Да</string>
-    <string name="okay_string">У реду</string>
-    <string name="cancel_string">Одустани</string>
 
     <string name="log_MCC_FILTER">МЦЦ филтер:</string>
     <string name="log_MCC_WORLD">Без МЦЦ филтера, претпостављам све државе</string>

@@ -52,7 +52,7 @@ public class SettingsActivity extends Activity {
             builder.setMessage(getString(R.string.no_api_key));
             builder.setCancelable(false);
 
-            builder.setPositiveButton(getString(R.string.yes_string), new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(getString(android.R.string.yes), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     Log.d(TAG, "onClick = yes, OCI = " + String.valueOf(oci_preference));
                     oci_preference = false;
@@ -61,7 +61,7 @@ public class SettingsActivity extends Activity {
                 }
             });
 
-            builder.setNegativeButton(getString(R.string.no_string), new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(getString(android.R.string.no), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                 }
             });
@@ -79,7 +79,7 @@ public class SettingsActivity extends Activity {
             builder.setMessage(getString(R.string.no_data_requested));
             builder.setCancelable(false);
 
-            builder.setNeutralButton(getString(R.string.okay_string),
+            builder.setNeutralButton(getString(android.R.string.ok),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                         }
