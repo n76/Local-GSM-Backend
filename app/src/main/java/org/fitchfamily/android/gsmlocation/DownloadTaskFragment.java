@@ -12,6 +12,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.zip.GZIPInputStream;
 
@@ -349,7 +350,7 @@ public class DownloadTaskFragment extends Fragment {
 
                 if (doOCI && (getState() == RUNNING)) {
                     doLog(ctx.getString(R.string.log_GETTING_OCID));
-                    getData(Config.OCI_URL_PREFIX + OpenCellId_API + Config.OCI_URL_SUFFIX);
+                    getData(String.format(Locale.US, Config.OCI_URL_FMT, OpenCellId_API));
                 }
 
                 if (doMLS && (getState() == RUNNING)) {
@@ -359,7 +360,7 @@ public class DownloadTaskFragment extends Fragment {
                     // a new day in GMT time. Get the time for a place a couple hours
                     // west of Greenwich to allow time for the data to be posted.
                     dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT-03"));
-                    getData(Config.MLS_URL_PREFIX + dateFormatGmt.format(new Date()) + "" + Config.MLS_URL_SUFFIX);
+                    getData(String.format(Locale.US, Config.MLS_URL_FMT, dateFormatGmt.format(new Date())));
                 }
 
                 if (getState() == RUNNING) {

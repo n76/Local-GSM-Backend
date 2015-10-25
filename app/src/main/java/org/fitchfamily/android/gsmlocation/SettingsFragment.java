@@ -64,7 +64,7 @@ public class SettingsFragment extends PreferenceFragment {
             public boolean onPreferenceClick(Preference arg0) {
                 Log.i(TAG, "requesting new key");
                 try {
-                    new GetOpenCellIDKeyTask().execute(mContext.getString(R.string.opencellid_api_get_key));
+                    new GetOpenCellIDKeyTask().execute(Config.OCI_API_GET_KEY_URL);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -197,7 +197,7 @@ public class SettingsFragment extends PreferenceFragment {
         protected String doInBackground(String... params) {
             try {
                 DefaultHttpClient httpclient = new DefaultHttpClient();
-                HttpGet httpGet = new HttpGet(mContext.getString(R.string.opencellid_api_get_key));
+                HttpGet httpGet = new HttpGet(Config.OCI_API_GET_KEY_URL);
                 OcidResponse result;
 
                 result = new OcidResponse(httpclient.execute(httpGet));
