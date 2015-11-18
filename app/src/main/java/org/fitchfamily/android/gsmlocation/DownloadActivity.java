@@ -39,19 +39,6 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download);
 
-        String openCellIdAPI = getIntent().getExtras().getString("ociAPI");
-        String MCCfilter = getIntent().getExtras().getString("mccFilter");
-        String MNCfilter = getIntent().getExtras().getString("mncFilter");
-        boolean doOCI = getIntent().getExtras().getBoolean("doOCI");
-        boolean doMLS = getIntent().getExtras().getBoolean("doMLS");
-        if (DEBUG) {
-            Log.d(TAG, "Use OpenCellID data = " + doOCI);
-            Log.d(TAG, "Use Mozilla data = " + doMLS);
-            Log.d(TAG, "OpenCellId API Key = " + openCellIdAPI);
-            Log.d(TAG, "MCC filtering = " + MCCfilter);
-            Log.d(TAG, "MNC filtering = " + MNCfilter);
-        }
-
         // Initialize views.
         mProgressBar=(ProgressBar) findViewById(R.id.progress);
 
@@ -88,7 +75,7 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
             mTaskFragment = new DownloadTaskFragment();
             fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
             mRunning = true;
-            mTaskFragment.start(doOCI, doMLS, openCellIdAPI, MCCfilter, MNCfilter, this);
+            mTaskFragment.start(this);
         }
     }
 

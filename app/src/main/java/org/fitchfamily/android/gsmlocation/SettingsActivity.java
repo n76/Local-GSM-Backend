@@ -93,26 +93,6 @@ public class SettingsActivity extends Activity {
 
             return;
         }
-        genDatabase(oci_preference, mls_preference, oci_key_preference, mcc_filter_preference, mnc_filter_preference);
+        startActivity(new Intent(this, DownloadActivity.class));
     }
-
-    public void genDatabase(boolean useOCI, boolean useMLS, String OciKey, String MccFilter, String MncFilter) {
-        if (DEBUG) {
-            Log.d(TAG, "Inputs validated: Start background processing...");
-            Log.d(TAG, "Use OpenCellID data = " + String.valueOf(useOCI));
-            Log.d(TAG, "Use Mozilla data = " + String.valueOf(useMLS));
-            Log.d(TAG, "OpenCellId API Key = " + OciKey);
-            Log.d(TAG, "MCC filtering = " + MccFilter);
-            Log.d(TAG, "MNC filtering = " + MncFilter);
-        }
-
-        Intent myIntent = new Intent(this, DownloadActivity.class);
-        myIntent.putExtra("doOCI", useOCI);
-        myIntent.putExtra("doMLS", useMLS);
-        myIntent.putExtra("ociAPI", OciKey);
-        myIntent.putExtra("mccFilter", MccFilter);
-        myIntent.putExtra("mncFilter", MncFilter);
-        startActivity(myIntent);
-    }
-
 }
