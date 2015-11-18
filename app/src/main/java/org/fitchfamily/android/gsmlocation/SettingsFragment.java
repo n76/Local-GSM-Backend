@@ -1,7 +1,5 @@
 package org.fitchfamily.android.gsmlocation;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,10 +11,9 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -26,14 +23,16 @@ public class SettingsFragment extends PreferenceFragment {
     private static final String TAG = makeLogTag(SettingsFragment.class);
     private static final boolean DEBUG = Config.DEBUG;
 
-    private Context mContext;
+    private SharedPreferences sp;
+    private EditTextPreference ociKeyPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings_prefs);
+        sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        final EditTextPreference ociKeyPreference = (EditTextPreference) this.findPreference("oci_key_preference");
+        ociKeyPreference = (EditTextPreference) this.findPreference("oci_key_preference");
         if (ociKeyPreference != null) {
             if (DEBUG)
                 Log.d(TAG, "onCreate(): ociKeyPreference is " + ociKeyPreference.toString());
@@ -63,12 +62,8 @@ public class SettingsFragment extends PreferenceFragment {
         preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference arg0) {
                 Log.i(TAG, "requesting new key");
-                try {
-                    new GetOpenCellIDKeyTask().execute(Config.OCI_API_GET_KEY_URL);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return false;
+                new RequestOpenCellIdKeyTask().execute();
+                return true;
             }
         });
 
@@ -138,12 +133,6 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        mContext = activity.getApplicationContext();
-        super.onAttach(activity);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 
@@ -184,56 +173,75 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     /**
-     * This might be extended in the future.
-     * Two keys I started started with `dev-usr`, not sure if that's a rule.
+     * OpenCellID API keys appear to be canonical form version 4 UUIDs, except keys
+     * generated with http://opencellid.org/gsmCell/user/generateApiKey have
+     * "dev-usr-" instead of hexadecimal digits before the first hyphen.
      */
-    private boolean isKeyValid(String key) {
-        return key.startsWith("dev-");
+    private boolean isOpenCellIdKeyValid(String key) {
+        return key.matches(
+                "(?:[0-9a-f]{8}|dev-usr-)-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}");
     }
 
-    private class GetOpenCellIDKeyTask extends AsyncTask<String, String, String> {
+    private class RequestOpenCellIdKeyTask extends AsyncTask<Void, Void, Integer> {
+        private String newKey;
 
         @Override
-        protected String doInBackground(String... params) {
+        protected void onPreExecute() {
+            Toast.makeText(getActivity(), R.string.oci_key_req_request_start, Toast.LENGTH_SHORT)
+                    .show();
+        }
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            HttpURLConnection conn = null;
+            int toastTextResId;
+
             try {
-                DefaultHttpClient httpclient = new DefaultHttpClient();
-                HttpGet httpGet = new HttpGet(Config.OCI_API_GET_KEY_URL);
-                OcidResponse result;
+                conn = (HttpURLConnection) new URL(Config.OCI_API_GET_KEY_URL).openConnection();
+                conn.connect();
+                int statusCode = conn.getResponseCode();
 
-                result = new OcidResponse(httpclient.execute(httpGet));
+                if (statusCode == 200) {
+                    byte[] buf = new byte[36];
+                    if (conn.getInputStream().read(buf, 0, 36) != 36) {
+                        toastTextResId = R.string.oci_key_req_failed_read;
+                    } else {
+                        newKey = new String(buf, "UTF-8");
 
-                if (result.getStatusCode() == 200) {
-                    return result.getResponseFromServer();
-                } else if (result.getStatusCode() == 503) {
-                    // Check for HTTP error code 503 which is returned when user is trying to request
-                    String responseFromServer = result.getResponseFromServer();
-                    Log.d(TAG, "CellTracker: OpenCellID reached 24hrs API key limit: " + responseFromServer);
-                    return responseFromServer;
+                        if (isOpenCellIdKeyValid(newKey)) {
+                            sp.edit().putString("oci_key_preference", newKey).commit();
+                            toastTextResId = R.string.oci_key_req_new_key_success;
+                        } else {
+                            if (DEBUG) Log.e(TAG, "Invalid OpenCellID API key received: " + newKey);
+                            toastTextResId = R.string.oci_key_req_key_invalid;
+                        }
+                    }
+                } else if (statusCode == 503) {
+                    toastTextResId = R.string.oci_key_req_only_one_req_per_day;
+                } else {
+                    if (DEBUG) {
+                        Log.e(TAG, "OpenCellID API key request response code: " + statusCode);
+                    }
+                    toastTextResId = R.string.oci_key_req_unexpected_status_code;
                 }
-
             } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
+                if (DEBUG) Log.e(TAG, "Error requesting OpenCellID API key", e);
+                toastTextResId = R.string.oci_key_req_connection_error;
+            } finally {
+                if (conn != null) {
+                    conn.disconnect();
+                }
             }
-            return null;
+
+            return toastTextResId;
         }
 
         @Override
-        protected void onPostExecute(String newKey) {
-            if (isKeyValid(newKey)) {
-                Log.i(TAG, "New key is valid");
-                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
-                EditTextPreference ociKeyPreference = (EditTextPreference) findPreference("oci_key_preference");
-                sp.edit().putString("oci_key_preference", newKey).apply();
-                ociKeyPreference.setSummary(newKey); //refresh summary
-                Toast.makeText(mContext, mContext.getString(R.string.new_key_saved), Toast.LENGTH_SHORT).show();
-            } else {
-                Log.e(TAG, "Invalid key: " + newKey);
-                Toast.makeText(mContext, mContext.getString(R.string.one_request_per_24h), Toast.LENGTH_SHORT).show();
+        protected void onPostExecute(Integer stringResId) {
+            if (newKey != null) {
+                ociKeyPreference.setSummary(newKey);
             }
-
+            Toast.makeText(getActivity(), stringResId, Toast.LENGTH_LONG).show();
         }
     }
-
 }

@@ -23,9 +23,9 @@
     <string name="mnc_filter_description">Списак кôдова мобилних мрежа (MNC) за коришћење, одвојених зарезом. Погледајте http://en.wikipedia.org/wiki/Mobile_country_code</string>
 
     <string name="request_new_api_key">Захтевај нови АПИ кључ</string>
-    <string name="new_key_saved">Нови АПИ кључ сачуван!</string>
-    <string name="one_request_per_24h">Можете да захтевате један нови АПИ кључ свака 24 сата. Покушајте поново касније.</string>
-    <string name="invalid_api_key">Неисправан АПИ кључ. Кључ мора да почне са „dev-“</string>
+    <string name="oci_key_req_new_key_success">Нови АПИ кључ сачуван!</string>
+    <string name="oci_key_req_only_one_req_per_day">Можете да захтевате један нови АПИ кључ свака 24 сата. Покушајте поново касније.</string>
+    <string name="oci_key_req_key_invalid">Неисправан АПИ кључ. Кључ мора да почне са „dev-“</string>
 
     <string name="db_date_label">Тренутна база података</string>
 

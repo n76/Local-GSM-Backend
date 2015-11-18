@@ -24,9 +24,13 @@
     <string name="mnc_filter_description">Comma separated list of numeric Mobile Network Codes (MNC) to be used. See http://en.wikipedia.org/wiki/Mobile_country_code</string>
 
     <string name="request_new_api_key">Request new OpenCellID key</string>
-    <string name="new_key_saved">New API key saved!</string>
-    <string name="one_request_per_24h">You can request one new API key per 24 hours. Please try again later.</string>
-    <string name="invalid_api_key">Invalid API key. The key must start with `dev-`</string>
+    <string name="oci_key_req_request_start">Requesting new OpenCellID API key…</string>
+    <string name="oci_key_req_new_key_success">New key saved successfully</string>
+    <string name="oci_key_req_key_invalid">Error: received an invalid API key</string>
+    <string name="oci_key_req_only_one_req_per_day">Request failed, you can only request one new key per day</string>
+    <string name="oci_key_req_unexpected_status_code">Error getting key, unexpected status code received</string>
+    <string name="oci_key_req_failed_read">Error reading key from the response</string>
+    <string name="oci_key_req_connection_error">Error getting key, connection error occurred</string>
 
     <string name="db_date_label">Current Database</string>
 
