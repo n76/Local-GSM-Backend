@@ -1,11 +1,13 @@
 package org.fitchfamily.android.gsmlocation;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -19,12 +21,14 @@ import java.text.SimpleDateFormat;
 
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
-public class SettingsFragment extends PreferenceFragment {
+public class SettingsFragment extends PreferenceFragment
+        implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
     private static final String TAG = makeLogTag(SettingsFragment.class);
     private static final boolean DEBUG = Config.DEBUG;
 
     private SharedPreferences sp;
     private EditTextPreference ociKeyPreference;
+    private Preference genDbPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,144 +36,117 @@ public class SettingsFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.settings_prefs);
         sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        ociKeyPreference = (EditTextPreference) this.findPreference("oci_key_preference");
-        if (ociKeyPreference != null) {
-            if (DEBUG)
-                Log.d(TAG, "onCreate(): ociKeyPreference is " + ociKeyPreference.toString());
+        ociKeyPreference = (EditTextPreference) findPreference("oci_key_preference");
+        genDbPreference = findPreference("generate_database");
 
-            if (ociKeyPreference.getText() == null ||
-                    ociKeyPreference.getText().isEmpty()){
-                // to ensure we don't get a null value
-                // set first value by default
-                ociKeyPreference.setText("");
-            }
+        bindPreferenceSummaryToValue(ociKeyPreference);
+        bindPreferenceSummaryToValue(findPreference("mcc_filter_preference"));
+        bindPreferenceSummaryToValue(findPreference("mnc_filter_preference"));
+        bindPreferenceSummaryToValue(genDbPreference);
 
-            ociKeyPreference.setSummary(ociKeyPreference.getText());
-            ociKeyPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    String value = newValue.toString();
-                    preference.setSummary(value);
-                    return true;
-                }
-            });
-        } else {
-            if (DEBUG)
-                Log.d(TAG, "onCreate(): ociKeyPreference is null");
-        }
-
-        Preference preference = this.findPreference("request_new_api_key");
-        preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference arg0) {
-                Log.i(TAG, "requesting new key");
-                new RequestOpenCellIdKeyTask().execute();
-                return true;
-            }
-        });
-
-
-        EditTextPreference mccFilterPreference = (EditTextPreference) this.findPreference("mcc_filter_preference");
-        if (mccFilterPreference != null) {
-            if (DEBUG)
-                Log.d(TAG, "onCreate(): mccFilterPreference is " + mccFilterPreference.toString());
-
-            if (mccFilterPreference.getText() == null) {
-                // to ensure we don't get a null value
-                // set first value by default
-                mccFilterPreference.setText("");
-            }
-
-            mccFilterPreference.setSummary(mccFilterPreference.getText());
-            mccFilterPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    preference.setSummary(newValue.toString());
-                    return true;
-                }
-            });
-        } else {
-            if (DEBUG)
-                Log.d(TAG, "onCreate(): mccFilterPreference is null");
-        }
-
-        EditTextPreference mncFilterPreference = (EditTextPreference) this.findPreference("mnc_filter_preference");
-        if (mncFilterPreference != null) {
-            if (DEBUG)
-                Log.d(TAG, "onCreate(): mncFilterPreference is " + mncFilterPreference.toString());
-
-            if (mncFilterPreference.getText() == null) {
-                // to ensure we don't get a null value
-                // set first value by default
-                mncFilterPreference.setText("");
-            }
-
-            mncFilterPreference.setSummary(mncFilterPreference.getText());
-            mncFilterPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    preference.setSummary(newValue.toString());
-                    return true;
-                }
-            });
-        } else {
-            if (DEBUG)
-                Log.d(TAG, "onCreate(): mncFilterPreference is null");
-        }
-
-        EditTextPreference currentDbPreference = (EditTextPreference) this.findPreference("db_date_preference");
-
-        if (currentDbPreference != null) {
-            if (currentDbPreference.getText() == null) {
-                // to ensure we don't get a null value
-                // set first value by default
-                currentDbPreference.setText("");
-            }
-            currentDbPreference.setSummary(currentDbTimeStamp());
-        } else {
-            if (DEBUG)
-                Log.d(TAG, "onCreate(): currentDbPreference is null");
-        }
-
+        findPreference("request_new_api_key").setOnPreferenceClickListener(this);
+        genDbPreference.setOnPreferenceClickListener(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        if (DEBUG)
-            Log.d(TAG, "onResume()");
-
-        EditTextPreference currentDbPreference = (EditTextPreference) this.findPreference("db_date_preference");
-        if (currentDbPreference != null) {
-            if (currentDbPreference.getText() == null) {
-                // to ensure we don't get a null value
-                // set first value by default
-                currentDbPreference.setText("");
-            }
-            currentDbPreference.setSummary(currentDbTimeStamp());
-        } else {
-            if (DEBUG)
-                Log.d(TAG, "onResume(): currentDbPreference is null");
-        }
+        if (DEBUG) Log.d(TAG, "onResume(): setting summary with current database info");
+        genDbPreference.setSummary(createCurrentDatabaseSummary());
     }
 
-    private String currentDbTimeStamp() {
-        String currentDbInfo;
-        if (Config.DB_NEW_FILE.exists() &&
-                Config.DB_NEW_FILE.canRead()) {
-            DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance();
-            currentDbInfo = "Last Modified: " + dateTimeInstance.format(Config.DB_NEW_FILE.lastModified());
+    private void bindPreferenceSummaryToValue(Preference preference) {
+        preference.setOnPreferenceChangeListener(this);
+        onPreferenceChange(preference, sp.getString(preference.getKey(), ""));
+    }
+
+    private String createCurrentDatabaseSummary() {
+        DateFormat df = SimpleDateFormat.getDateTimeInstance();
+        String summary;
+
+        if (Config.DB_NEW_FILE.exists()) {
+            if (Config.DB_NEW_FILE.canRead()) {
+                summary = getString(R.string.db_file_last_modified,
+                        df.format(Config.DB_NEW_FILE.lastModified()));
+            } else {
+                summary = getString(R.string.db_file_unreadable, Config.DB_NEW_NAME);
+            }
         } else if (Config.DB_FILE.exists()) {
             if (Config.DB_FILE.canRead()) {
-                DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance();
-                currentDbInfo = "Last Modified: " + dateTimeInstance.format(Config.DB_FILE.lastModified());
+                summary = getString(R.string.db_file_last_modified,
+                        df.format(Config.DB_FILE.lastModified()));
             } else {
-                currentDbInfo = "No read permission on database.";
+                summary = getString(R.string.db_file_unreadable, Config.DB_NAME);
             }
         } else {
-            currentDbInfo = "No database file found.";
+            summary = getString(R.string.db_file_not_found);
         }
-        return currentDbInfo;
+
+        return summary;
+    }
+
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        String prefKey = preference.getKey();
+
+        if (prefKey.equals("oci_key_preference")) {
+            String newKey = newValue.toString();
+            if (!newKey.isEmpty() && !isOpenCellIdKeyValid(newKey)) {
+                new AlertDialog.Builder(getActivity()).setMessage(R.string.invalid_oci_api_key)
+                        .setCancelable(false).setPositiveButton(android.R.string.ok, null).show();
+                return false;
+            } else {
+                preference.setSummary(newValue.toString());
+            }
+        } else if (prefKey.equals("generate_database")) {
+            preference.setSummary(createCurrentDatabaseSummary());
+        } else {
+            preference.setSummary(newValue.toString());
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+        String prefKey = preference.getKey();
+
+        if (prefKey.equals("request_new_api_key")) {
+            if (DEBUG) Log.i(TAG, "Requesting new OpenCellID API key");
+            if (sp.getString("oci_key_preference", "").isEmpty()) {
+                new RequestOpenCellIdKeyTask().execute();
+            } else {
+                new AlertDialog.Builder(getActivity()).setMessage(R.string.oci_key_already_entered)
+                        .setNegativeButton(android.R.string.no, null)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new RequestOpenCellIdKeyTask().execute();
+                            }
+                        }).show();
+            }
+            return true;
+        } else if (prefKey.equals("generate_database")) {
+            validatePrefsAndLaunchDownload();
+            return true;
+        }
+
+        return false;
+    }
+
+    private void validatePrefsAndLaunchDownload() {
+        boolean downloadOci = sp.getBoolean("oci_preference", false);
+        boolean downloadMls = sp.getBoolean("mls_preference", false);
+
+        if (!downloadOci && !downloadMls) {
+            new AlertDialog.Builder(getActivity()).setMessage(R.string.no_data_requested)
+                    .setCancelable(false).setPositiveButton(android.R.string.ok, null).show();
+        } else if (downloadOci && sp.getString("oci_key_preference", "").isEmpty()) {
+            new AlertDialog.Builder(getActivity()).setMessage(R.string.no_api_key)
+                    .setCancelable(false).setPositiveButton(android.R.string.ok, null).show();
+        } else {
+            startActivity(new Intent(getActivity(), DownloadActivity.class));
+        }
     }
 
     /**

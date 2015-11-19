@@ -29,7 +29,7 @@
 
     <string name="db_date_label">Тренутна база података</string>
 
-    <string name="gen_db_button">Направи базу података</string>
+    <string name="generate_database">Направи базу података</string>
 
     <string name="no_api_key">Изабран OpenCellId за извор података али није наведен АПИ кључ. Да наставим без коришћења OpenCellId података?</string>
     <string name="no_data_requested">Ниједан извор података није изабран. Немам шта да радим.</string>

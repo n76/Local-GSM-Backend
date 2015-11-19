@@ -16,7 +16,7 @@
 
     <string name="filter_title">Filtering</string>
     <string name="mcc_filter_label">MCC Filter</string>
-    <string name="mcc_default">310,311</string>
+    <string name="mcc_default"></string>
     <string name="mcc_filter_description">Comma separated list of numeric Mobile Country Codes (MCC) to be used. See http://en.wikipedia.org/wiki/Mobile_country_code</string>
 
     <string name="mnc_filter_label">MNC Filter</string>
@@ -24,6 +24,7 @@
     <string name="mnc_filter_description">Comma separated list of numeric Mobile Network Codes (MNC) to be used. See http://en.wikipedia.org/wiki/Mobile_country_code</string>
 
     <string name="request_new_api_key">Request new OpenCellID key</string>
+    <string name="oci_key_already_entered">There is a key entered already, are you sure you want to request a new one?</string>
     <string name="oci_key_req_request_start">Requesting new OpenCellID API key…</string>
     <string name="oci_key_req_new_key_success">New key saved successfully</string>
     <string name="oci_key_req_key_invalid">Error: received an invalid API key</string>
@@ -32,12 +33,14 @@
     <string name="oci_key_req_failed_read">Error reading key from the response</string>
     <string name="oci_key_req_connection_error">Error getting key, connection error occurred</string>
 
-    <string name="db_date_label">Current Database</string>
+    <string name="generate_database">Generate Database</string>
+    <string name="db_file_unreadable">Database file exists but cannot be read. Modify permissions on %s, or tap to attempt generating a new database.</string>
+    <string name="db_file_last_modified">Last modified: %s\nTap to generate a new database.</string>
+    <string name="db_file_not_found">No database file found. Tap to generate a new database.</string>
 
-    <string name="gen_db_button">Generate Database</string>
-
-    <string name="no_api_key">OpenCellId data selected but no API key given. Continue without using OpenCellId data?</string>
+    <string name="no_api_key">OpenCellID selected as one of the data sources, but no API key given. Uncheck the OpenCellID option or enter a valid OpenCellID API key.</string>
     <string name="no_data_requested">Neither OpenCellId data nor Mozilla Location Services data selected. Nothing to do.</string>
+    <string name="invalid_oci_api_key">The given API key is incorrect. Enter a valid one (or disable the OpenCellID data source).</string>
 
     <string name="log_MCC_FILTER">MCC filter:</string>
     <string name="log_MCC_WORLD">No MCC Filters, assume all countries</string>
