@@ -72,3 +72,4 @@ Update History
 0.9.4|13Aug2015|Slight revision to clean up logic, might help on https://github.com/n76/Local-GSM-Backend/issues/31 however the largest change is moving many text strings into string resources so that internationalization is better.
 1.0.0|14Aug2015|Update Serbian translation.
 1.0.1|8Oct2015|Restore compability with API 17
+1.0.2|22Nov2015|Thanks to @hogbush Lots of code cleanup with better handling of UI elements.

@@ -27,8 +27,6 @@
     <string name="oci_key_req_only_one_req_per_day">Можете да захтевате један нови АПИ кључ свака 24 сата. Покушајте поново касније.</string>
     <string name="oci_key_req_key_invalid">Неисправан АПИ кључ. Кључ мора да почне са „dev-“</string>
 
-    <string name="db_date_label">Тренутна база података</string>
-
     <string name="generate_database">Направи базу података</string>
 
     <string name="no_api_key">Изабран OpenCellId за извор података али није наведен АПИ кључ. Да наставим без коришћења OpenCellId података?</string>
