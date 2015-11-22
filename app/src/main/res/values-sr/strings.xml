@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation" >
     <string name="app_name">Услуга локације помоћу ГСМ-а</string>
     <string name="summary">Лоцирање помоћу базе података базних станица на телефону.</string>
 
@@ -22,15 +24,24 @@
     <string name="mnc_default">1,2,3,4,5,7,10,12,90</string>
     <string name="mnc_filter_description">Списак кôдова мобилних мрежа (MNC) за коришћење, одвојених зарезом. Погледајте http://en.wikipedia.org/wiki/Mobile_country_code</string>
 
-    <string name="request_new_api_key">Захтевај нови АПИ кључ</string>
-    <string name="oci_key_req_new_key_success">Нови АПИ кључ сачуван!</string>
-    <string name="oci_key_req_only_one_req_per_day">Можете да захтевате један нови АПИ кључ свака 24 сата. Покушајте поново касније.</string>
-    <string name="oci_key_req_key_invalid">Неисправан АПИ кључ. Кључ мора да почне са „dev-“</string>
+    <string name="request_new_api_key">Захтевај нови OpenCellID кључ</string>
+    <string name="oci_key_already_entered">Већ је унет кључ, желите ли заиста нови кључ?</string>
+    <string name="oci_key_req_request_start">Захтевам нови OpenCellID АПИ кључ…</string>
+    <string name="oci_key_req_new_key_success">Нови кључ успешно сачуван</string>
+    <string name="oci_key_req_key_invalid">Грешка: примљен је неисправан АПИ кључ</string>
+    <string name="oci_key_req_only_one_req_per_day">Захтев није успео, можете да захтевате само један нови кључ дневно</string>
+    <string name="oci_key_req_unexpected_status_code">Грешка добављања кључа, примљен неочекиван кôд стања</string>
+    <string name="oci_key_req_failed_read">Грешка читања кључа из одзива</string>
+    <string name="oci_key_req_connection_error">Грешка добављања кључа, грешка везе</string>
 
     <string name="generate_database">Направи базу података</string>
+    <string name="db_file_unreadable">Фајл базе података постоји али не може да се очита. Измените дозволе за %s, или тапните за покушај прављења нове базе података.</string>
+    <string name="db_file_last_modified">Последња измена: %s\nТапните за прављење нове базе података.</string>
+    <string name="db_file_not_found">Фајл базе података није нађен. Тапните за прављење нове базе података.</string>
 
-    <string name="no_api_key">Изабран OpenCellId за извор података али није наведен АПИ кључ. Да наставим без коришћења OpenCellId података?</string>
+    <string name="no_api_key">Изабран OpenCellID за извор података али није наведен АПИ кључ. Да наставим без коришћења OpenCellID података?</string>
     <string name="no_data_requested">Ниједан извор података није изабран. Немам шта да радим.</string>
+    <string name="invalid_oci_api_key">Задати АПИ кључ није исправан. Задајте исправан кључ (или искључите OpenCellID извор података).</string>
 
     <string name="log_MCC_FILTER">МЦЦ филтер:</string>
     <string name="log_MCC_WORLD">Без МЦЦ филтера, претпостављам све државе</string>
@@ -56,6 +67,5 @@
     <string name="st_FAILED">НЕУСПЕХ</string>
     <string name="st_SUCCESS">УСПЕХ</string>
     <string name="st_UNKNOWN">НЕПОЗНАТО</string>
-
 </resources>
 
