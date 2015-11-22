@@ -73,3 +73,4 @@ Update History
 1.0.0|14Aug2015|Update Serbian translation.
 1.0.1|8Oct2015|Restore compability with API 17
 1.0.2|22Nov2015|Thanks to @hogbush Lots of code cleanup with better handling of UI elements.
+1.0.3|22Nov2015|Thanks to @pejakm Updated Serbian translation.
