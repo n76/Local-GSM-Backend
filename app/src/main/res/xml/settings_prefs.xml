@@ -1,5 +1,4 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
     <PreferenceCategory android:title="@string/data_sources">
         <CheckBoxPreference
             android:key="oci_preference"
@@ -13,9 +12,11 @@
         <EditTextPreference
             android:dialogTitle="@string/oci_api_description"
             android:key="oci_key_preference"
+            android:maxLength="36"
             android:title="@string/oci_api_label" />
         <Preference
             android:key="request_new_api_key"
+            android:persistent="false"
             android:title="@string/request_new_api_key" />
     </PreferenceCategory>
 
@@ -36,13 +37,8 @@
             android:title="@string/mnc_filter_label" />
     </PreferenceCategory>
 
-    <EditTextPreference
-        android:defaultValue=""
-        android:dialogTitle="not used"
-        android:enabled="false"
-        android:key="db_date_preference"
-        android:title="@string/db_date_label" />
     <Preference
-        android:key="genButtons"
-        android:layout="@layout/settings_gen_db_button"></Preference>
+        android:key="generate_database"
+        android:persistent="false"
+        android:title="@string/generate_database" />
 </PreferenceScreen>

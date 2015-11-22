@@ -5,7 +5,7 @@ import android.os.Environment;
 import java.io.File;
 
 public class Config {
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = BuildConfig.DEBUG;
 
     // Location of database
     public static final String DB_NAME = "lacells.db";

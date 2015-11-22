@@ -3,10 +3,12 @@ package org.fitchfamily.android.gsmlocation;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -18,6 +20,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -60,7 +63,7 @@ public class DownloadTaskFragment extends Fragment {
     }
 
     private TaskCallbacks mCallbacks;
-    private DownloadDataTask mTask = null;
+    private DownloadDataTask mTask;
 
     /**
      * Hold a reference to the parent Activity so we can report the task's current
@@ -68,6 +71,7 @@ public class DownloadTaskFragment extends Fragment {
      * newly created Activity after each configuration change.
      */
     @Override
+    @SuppressWarnings("deprecation")
     public void onAttach(Activity activity) {
         if (DEBUG)
             Log.i(TAG, "onAttach(Activity)");
@@ -109,18 +113,12 @@ public class DownloadTaskFragment extends Fragment {
     /*****************************/
     /**
      * Starts background task.
-     *
-     * @param doOCI
-     * @param doMLS
-     * @param OpenCellId_API
-     * @param MCCfilter
-     * @param MNCfilter
      */
-    public void start(boolean doOCI, boolean doMLS, String OpenCellId_API, String MCCfilter, String MNCfilter, Context myCtx) {
+    public void start(Context context) {
         if (mTask == null) {
-            mTask = new DownloadDataTask();
-            mTask.initialize(doOCI, doMLS, OpenCellId_API, MCCfilter, MNCfilter, myCtx);
+            mTask = new DownloadDataTask(context);
             mTask.execute();
+            mTask.setState(DownloadDataTask.RUNNING);
         }
     }
 
@@ -130,6 +128,10 @@ public class DownloadTaskFragment extends Fragment {
     public void cancel() {
         if (DEBUG) Log.i(TAG, "cancel()");
         mTask.setState(DownloadDataTask.CANCELED);
+    }
+
+    public boolean isTaskRunning() {
+        return mTask.getState() == DownloadDataTask.RUNNING;
     }
 
     /***************************/
@@ -152,22 +154,13 @@ public class DownloadTaskFragment extends Fragment {
      * A task that performs the actual downloading and building of a new
      * database it proxies progress updates and results back to the Activity.
      */
-    private class DownloadDataTask extends AsyncTask<Context, ProgressInfo, Void> {
-        private String OpenCellId_API;
-        private String MCCfilter;
-        private String MNCfilter;
-        private boolean doOCI;
-        private boolean doMLS;
-
-        private Boolean mccEnable[] = new Boolean[1000];
-        private Boolean mncEnable[] = new Boolean[1000];
-
+    private class DownloadDataTask extends AsyncTask<Void, ProgressInfo, Void> {
         private int percentComplete;
 
         private File newDbFile;
-        private SQLiteDatabase database = null;
+        private SQLiteDatabase database;
 
-        private String logText;
+        private String logText = "";
 
         public static final int RUNNING = 0;
         public static final int CANCELED = 1;
@@ -175,81 +168,13 @@ public class DownloadTaskFragment extends Fragment {
         public static final int SUCCESS = 3;
         private int mState = RUNNING;
         private Context ctx;
+        private SharedPreferences sp;
 
+        private boolean[] mccFilter = new boolean[1000];
+        private boolean[] mncFilter = new boolean[1000];
 
-        void initialize(boolean doOCI, boolean doMLS, String OpenCellId_API, String MCCfilter, String MNCfilter, Context my_ctx) {
-
-            // Clear logging when starting new download
-            ctx = my_ctx;
-            percentComplete = 0;
-            logText = "";
-            if (Config.GEN_LOG_FILE.exists())
-                Config.GEN_LOG_FILE.delete();
-
-            this.OpenCellId_API = OpenCellId_API;
-            this.MCCfilter = MCCfilter;
-            this.MNCfilter = MNCfilter;
-            this.doOCI = doOCI;
-            this.doMLS = doMLS;
-            setState(RUNNING);
-            if (DEBUG) {
-                Log.d(TAG, "DownloadDataTask:initialize(" + String.valueOf(doOCI)
-                        + ", " + String.valueOf(doMLS)
-                        + ", \"" + OpenCellId_API
-                        + "\", \"" + MCCfilter
-                        + "\", \"" + MNCfilter
-                        + "\")");
-            }
-
-            // mcc filtering is a boolean array. Fill with false (don't use)
-            // and then set the mcc codes we want to true.
-            for (int i = 0; i < 1000; i++)
-                mccEnable[i] = false;
-
-            int enableCount = 0;
-
-            if (!MCCfilter.equals("")) {
-                doLog(ctx.getString(R.string.log_MCC_FILTER) + " " + MCCfilter);
-                String[] mccCodes = MCCfilter.split(",");
-
-                for (String c : mccCodes) {
-                    if ((c != null) && (c.length() > 0)) {
-                        mccEnable[Integer.parseInt(c)] = true;
-                        enableCount++;
-                    }
-                }
-            }
-            // If no mcc codes were specified, then assume we want the
-            // world, so set all codes to true.
-            if (enableCount == 0) {
-                for (int i = 0; i < 1000; i++)
-                    mccEnable[i] = true;
-                doLog(ctx.getString(R.string.log_MCC_WORLD));
-            }
-
-            // mnc filtering is a boolean array. Fill with false (don't use)
-            // and then set the mnc codes we want to true.
-            for (int i = 0; i < 1000; i++)
-                mncEnable[i] = false;
-
-            enableCount = 0;
-            if (!MNCfilter.equals("")) {
-                doLog(ctx.getString(R.string.log_MCC_FILTER) + " " + MNCfilter);
-                String[] mncCodes = MNCfilter.split(",");
-                for (String c : mncCodes) {
-                    if ((c != null) && (c.length() > 0)) {
-                        mncEnable[Integer.parseInt(c)] = true;
-                        enableCount++;
-                    }
-                }
-            }
-            // If no mnc codes were specified, then assume we want the
-            // world, so set all codes to true.
-            if (enableCount == 0) {
-                for (int i = 0; i < 1000; i++)
-                    mncEnable[i] = true;
-                doLog(ctx.getString(R.string.log_MNC_WORLD));
-            }
+        public DownloadDataTask(Context context) {
+            ctx = context;
         }
 
         @Override
@@ -287,12 +212,68 @@ public class DownloadTaskFragment extends Fragment {
         }
 
         /**
+         * Turn comma-separated string with MCC/MNC codes into a boolean array for filtering.
+         * @param codesStr Empty string or a string of comma-separated numbers.
+         * @param outputArray 1000-element boolean array filled with false values. Elements with
+         *                    indices corresponding to codes found in {@code codesStr} will be
+         *                    changed to true.
+         * @return True if the string contained at least one valid (0-999) code, false otherwise.
+         */
+        private boolean makeFilterArray(String codesStr, boolean[] outputArray) {
+            if (codesStr.isEmpty()) {
+                Arrays.fill(outputArray, Boolean.TRUE);
+                return false;
+            } else {
+                int enabledCount = 0, code;
+                for (String codeStr : codesStr.split(",")) {
+                    try {
+                        code = Integer.parseInt(codeStr);
+                    } catch (NumberFormatException e) {
+                        continue;
+                    }
+                    if (code >= 0 && code <= 999) {
+                        outputArray[code] = true;
+                        enabledCount++;
+                    }
+                }
+                if (enabledCount == 0) {
+                    // The string contained only number(s) larger than
+                    // 999, only commas or some other surprise.
+                    Arrays.fill(outputArray, Boolean.TRUE);
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /**
          * Note that we do NOT call the callback object's methods directly from the
          * background thread, as this could result in a race condition.
          */
         @Override
-        protected Void doInBackground(Context... params) {
+        protected Void doInBackground(Void... params) {
             long entryTime = System.currentTimeMillis();
+            sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+
+            Config.GEN_LOG_FILE.delete();
+
+            // Prepare the MCC and MNC code filters.
+            String mccCodes = sp.getString("mcc_filter_preference", "");
+            String mncCodes = sp.getString("mnc_filter_preference", "");
+
+            if (makeFilterArray(mccCodes, mccFilter)) {
+                doLog(ctx.getString(R.string.log_MCC_FILTER) + " " + mccCodes);
+            } else {
+                doLog(ctx.getString(R.string.log_MCC_WORLD));
+            }
+
+            if (makeFilterArray(mncCodes, mncFilter)) {
+                doLog(ctx.getString(R.string.log_MNC_FILTER) + " " + mncCodes);
+            } else {
+                doLog(ctx.getString(R.string.log_MNC_WORLD));
+            }
+
             try {
 
                 // Create new database to put everything in.
@@ -306,12 +287,13 @@ public class DownloadTaskFragment extends Fragment {
                 );
                 database.execSQL("CREATE TABLE cells(mcc INTEGER, mnc INTEGER, lac INTEGER, cid INTEGER, longitude REAL, latitude REAL, accuracy REAL, samples INTEGER, altitude REAL);");
 
-                if (doOCI && (getState() == RUNNING)) {
+                if (sp.getBoolean("oci_preference", false) && getState() == RUNNING) {
                     doLog(ctx.getString(R.string.log_GETTING_OCID));
-                    getData(String.format(Locale.US, Config.OCI_URL_FMT, OpenCellId_API));
+                    String openCellIdApiKey = sp.getString("oci_key_preference", "");
+                    getData(String.format(Locale.US, Config.OCI_URL_FMT, openCellIdApiKey));
                 }
 
-                if (doMLS && (getState() == RUNNING)) {
+                if (sp.getBoolean("mls_preference", false) && getState() == RUNNING) {
                     doLog(ctx.getString(R.string.log_GETTING_MOZ));
                     SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                     // Mozilla publishes new CSV files at a bit after the beginning of
@@ -326,10 +308,6 @@ public class DownloadTaskFragment extends Fragment {
                     database.execSQL("CREATE INDEX _idx1 ON cells (mcc, mnc, lac, cid);");
                     database.execSQL("CREATE INDEX _idx2 ON cells (lac, cid);");
                 }
-            } catch (IOException e) {
-                setState(FAILED);
-                doLog(e.getMessage());
-                e.printStackTrace();
             } catch (Exception e) {
                 setState(FAILED);
                 doLog(e.getMessage());
@@ -485,8 +463,8 @@ public class DownloadTaskFragment extends Fragment {
 
                     int mcc = Integer.parseInt(rec.get(mccIndex));
                     int mnc = Integer.parseInt(rec.get(mncIndex));
-                    if ((mcc >= 0) && (mcc <= 999) && mccEnable[mcc] &&
-                            (mnc >= 0) && (mnc <= 999) && mncEnable[mnc]) {
+                    if ((mcc >= 0) && (mcc <= 999) && mccFilter[mcc] &&
+                            (mnc >= 0) && (mnc <= 999) && mncFilter[mnc]) {
                         // Keep transaction size limited
                         if ((insertedRecords % 1000) == 0) {
                             database.setTransactionSuccessful();

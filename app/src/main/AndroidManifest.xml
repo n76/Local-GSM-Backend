@@ -1,26 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.fitchfamily.android.gsmlocation"
-    android:versionCode="29"
-    android:versionName="1.0.1">
+    package="org.fitchfamily.android.gsmlocation">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <uses-sdk
-        android:minSdkVersion="18"
-        android:targetSdkVersion="18" />
-
     <application
         android:allowBackup="false"
         android:icon="@drawable/icon"
         android:label="@string/app_name">
-
-        <uses-library
-            android:name="com.google.android.maps"
-            android:required="false" />
 
         <service
             android:name=".GsmService"
@@ -41,19 +31,18 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <!--
-                                <category android:name="android.intent.category.LAUNCHER" />
-                -->
             </intent-filter>
         </activity>
 
         <activity
             android:name=".DownloadActivity"
             android:label="@string/app_name"
-            android:noHistory="true" />
+            android:launchMode="singleTask"
+            android:parentActivityName=".SettingsActivity" />
     </application>
 
 </manifest>

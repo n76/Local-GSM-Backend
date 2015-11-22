@@ -20,37 +20,18 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
     private static final String TAG = makeLogTag(DownloadActivity.class);
     private static final boolean DEBUG = Config.DEBUG;
 
-    private static final String KEY_CURRENT_PROGRESS = "current_progress";
-    private static final String KEY_LOG_PROGRESS = "log_progress";
     private static final String TAG_TASK_FRAGMENT = "dl_task_fragment";
-
     private DownloadTaskFragment mTaskFragment;
-
 
     private Button mButton;
     private ProgressBar mProgressBar;
     private TextView mTextView;
-
-    private boolean mRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (DEBUG) Log.i(TAG, "onCreate(Bundle)");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download);
-
-        String openCellIdAPI = getIntent().getExtras().getString("ociAPI");
-        String MCCfilter = getIntent().getExtras().getString("mccFilter");
-        String MNCfilter = getIntent().getExtras().getString("mncFilter");
-        boolean doOCI = getIntent().getExtras().getBoolean("doOCI");
-        boolean doMLS = getIntent().getExtras().getBoolean("doMLS");
-        if (DEBUG) {
-            Log.d(TAG, "Use OpenCellID data = " + doOCI);
-            Log.d(TAG, "Use Mozilla data = " + doMLS);
-            Log.d(TAG, "OpenCellId API Key = " + openCellIdAPI);
-            Log.d(TAG, "MCC filtering = " + MCCfilter);
-            Log.d(TAG, "MNC filtering = " + MNCfilter);
-        }
 
         // Initialize views.
         mProgressBar=(ProgressBar) findViewById(R.id.progress);
@@ -60,7 +41,7 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
         mButton = (Button) findViewById(R.id.cancel_button);
         mButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (mRunning) {
+                if (mTaskFragment.isTaskRunning()) {
                     if (DEBUG)
                         Log.i(TAG, "mButton.onClick: Stop running task");
                     mTaskFragment.cancel();
@@ -73,12 +54,6 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
         });
         mButton.setText(getString(android.R.string.cancel));
 
-        // Restore saved state.
-        if (savedInstanceState != null) {
-            mProgressBar.setProgress(savedInstanceState.getInt(KEY_CURRENT_PROGRESS));
-            mTextView.setText(savedInstanceState.getString(KEY_LOG_PROGRESS));
-        }
-
         FragmentManager fm = getFragmentManager();
         mTaskFragment = (DownloadTaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
 
@@ -87,18 +62,8 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
         if (mTaskFragment == null) {
             mTaskFragment = new DownloadTaskFragment();
             fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
-            mRunning = true;
-            mTaskFragment.start(doOCI, doMLS, openCellIdAPI, MCCfilter, MNCfilter, this);
+            mTaskFragment.start(this);
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        if (DEBUG)
-            Log.i(TAG, "onSaveInstanceState(Bundle)");
-        super.onSaveInstanceState(outState);
-        outState.putInt(KEY_CURRENT_PROGRESS, mProgressBar.getProgress());
-        outState.putString(KEY_LOG_PROGRESS, mTextView.getText().toString());
     }
 
     /*********************************/
@@ -110,7 +75,6 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
         if (DEBUG)
             Log.i(TAG, "onPreExecute()");
         mButton.setText(getString(android.R.string.cancel));
-        mRunning = true;
     }
 
     @Override
@@ -125,7 +89,6 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
             Log.i(TAG, "onCancelled()");
         mButton.setText(getString(android.R.string.ok));
         mProgressBar.setProgress(0);
-        mRunning = false;
     }
 
     @Override
@@ -134,6 +97,5 @@ public class DownloadActivity extends Activity implements DownloadTaskFragment.T
             Log.i(TAG, "onPostExecute()");
         mProgressBar.setProgress(mProgressBar.getMax());
         mButton.setText(getString(android.R.string.ok));
-        mRunning = false;
     }
 }

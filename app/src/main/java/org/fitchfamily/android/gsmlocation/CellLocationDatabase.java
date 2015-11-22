@@ -116,7 +116,7 @@ public class CellLocationDatabase {
                                                        null,
                                                        SQLiteDatabase.NO_LOCALIZED_COLLATORS);
             } else {
-                Log.i(TAG, "Unable to open database "+ Config.DB_FILE);
+                if (DEBUG) Log.e(TAG, "Unable to open database "+ Config.DB_FILE);
                 database = null;
             }
         }

@@ -111,7 +111,7 @@ public class GsmService extends LocationBackendService {
             };
             worker.start();
         } catch (Exception e) {
-            Log.e(TAG, "Start failed: " + e.getMessage());
+            if (DEBUG) Log.e(TAG, "Start failed: " + e.getMessage());
             e.printStackTrace();
             worker = null;
         }
