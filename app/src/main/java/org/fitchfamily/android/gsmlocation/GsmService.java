@@ -1,7 +1,14 @@
 package org.fitchfamily.android.gsmlocation;
 
+import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Looper;
 import android.telephony.CellLocation;
 import android.telephony.PhoneStateListener;
@@ -124,12 +131,30 @@ public class GsmService extends LocationBackendService {
 
     @Override
     protected synchronized void onOpen() {
-        super.onOpen();
+        if (DEBUG) Log.d(TAG, "Binder OPEN called");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Context ctx = getApplicationContext();
+
+            if (ctx.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(ctx, ReqLocationPermActivity.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, intent, 0);
+
+                Notification notification = new Notification.Builder(ctx)
+                        .setContentTitle(getString(R.string.app_name))
+                        .setContentText(getString(R.string.notification_location_permission))
+                        .setSmallIcon(R.drawable.icon)
+                        .setContentIntent(pendingIntent)
+                        .build();
+
+                ((NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE))
+                        .notify(ReqLocationPermActivity.NOTIFICATION_ID, notification);
+                return;
+            }
+        }
 
         start();
-
-        if (DEBUG)
-            Log.d(TAG, "Binder OPEN called");
     }
 
     protected synchronized void onClose() {
@@ -147,5 +172,4 @@ public class GsmService extends LocationBackendService {
             worker = null;
         }
     }
-
 }

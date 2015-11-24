@@ -68,5 +68,12 @@
     <string name="st_FAILED">FAILED</string>
     <string name="st_SUCCESS">SUCCESS</string>
     <string name="st_UNKNOWN">UNKNOWN</string>
+
+    <!-- Strings related to requesting/granting permissions -->
+    <string name="notification_location_permission">Tap to grant the necessary location permission.</string>
+    <string name="dialog_location_perm_granted">Now disable and re-enable GSM Location Service in the UnifiedNlp settings to make it work. Alternatively, disable and re-enable location in the quick settings menu.</string>
+    <string name="dialog_location_perm_denied">The service won\'t be able to gather information about mobile network cells and will be useless until you grant the location permission.</string>
+    <string name="dialog_write_ext_storage_perm_granted">You must grant permission to access files on the device, the database can\'t be generated without it.</string>
+
 </resources>
 

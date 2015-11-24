@@ -1,10 +1,14 @@
 package org.fitchfamily.android.gsmlocation;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
@@ -25,6 +29,8 @@ public class SettingsFragment extends PreferenceFragment
         implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
     private static final String TAG = makeLogTag(SettingsFragment.class);
     private static final boolean DEBUG = Config.DEBUG;
+
+    private static final int REQ_CODE_EXT_STORAGE = 1;
 
     private SharedPreferences sp;
     private EditTextPreference ociKeyPreference;
@@ -127,7 +133,17 @@ public class SettingsFragment extends PreferenceFragment
             }
             return true;
         } else if (prefKey.equals("generate_database")) {
-            validatePrefsAndLaunchDownload();
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                validatePrefsAndLaunchDownload();
+            } else {
+                if (getContext().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                        PackageManager.PERMISSION_GRANTED) {
+                    validatePrefsAndLaunchDownload();
+                } else {
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            REQ_CODE_EXT_STORAGE);
+                }
+            }
             return true;
         }
 
@@ -146,6 +162,24 @@ public class SettingsFragment extends PreferenceFragment
                     .setCancelable(false).setPositiveButton(android.R.string.ok, null).show();
         } else {
             startActivity(new Intent(getActivity(), DownloadActivity.class));
+        }
+    }
+
+    @Override
+    @TargetApi(23)
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (DEBUG) Log.d(TAG, "onRequestPermissionsResult() called");
+
+        if (requestCode == REQ_CODE_EXT_STORAGE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                validatePrefsAndLaunchDownload();
+            } else {
+                new AlertDialog.Builder(getContext())
+                        .setMessage(R.string.dialog_write_ext_storage_perm_granted)
+                        .setCancelable(false).setPositiveButton(android.R.string.ok, null).show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
