@@ -75,3 +75,4 @@ Update History
 1.0.2|22Nov2015|Thanks to @hogbush Lots of code cleanup with better handling of UI elements.
 1.0.3|22Nov2015|Thanks to @pejakm Updated Serbian translation.
 1.0.4|24Nov2015|Thanks to @hogbush Support Marshmallow’s runtime permissions.
+1.0.5|20Dec2015|Detect and better handle SQLite detected errors

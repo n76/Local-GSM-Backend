@@ -320,6 +320,7 @@ public class DownloadTaskFragment extends Fragment {
                     database.close();
             } catch (Exception e) {
                 doLog(e.getMessage());
+                setState(FAILED);
             }
 
             // Remove database journal file regardless of how we finished

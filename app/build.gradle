@@ -8,8 +8,8 @@ android {
         applicationId "org.fitchfamily.android.gsmlocation"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 32
-        versionName "1.0.4"
+        versionCode 33
+        versionName "1.0.5"
     }
 
     buildTypes {

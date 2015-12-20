@@ -112,9 +112,20 @@ public class CellLocationDatabase {
                 Log.d(TAG, "Attempting to open database.");
 
             if (Config.DB_FILE.exists() && Config.DB_FILE.canRead()) {
-                database = SQLiteDatabase.openDatabase(Config.DB_FILE.getAbsolutePath(),
-                                                       null,
-                                                       SQLiteDatabase.NO_LOCALIZED_COLLATORS);
+                try {
+                    database = SQLiteDatabase.openDatabase(Config.DB_FILE.getAbsolutePath(),
+                            null,
+                            SQLiteDatabase.NO_LOCALIZED_COLLATORS);
+                } catch (Exception e) {
+                    if (DEBUG) Log.e(TAG, "Error opening database: "+ e.getMessage());
+                    database = null;
+                    Config.DB_FILE.delete();
+                    if (Config.DB_BAK_FILE.exists() && Config.DB_BAK_FILE.canRead()) {
+                        if (DEBUG) Log.e(TAG, "Reverting to old database");
+                        Config.DB_BAK_FILE.renameTo(Config.DB_FILE);
+                        openDatabase();
+                    }
+                }
             } else {
                 if (DEBUG) Log.e(TAG, "Unable to open database "+ Config.DB_FILE);
                 database = null;
