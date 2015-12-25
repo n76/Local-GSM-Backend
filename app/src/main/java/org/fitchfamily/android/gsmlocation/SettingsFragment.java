@@ -17,6 +17,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.octo.android.robospice.SpiceManager;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -27,6 +29,21 @@ import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
 public class SettingsFragment extends PreferenceFragment
         implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
+
+    private SpiceManager spiceManager = new SpiceManager(SpiceService.class);
+
+    @Override
+    public void onStart() {
+        spiceManager.start(getActivity());
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        spiceManager.shouldStop();
+        super.onStop();
+    }
+
     private static final String TAG = makeLogTag(SettingsFragment.class);
     private static final boolean DEBUG = Config.DEBUG;
 
@@ -161,7 +178,9 @@ public class SettingsFragment extends PreferenceFragment
             new AlertDialog.Builder(getActivity()).setMessage(R.string.no_api_key)
                     .setCancelable(false).setPositiveButton(android.R.string.ok, null).show();
         } else {
-            startActivity(new Intent(getActivity(), DownloadActivity.class));
+            DownloadSpiceRequest.executeWith(getActivity(), spiceManager);
+
+            startActivity(new Intent(getActivity(), DownloadProgressActivity.class));
         }
     }
 
