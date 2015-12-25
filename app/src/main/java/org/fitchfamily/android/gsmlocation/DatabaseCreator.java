@@ -55,7 +55,7 @@ public class DatabaseCreator {
      * @throws UnsupportedOperationException if the database is opened
      */
     private void ensureClosed() {
-        if(database == null) {
+        if(database != null) {
             throw new UnsupportedOperationException(file + " is opened");
         }
     }
