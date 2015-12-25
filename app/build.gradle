@@ -18,8 +18,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
 }
 
 dependencies {
     compile 'org.microg:unifiednlp-api:1.3.2'
+    compile 'com.octo.android.robospice:robospice:1.4.14'
 }

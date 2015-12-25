@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="false"
@@ -39,7 +40,7 @@
         </activity>
 
         <activity
-            android:name=".DownloadActivity"
+            android:name=".DownloadProgressActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:parentActivityName=".SettingsActivity" />
@@ -48,6 +49,11 @@
             android:name=".ReqLocationPermActivity"
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <service
+            android:name=".SpiceService"
+            android:exported="false" />
+
     </application>
 
 </manifest>

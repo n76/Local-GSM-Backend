@@ -1,31 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:keepScreenOn="true">
-    <ProgressBar
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ProgressBar
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
             android:id="@+id/progress"
             android:progress="0"
+            android:padding="@dimen/view_margin"
             style="@android:style/Widget.ProgressBar.Horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            />
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
 
-        <TextView android:id="@+id/logText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:freezesText="true" />
         <Button
-                android:id="@+id/cancel_button"
-                android:text="@android:string/cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:gravity="bottom" />
-    </FrameLayout>
-</LinearLayout>
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/view_margin"
+            android:id="@+id/cancel_button"
+            android:text="@android:string/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <TextView
+        android:padding="@dimen/view_margin"
+        android:layout_below="@+id/header"
+        android:id="@+id/logText"
+        android:gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>
