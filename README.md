@@ -78,3 +78,5 @@ Update History
 1.0.5|20Dec2015|Detect and better handle SQLite detected errors
 1.0.6|21Dec2015|Revise required API to allow install on Gingerbread
 1.0.7|23Dec2015|Revise target API to allow install on Gingerbread through Marshmallow
+1.1.0|25Dec2015|Thanks to @UnknownUntilNow Improve database download, add German translation
+
