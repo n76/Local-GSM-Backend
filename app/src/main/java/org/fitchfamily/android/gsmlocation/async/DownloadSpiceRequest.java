@@ -1,4 +1,4 @@
-package org.fitchfamily.android.gsmlocation;
+package org.fitchfamily.android.gsmlocation.async;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
@@ -13,6 +13,13 @@ import com.octo.android.robospice.request.SpiceRequest;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.retry.DefaultRetryPolicy;
 
+import org.fitchfamily.android.gsmlocation.Config;
+import org.fitchfamily.android.gsmlocation.CsvParser;
+import org.fitchfamily.android.gsmlocation.DatabaseCreator;
+import org.fitchfamily.android.gsmlocation.LogUtils;
+import org.fitchfamily.android.gsmlocation.R;
+import org.fitchfamily.android.gsmlocation.Settings;
+
 import java.io.BufferedInputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -20,7 +27,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -42,9 +48,7 @@ import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
  */
 
 public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Result> {
-    public static void executeWith(BaseActivity activity) {
-        executeWith(activity, activity.getSpiceManager());
-    }
+    public static final int PROGRESS_MAX = 1000;
 
     public static void executeWith(Context context, SpiceManager spiceManager) {
         spiceManager.execute(new DownloadSpiceRequest(context.getApplicationContext()), DownloadSpiceRequest.CACHE_KEY, DurationInMillis.ALWAYS_EXPIRED, new RequestListener<Result>() {
@@ -120,24 +124,32 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
 
             try {
                 databaseCreator = DatabaseCreator.withTempFile().open().createTable();
+                final boolean openCellId = Settings.with(context).useOpenCellId();
+                final boolean mozillaLocationService = Settings.with(context).useMozillaLocationService();
+                final boolean nothing = openCellId && mozillaLocationService;
+                final int sources = (openCellId ? 1 : 0) + (mozillaLocationService ? 1 : 0);
+                final int progress_per_source = nothing ? 0 : PROGRESS_MAX / sources;
+                int progress = 0;
 
-                if (Settings.with(context).useOpenCellId() && !isCancelled()) {
+                if (openCellId && !isCancelled()) {
                     logInfo(context.getString(R.string.log_GETTING_OCID));
-                    getData(String.format(Locale.US, Config.OCI_URL_FMT, Settings.with(context).openCellIdApiKey()));
+                    getData(String.format(Locale.US, Config.OCI_URL_FMT, Settings.with(context).openCellIdApiKey()), progress, progress_per_source);
+                    progress += progress_per_source;
                 }
 
-                if (Settings.with(context).useMozillaLocationService() && !isCancelled()) {
+                if (mozillaLocationService && !isCancelled()) {
                     logInfo(context.getString(R.string.log_GETTING_MOZ));
                     SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                     // Mozilla publishes new CSV files at a bit after the beginning of
                     // a new day in GMT time. Get the time for a place a couple hours
                     // west of Greenwich to allow time for the data to be posted.
                     dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT-03"));
-                    getData(String.format(Locale.US, Config.MLS_URL_FMT, dateFormatGmt.format(new Date())));
+                    getData(String.format(Locale.US, Config.MLS_URL_FMT, dateFormatGmt.format(new Date())), progress, progress_per_source);
+                    progress += progress_per_source;
                 }
 
                 if (!isCancelled()) {
-                    publishProgress(100, context.getString(R.string.log_INDICIES));
+                    publishProgress(PROGRESS_MAX, context.getString(R.string.log_INDICIES));
 
                     databaseCreator
                             .createIndex()
@@ -209,7 +221,13 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
         return true;
     }
 
-    private void getData(String url) throws Exception {
+    private void getData(String url, int progressStart, int progressEnd) throws Exception {
+        if(progressStart >= progressEnd) {
+            throw new IllegalArgumentException(progressStart + " >= " + progressEnd);
+        }
+
+        final int progressSize = progressEnd - progressStart;
+
         try {
             long maxLength;
             int totalRecords = 0;
@@ -277,12 +295,11 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
 
                 totalRecords++;
 
-                int percentComplete = (int) ((100l * cvs.bytesRead()) / maxLength);
                 if ((totalRecords % 1000) == 0) {
                     String statusText = RecsReadStr + " " + Integer.toString(totalRecords) +
                             ", " + RecsInsertedStr + " " + Integer.toString(insertedRecords);
 
-                    publishProgress(percentComplete, statusText);
+                    publishProgress(progressStart + (((cvs.bytesRead() * progressSize)) / (int) maxLength), statusText);
                 }
 
                 int mcc = Integer.parseInt(rec.get(mccIndex));
