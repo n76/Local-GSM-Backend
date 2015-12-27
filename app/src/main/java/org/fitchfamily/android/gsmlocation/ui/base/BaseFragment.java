@@ -1,20 +1,22 @@
-package org.fitchfamily.android.gsmlocation;
+package org.fitchfamily.android.gsmlocation.ui.base;
 
-import android.app.Activity;
+import android.support.v4.app.Fragment;
 
 import com.octo.android.robospice.SpiceManager;
 
-public abstract class BaseActivity extends Activity {
+import org.fitchfamily.android.gsmlocation.async.SpiceService;
+
+public abstract class BaseFragment extends Fragment {
     private SpiceManager spiceManager = new SpiceManager(SpiceService.class);
 
     @Override
-    protected void onStart() {
-        spiceManager.start(this);
+    public void onStart() {
+        spiceManager.start(getContext());
         super.onStart();
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         spiceManager.shouldStop();
         super.onStop();
     }

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="MissingTranslation" >
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
+    tools:ignore="MissingTranslation">
     <string name="app_name">GSM Ortungsdienst</string>
     <string name="summary">Ortung mittels Datenbank auf dem Telefon</string>
 
@@ -17,7 +18,6 @@
 
     <string name="filter_title">Filtern</string>
     <string name="mcc_filter_label">MCC Filter</string>
-    <string name="mcc_default">262</string>
     <string name="mcc_filter_description">Komma-getrennte List von Mobile Country Code-Nummern (MCC). siehe https://de.wikipedia.org/wiki/Mobile_Country_Code</string>
 
     <string name="mnc_filter_label">MNC Filter</string>
@@ -70,5 +70,72 @@
     <string name="dialog_location_perm_denied">Der Dienst ist nutzlos ohne die Berechtigung, da er keine Mobilfunkmasten sehen kann.</string>
     <string name="dialog_write_ext_storage_perm_granted">Die Datenbank kann nicht ohne Dateizugriff erstellt werden.</string>
 
+    <!-- string for the new UI -->
+    <string name="fragment_settings_title">Einstellungen</string>
+
+    <string name="fragment_update_database_title">Datenbank</string>
+
+    <string name="fragment_update_database_last_update">Letztes Datenbankupdate:
+        <xliff:g example="3 minutes ago" id="time">%1$s</xliff:g>
+    </string>
+    <string name="fragment_update_database_no_database_found">Keine Datenbank gefunden</string>
+    <string name="fragment_update_database_no_permission">Datenbank exsistiert, aber ist nicht
+        lesbar.
+        Bitte Berechtigungen für
+        <xliff:g id="file">%s</xliff:g>
+        bearbeiten
+    </string>
+    <string name="fragment_update_database_start_update">Datenbank aktualisiren</string>
+    <string name="fragment_update_database_create_database">Datenbank erstellen</string>
+    <string name="fragment_update_database_show_details">Details anzeigen</string>
+
+    <string name="fragment_update_database_exception_title">Fehler während des Datenbankupdates
+    </string>
+
+    <string name="fragment_settings_card_sources_title">Quellen</string>
+
+    <string name="fragment_settings_opencellid_error_title">OpenCellID konnte nicht aktiviert
+        werden
+    </string>
+    <string name="fragment_settings_opencellid_error_connection">Verbindung fehlgeschlagen</string>
+    <string name="fragment_settings_opencellid_error_day_limit">Möglicherweise funktioniert es
+        morgen?
+    </string>
+
+    <string name="activity_main_libraries">Externe Bibliotheken</string>
+
+    <string name="fragment_settings_card_areas_title">Gebiete</string>
+
+    <string name="fragment_settings_card_areas_nothing_chosen">Nichts ausgewählt (alle werden
+        verwendet)
+    </string>
+    <string name="fragment_settings_card_areas_other">Andere</string>
+
+    <string name="fragment_settings_blocked_database_update">Die Einstellungen können nicht
+        verändert
+        werden, während die Datenbank aktualisiert wird.
+    </string>
+
+    <string name="activity_area_list_title">Gebiete wählen</string>
+
+    <string name="fragment_area_list_unknown">Unbekanntes Gebiet (MCC:<xliff:g example="42"
+                                                                               id="mcc">
+        %1$s</xliff:g>)
+    </string>
+
+    <string name="fragment_database_update_error_no_sources">Sie müssen zuerst Quellen wählen
+    </string>
+    <string name="fragment_database_update_button_settings">Einstellungen öffnen</string>
+
+    <string name="fragment_database_update_error_no_permission">Berechtigung zum Speichern von Daten
+        ist erforderlich
+    </string>
+    <string name="fragment_database_update_button_permission_allow">Erlauben</string>
+
+    <string name="fragment_settings_advanced_title">Experteneinstellungen</string>
+
+    <string name="activity_area_list_search_hint">Suchen</string>
+
+    <string name="activity_main_about">Über</string>
 </resources>
 

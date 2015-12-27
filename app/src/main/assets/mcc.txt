@@ -1,0 +1,9 @@
+# this file contains all mcc numbers
+# syntax: [country code]:[mcc number, separated by comma]
+au:505
+ca:302
+gb:234,235
+nz:530
+us:310,311,312,313,316
+de:262
+sr:218,219,220,297

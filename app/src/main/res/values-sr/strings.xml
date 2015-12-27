@@ -17,7 +17,6 @@
 
     <string name="filter_title">Филтер</string>
     <string name="mcc_filter_label">МЦЦ филтер</string>
-    <string name="mcc_default">218,219,220,297</string>
     <string name="mcc_filter_description">Списак мобилних кôдова земље (MCC) за коришћење, одвојених зарезом. Погледајте http://en.wikipedia.org/wiki/Mobile_country_code</string>
 
     <string name="mnc_filter_label">МНЦ филтер</string>

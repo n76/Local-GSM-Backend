@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="define_androidsupportlibrary"></string>
+    <!-- Author section -->
+    <string name="library_androidsupportlibrary_author">The Android Open Source Project</string>
+    <string name="library_androidsupportlibrary_authorWebsite"></string>
+    <!-- Library section -->
+    <string name="library_androidsupportlibrary_libraryName">Android Support Library</string>
+    <string name="library_androidsupportlibrary_libraryDescription">The Android Support Library
+        package is a set of code libraries that provide backward-compatible versions of Android
+        framework APIs as well as features that are only available through the library APIs.
+    </string>
+    <string name="library_androidsupportlibrary_libraryWebsite">
+        https://developer.android.com/tools/support-library/index.html#overview
+    </string>
+    <string name="library_androidsupportlibrary_libraryVersion">23.1.1</string>
+    <!-- OpenSource section -->
+    <string name="library_androidsupportlibrary_isOpenSource">true</string>
+    <string name="library_androidsupportlibrary_repositoryLink">
+        https://android.googlesource.com/platform/frameworks/support
+    </string>
+    <!-- ClassPath for autoDetect section -->
+    <string name="library_androidsupportlibrary_classPath">android.support</string>
+    <!-- License section -->
+    <string name="library_androidsupportlibrary_licenseId">apache_2_0</string>
+    <!-- Custom variables section -->
+
+
+    <string name="define_robospice"></string>
+    <!-- Author section -->
+    <string name="library_robospice_author">Stéphane Nicolas</string>
+    <string name="library_robospice_authorWebsite">https://github.com/stephanenicolas</string>
+    <!-- Library section -->
+    <string name="library_robospice_libraryName">RoboSpice</string>
+    <string name="library_robospice_libraryDescription">RoboSpice is a modular android library that
+        makes writing asynchronous network requests easy!
+    </string>
+    <string name="library_robospice_libraryWebsite">
+        https://github.com/stephanenicolas/robospice/blob/release/README.md
+    </string>
+    <string name="library_robospice_libraryVersion">1.4.14</string>
+    <!-- OpenSource section -->
+    <string name="library_robospice_isOpenSource">true</string>
+    <string name="library_robospice_repositoryLink">https://github.com/stephanenicolas/robospice
+    </string>
+    <!-- ClassPath for autoDetect section -->
+    <string name="library_robospice_classPath">com.octo.android.robospice</string>
+    <!-- License section -->
+    <string name="library_robospice_licenseId">apache_2_0</string>
+    <!-- Custom variables section -->
+
+
+    <string name="define_supportpreferencefragment"></string>
+    <!-- Author section -->
+    <string name="library_supportpreferencefragment_author">Machinarius</string>
+    <string name="library_supportpreferencefragment_authorWebsite">https://github.com/Machinarius
+    </string>
+    <!-- Library section -->
+    <string name="library_supportpreferencefragment_libraryName">Support PreferenceFragment</string>
+    <string name="library_supportpreferencefragment_libraryDescription">Unofficial
+        PreferenceFragment compatibility layer for Android 1.6 and up.
+    </string>
+    <string name="library_supportpreferencefragment_libraryWebsite">
+        https://github.com/Machinarius/PreferenceFragment-Compat/blob/master/README.md
+    </string>
+    <string name="library_supportpreferencefragment_libraryVersion">0.1.1</string>
+    <!-- OpenSource section -->
+    <string name="library_supportpreferencefragment_isOpenSource">true</string>
+    <string name="library_supportpreferencefragment_repositoryLink">
+        https://github.com/Machinarius/PreferenceFragment-Compat
+    </string>
+    <!-- ClassPath for autoDetect section -->
+    <string name="library_supportpreferencefragment_classPath">
+        com.github.machinarius.preferencefragment
+    </string>
+    <!-- License section -->
+    <string name="library_supportpreferencefragment_licenseId">apache_2_0</string>
+    <!-- Custom variables section -->
+</resources>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="MissingTranslation" >
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
+    tools:ignore="MissingTranslation">
     <string name="app_name">GSM Location Service</string>
     <string name="summary">Locate using on phone database.</string>
 
@@ -19,30 +20,50 @@
     <string name="filter_title">Filtering</string>
     <string name="mcc_filter_label">MCC Filter</string>
     <string name="mcc_default"></string>
-    <string name="mcc_filter_description">Comma separated list of numeric Mobile Country Codes (MCC) to be used. See http://en.wikipedia.org/wiki/Mobile_country_code</string>
+    <string name="mcc_filter_description">Comma separated list of numeric Mobile Country Codes (MCC)
+        to be used. See http://en.wikipedia.org/wiki/Mobile_country_code
+    </string>
 
     <string name="mnc_filter_label">MNC Filter</string>
     <string name="mnc_default"></string>
-    <string name="mnc_filter_description">Comma separated list of numeric Mobile Network Codes (MNC) to be used. See http://en.wikipedia.org/wiki/Mobile_country_code</string>
+    <string name="mnc_filter_description">Comma separated list of numeric Mobile Network Codes (MNC)
+        to be used. See http://en.wikipedia.org/wiki/Mobile_country_code
+    </string>
 
     <string name="request_new_api_key">Request new OpenCellID key</string>
-    <string name="oci_key_already_entered">There is a key entered already, are you sure you want to request a new one?</string>
+    <string name="oci_key_already_entered">There is a key entered already, are you sure you want to
+        request a new one?
+    </string>
     <string name="oci_key_req_request_start">Requesting new OpenCellID API key…</string>
     <string name="oci_key_req_new_key_success">New key saved successfully</string>
     <string name="oci_key_req_key_invalid">Error: received an invalid API key</string>
-    <string name="oci_key_req_only_one_req_per_day">Request failed, you can only request one new key per day</string>
-    <string name="oci_key_req_unexpected_status_code">Error getting key, unexpected status code received</string>
+    <string name="oci_key_req_only_one_req_per_day">Request failed, you can only request one new key
+        per day
+    </string>
+    <string name="oci_key_req_unexpected_status_code">Error getting key, unexpected status code
+        received
+    </string>
     <string name="oci_key_req_failed_read">Error reading key from the response</string>
-    <string name="oci_key_req_connection_error">Error getting key, connection error occurred</string>
+    <string name="oci_key_req_connection_error">Error getting key, connection error occurred
+    </string>
 
     <string name="generate_database">Generate Database</string>
-    <string name="db_file_unreadable">Database file exists but cannot be read. Modify permissions on %s, or tap to attempt generating a new database.</string>
+    <string name="db_file_unreadable">Database file exists but cannot be read. Modify permissions on
+        %s, or tap to attempt generating a new database.
+    </string>
     <string name="db_file_last_modified">Last modified: %s\nTap to generate a new database.</string>
-    <string name="db_file_not_found">No database file found. Tap to generate a new database.</string>
+    <string name="db_file_not_found">No database file found. Tap to generate a new database.
+    </string>
 
-    <string name="no_api_key">OpenCellID selected as one of the data sources, but no API key given. Uncheck the OpenCellID option or enter a valid OpenCellID API key.</string>
-    <string name="no_data_requested">Neither OpenCellId data nor Mozilla Location Services data selected. Nothing to do.</string>
-    <string name="invalid_oci_api_key">The given API key is incorrect. Enter a valid one (or disable the OpenCellID data source).</string>
+    <string name="no_api_key">OpenCellID selected as one of the data sources, but no API key given.
+        Uncheck the OpenCellID option or enter a valid OpenCellID API key.
+    </string>
+    <string name="no_data_requested">Neither OpenCellId data nor Mozilla Location Services data
+        selected. Nothing to do.
+    </string>
+    <string name="invalid_oci_api_key">The given API key is incorrect. Enter a valid one (or disable
+        the OpenCellID data source).
+    </string>
 
     <string name="log_MCC_FILTER">MCC filter:</string>
     <string name="log_MCC_WORLD">No MCC Filters, assume all countries</string>
@@ -70,10 +91,76 @@
     <string name="st_UNKNOWN">UNKNOWN</string>
 
     <!-- Strings related to requesting/granting permissions -->
-    <string name="notification_location_permission">Tap to grant the necessary location permission.</string>
-    <string name="dialog_location_perm_granted">Now disable and re-enable GSM Location Service in the UnifiedNlp settings to make it work. Alternatively, disable and re-enable location in the quick settings menu.</string>
-    <string name="dialog_location_perm_denied">The service won\'t be able to gather information about mobile network cells and will be useless until you grant the location permission.</string>
-    <string name="dialog_write_ext_storage_perm_granted">You must grant permission to access files on the device, the database can\'t be generated without it.</string>
+    <string name="notification_location_permission">Tap to grant the necessary location
+        permission.
+    </string>
+    <string name="dialog_location_perm_granted">Now disable and re-enable GSM Location Service in
+        the UnifiedNlp settings to make it work. Alternatively, disable and re-enable location in
+        the quick settings menu.
+    </string>
+    <string name="dialog_location_perm_denied">The service won\'t be able to gather information
+        about mobile network cells and will be useless until you grant the location permission.
+    </string>
+    <string name="dialog_write_ext_storage_perm_granted">You must grant permission to access files
+        on the device, the database can\'t be generated without it.
+    </string>
 
+    <!-- string for the new UI -->
+    <string name="fragment_settings_title">Settings</string>
+
+    <string name="fragment_update_database_title">Database</string>
+
+    <string name="fragment_update_database_last_update">Last database update:
+        <xliff:g example="3 minutes ago" id="time">%1$s</xliff:g>
+    </string>
+    <string name="fragment_update_database_no_database_found">No database found</string>
+    <string name="fragment_update_database_no_permission">Database file exists but cannot be read.
+        Modify permissions on
+        <xliff:g id="file">%s</xliff:g>
+    </string>
+    <string name="fragment_update_database_start_update">Update database</string>
+    <string name="fragment_update_database_create_database">Create database</string>
+    <string name="fragment_update_database_show_details">Show details</string>
+
+    <string name="fragment_update_database_exception_title">Error during updating database</string>
+
+    <string name="fragment_settings_card_sources_title">Sources</string>
+
+    <string name="fragment_settings_opencellid_error_title">Couldn\'t enable OpenCellID</string>
+    <string name="fragment_settings_opencellid_error_connection">Connection failed</string>
+    <string name="fragment_settings_opencellid_error_day_limit">Try it tomorrow again</string>
+
+    <string name="activity_main_libraries">External libraries</string>
+
+    <string name="fragment_settings_card_areas_title">Areas</string>
+
+    <string name="fragment_settings_card_areas_nothing_chosen">Nothing chosen (will use all)
+    </string>
+    <string name="fragment_settings_card_areas_other">Others</string>
+
+    <string name="fragment_settings_blocked_database_update">You can\'t change the settings while
+        the database is being updated.
+    </string>
+
+    <string name="activity_area_list_title">Chose areas</string>
+
+    <string name="fragment_area_list_unknown">Unknown Area (MCC:<xliff:g example="42" id="mcc">
+        %1$s</xliff:g>)
+    </string>
+
+    <string name="fragment_database_update_error_no_sources">You have to choose sources in the
+        settings first
+    </string>
+    <string name="fragment_database_update_button_settings">Open Settings</string>
+
+    <string name="fragment_database_update_error_no_permission">Permission to store files required
+    </string>
+    <string name="fragment_database_update_button_permission_allow">Allow</string>
+
+    <string name="fragment_settings_advanced_title">Advanced Settings</string>
+
+    <string name="activity_area_list_search_hint">Search</string>
+
+    <string name="activity_main_about">About</string>
 </resources>
 
