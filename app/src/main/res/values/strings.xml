@@ -31,22 +31,40 @@
         the OpenCellID data source).
     </string>
 
-    <string name="log_MCC_FILTER">MCC filter:</string>
+    <string name="log_MCC_FILTER">MCC filter:
+        <xliff:g example="42,48" id="MCC filter">%1$s</xliff:g>
+    </string>
     <string name="log_MCC_WORLD">No MCC Filters, assume all countries</string>
-    <string name="log_MNC_FILTER">MNC Filter:</string>
+    <string name="log_MNC_FILTER">MNC Filter:
+        <xliff:g example="1,2,3,4" id="MNC filter">%1$s</xliff:g>
+    </string>
     <string name="log_MNC_WORLD">No MNC Filters, assume all networks</string>
     <string name="log_GETTING_OCID">Getting Tower Data From OpenCellID. . .</string>
     <string name="log_GETTING_MOZ">Getting Tower Data From Mozilla Location Services. . .</string>
-    <string name="log_URL">URL is</string>
-    <string name="log_CONT_LENGTH">Content length =</string>
-    <string name="log_REC_READ">Records Read:</string>
-    <string name="log_REC_INSERTED">Inserted:</string>
+    <string name="log_URL">URL is
+        <xliff:g example="http://opencellid.org/downloads/" id="url">%1$s</xliff:g>
+    </string>
+    <string name="log_CONT_LENGTH">Content length =
+        <xliff:g example="5535" id="content length">%1$s</xliff:g>
+    </string>
+    <string name="log_REC_STATS">
+        Records Read:<xliff:g example="1000" id="records read">%1$d</xliff:g>,
+        Inserted:
+        <xliff:g id="records inserted">%2$d</xliff:g>
+    </string>
     <string name="log_INDICIES">Creating indicies for faster access.</string>
-    <string name="log_TOT_TIME">Total Time:</string>
-    <string name="log_MILLISEC">ms</string>
-    <string name="log_MILLISEC_PER_REC">ms/record</string>
+    <string name="log_TOT_TIME">Total Time:
+        <xliff:g example="29530" id="time in milliseconds">%1$d</xliff:g>
+        ms
+    </string>
     <string name="log_FINISHED">Finished.</string>
-    <string name="log_TOTAL_TIME">Total Time:</string>
+    <string name="log_END_STATS">Total Time:
+        <xliff:g id="time in milliseconds">%1$s</xliff:g>
+        ms
+        (
+        <xliff:g id="milliseconds per record">%2$s</xliff:g>
+        ms/record)
+    </string>
 
     <string name="st_CANCELED">CANCELED</string>
 

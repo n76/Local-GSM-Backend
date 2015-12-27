@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="MissingTranslation" >
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
+    tools:ignore="MissingTranslation">
     <string name="app_name">Услуга локације помоћу ГСМ-а</string>
     <string name="summary">Лоцирање помоћу базе података базних станица на телефону.</string>
 
@@ -22,22 +23,40 @@
 
     <string name="invalid_oci_api_key">Задати АПИ кључ није исправан. Задајте исправан кључ (или искључите OpenCellID извор података).</string>
 
-    <string name="log_MCC_FILTER">МЦЦ филтер:</string>
+    <string name="log_MCC_FILTER">МЦЦ филтер:
+        <xliff:g example="42,48" id="MCC filter">%1$s</xliff:g>
+    </string>
     <string name="log_MCC_WORLD">Без МЦЦ филтера, претпостављам све државе</string>
-    <string name="log_MNC_FILTER">МНЦ филтер:</string>
+    <string name="log_MNC_FILTER">МНЦ филтер:
+        <xliff:g example="1,2,3,4" id="MNC filter">%1$s</xliff:g>
+    </string>
     <string name="log_MNC_WORLD">Без МНЦ филтера, претпостављам све мреже</string>
     <string name="log_GETTING_OCID">Добављам податке о базним станицама са OpenCell ID. . .</string>
     <string name="log_GETTING_MOZ">Добављам податке о базним станицама са Мозилиних услуга лоцирања. . .</string>
-    <string name="log_URL">УРЛ је</string>
-    <string name="log_CONT_LENGTH">Дужина садржаја =</string>
-    <string name="log_REC_READ">Уноса прочитано:</string>
-    <string name="log_REC_INSERTED">Уметнуто:</string>
+    <string name="log_URL">УРЛ је
+        <xliff:g example="http://opencellid.org/downloads/" id="url">%1$s</xliff:g>
+    </string>
+    <string name="log_CONT_LENGTH">Дужина садржаја =
+        <xliff:g example="5535" id="content length">%1$s</xliff:g>
+    </string>
+    <string name="log_REC_STATS">
+        Уноса прочитаноe:<xliff:g example="1000" id="records read">%1$d</xliff:g>,
+        Уметнуто:
+        <xliff:g id="records inserted">%2$d</xliff:g>
+    </string>
     <string name="log_INDICIES">Стварам индексе за бржи приступ.</string>
-    <string name="log_TOT_TIME">Укупно време:</string>
-    <string name="log_MILLISEC">ms</string>
-    <string name="log_MILLISEC_PER_REC">ms/унос</string>
+    <string name="log_TOT_TIME">Укупно време:
+        <xliff:g example="29530" id="time in milliseconds">%1$d</xliff:g>
+        ms
+    </string>
     <string name="log_FINISHED">Завршено.</string>
-    <string name="log_TOTAL_TIME">Укупно време:</string>
+    <string name="log_END_STATS">Укупно време:
+        <xliff:g id="time in milliseconds">%1$s</xliff:g>
+        ms
+        (
+        <xliff:g id="milliseconds per record">%2$s</xliff:g>
+        ms/унос)
+    </string>
 
     <string name="st_CANCELED">ОТКАЗАНО</string>
 </resources>
