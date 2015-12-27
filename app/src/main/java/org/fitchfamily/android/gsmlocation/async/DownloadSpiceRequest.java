@@ -126,14 +126,14 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
                 databaseCreator = DatabaseCreator.withTempFile().open().createTable();
                 final boolean openCellId = Settings.with(context).useOpenCellId();
                 final boolean mozillaLocationService = Settings.with(context).useMozillaLocationService();
-                final boolean nothing = openCellId && mozillaLocationService;
+                final boolean nothing = (!openCellId) && (!mozillaLocationService);
                 final int sources = (openCellId ? 1 : 0) + (mozillaLocationService ? 1 : 0);
                 final int progress_per_source = nothing ? 0 : PROGRESS_MAX / sources;
                 int progress = 0;
 
                 if (openCellId && !isCancelled()) {
                     logInfo(context.getString(R.string.log_GETTING_OCID));
-                    getData(String.format(Locale.US, Config.OCI_URL_FMT, Settings.with(context).openCellIdApiKey()), progress, progress_per_source);
+                    getData(String.format(Locale.US, Config.OCI_URL_FMT, Settings.with(context).openCellIdApiKey()), progress, progress + progress_per_source);
                     progress += progress_per_source;
                 }
 
@@ -144,7 +144,7 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
                     // a new day in GMT time. Get the time for a place a couple hours
                     // west of Greenwich to allow time for the data to be posted.
                     dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT-03"));
-                    getData(String.format(Locale.US, Config.MLS_URL_FMT, dateFormatGmt.format(new Date())), progress, progress_per_source);
+                    getData(String.format(Locale.US, Config.MLS_URL_FMT, dateFormatGmt.format(new Date())), progress, progress + progress_per_source);
                     progress += progress_per_source;
                 }
 
@@ -226,7 +226,7 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
             throw new IllegalArgumentException(progressStart + " >= " + progressEnd);
         }
 
-        final int progressSize = progressEnd - progressStart;
+        final long progressSize = progressEnd - progressStart;
 
         try {
             long maxLength;
@@ -299,7 +299,8 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
                     String statusText = RecsReadStr + " " + Integer.toString(totalRecords) +
                             ", " + RecsInsertedStr + " " + Integer.toString(insertedRecords);
 
-                    publishProgress(progressStart + (((cvs.bytesRead() * progressSize)) / (int) maxLength), statusText);
+                    final long progress = ((((long) cvs.bytesRead()) * progressSize)) / maxLength;
+                    publishProgress(progressStart + (int) progress, statusText);
                 }
 
                 int mcc = Integer.parseInt(rec.get(mccIndex));
@@ -364,9 +365,9 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
         }
     }
 
-    private void publishProgress(int percentage, String message) {
-        lastProgress = percentage;
-        logProgress(percentage, message);
+    private void publishProgress(int progress, String message) {
+        lastProgress = progress;
+        logProgress(progress / (PROGRESS_MAX / 100), message);
     }
 
     private void logInfo(String info) {
