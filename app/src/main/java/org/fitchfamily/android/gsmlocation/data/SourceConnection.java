@@ -12,24 +12,32 @@ import javax.net.ssl.HttpsURLConnection;
 public final class SourceConnection {
     private HttpURLConnection connection;
 
+    private Source source;
     private InputStream inputStream;
 
     public SourceConnection(Source source) throws IOException {
-        URL u = new URL(source.url());
+        this.source = source;
 
-        if (u.getProtocol().equals("https")) {
-            connection = (HttpsURLConnection) u.openConnection();
+        URL url = new URL(source.url());
+
+        if (url.getProtocol().equals("https")) {
+            connection = (HttpsURLConnection) url.openConnection();
         } else {
-            connection = (HttpURLConnection) u.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
         }
 
         connection.setRequestMethod("GET");
         connection.connect();
 
-        inputStream = new BufferedInputStream(
-                new GZIPInputStream(
-                        new BufferedInputStream(
-                                connection.getInputStream())));
+        inputStream = new BufferedInputStream(connection.getInputStream());
+
+        if (source.compression() == Source.Compression.gzip) {
+            inputStream = new BufferedInputStream(
+                    new GZIPInputStream(
+                            inputStream
+                    )
+            );
+        }
     }
 
     public int getCompressedContentLength() {
@@ -38,7 +46,7 @@ public final class SourceConnection {
 
     public int getContentLength() {
         // Looks like .gz is about a 4 to 1 compression ratio
-        return connection.getContentLength() * 4;
+        return connection.getContentLength() * (source.compression() == Source.Compression.gzip ? 4 : 1);
     }
 
     public InputStream inputStream() {

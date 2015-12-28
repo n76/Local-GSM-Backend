@@ -36,6 +36,6 @@ public final class Source {
     }
 
     public enum Compression {
-        gzip
+        gzip, none
     }
 }
