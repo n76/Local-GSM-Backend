@@ -207,6 +207,10 @@ public class DatabaseCreator {
             insertStatement = database.compileStatement(SQL_INSERT);
         }
 
+        if (accuracy.contains(".")) {
+            accuracy = accuracy.substring(0, accuracy.indexOf("."));
+        }
+
         int range = Integer.parseInt(accuracy);
         range = Math.max(range, Config.MIN_RANGE);
         range = Math.min(range, Config.MAX_RANGE);
