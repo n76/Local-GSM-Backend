@@ -6,20 +6,33 @@ import java.util.Collections;
 import java.util.List;
 
 public final class Source {
+    public static final int UNKNOWN = -1;
+
     private final List<String> urls;
     private final Compression compression;
 
-    public Source(List<String> urls, Compression compression) {
+    private final int expectedRecords;
+
+    public Source(List<String> urls, Compression compression, int expectedRecords) {
         if (urls == null || urls.isEmpty() || compression == null) {
             throw new NullPointerException();
         }
 
         this.urls = Collections.unmodifiableList(urls);
         this.compression = compression;
+        this.expectedRecords = expectedRecords;
+    }
+
+    public Source(List<String> urls, Compression compression) {
+        this(urls, compression, UNKNOWN);
+    }
+
+    public Source(String url, Compression compression, int expectedRecords) {
+        this(Arrays.asList(url), compression, expectedRecords);
     }
 
     public Source(String url, Compression compression) {
-        this(Arrays.asList(url), compression);
+        this(url, compression, UNKNOWN);
     }
 
     public Compression compression() {
@@ -28,6 +41,10 @@ public final class Source {
 
     public List<String> urls() {
         return urls;
+    }
+
+    public int expectedRecords() {
+        return expectedRecords;
     }
 
     public SourceConnection connect() throws IOException {
