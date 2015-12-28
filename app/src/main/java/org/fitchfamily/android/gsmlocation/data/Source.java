@@ -2,6 +2,8 @@ package org.fitchfamily.android.gsmlocation.data;
 
 import android.text.TextUtils;
 
+import java.io.IOException;
+
 public final class Source {
     private final String url;
 
@@ -22,6 +24,10 @@ public final class Source {
 
     public String url() {
         return url;
+    }
+
+    public SourceConnection connect() throws IOException {
+        return new SourceConnection(this);
     }
 
     @Override

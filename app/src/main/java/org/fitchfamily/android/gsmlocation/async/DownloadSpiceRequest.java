@@ -20,11 +20,9 @@ import org.fitchfamily.android.gsmlocation.LogUtils;
 import org.fitchfamily.android.gsmlocation.R;
 import org.fitchfamily.android.gsmlocation.Settings;
 import org.fitchfamily.android.gsmlocation.data.Source;
+import org.fitchfamily.android.gsmlocation.data.SourceConnection;
 
-import java.io.BufferedInputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,9 +31,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.zip.GZIPInputStream;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
@@ -252,7 +247,6 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
         final long progressSize = progressEnd - progressStart;
 
         try {
-            long maxLength;
             int totalRecords = 0;
             int insertedRecords = 0;
 
@@ -260,26 +254,12 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
 
             logInfo(context.getString(R.string.log_URL, source));
 
-            HttpURLConnection c;
-            URL u = new URL(source.url());
+            SourceConnection connection = source.connect();
 
-            if (u.getProtocol().equals("https")) {
-                c = (HttpsURLConnection) u.openConnection();
-            } else {
-                c = (HttpURLConnection) u.openConnection();
-            }
-            c.setRequestMethod("GET");
-            c.connect();
+            logInfo(context.getString(R.string.log_CONT_LENGTH, String.valueOf(connection.getCompressedContentLength())));
+            final long maxLength = connection.getContentLength();
 
-            // Looks like .gz is about a 4 to 1 compression ratio
-            logInfo(context.getString(R.string.log_CONT_LENGTH, String.valueOf(c.getContentLength())));
-            maxLength = c.getContentLength() * 4;
-
-            CsvParser cvs = new CsvParser(
-                    new BufferedInputStream(
-                            new GZIPInputStream(
-                                    new BufferedInputStream(
-                                            c.getInputStream()))));
+            CsvParser cvs = new CsvParser(connection.inputStream());
 
             // CSV Field    ==> Database Field
             // radio        ==>
