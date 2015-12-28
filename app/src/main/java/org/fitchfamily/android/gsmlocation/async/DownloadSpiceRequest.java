@@ -341,7 +341,7 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
             long exitTime = System.currentTimeMillis();
             long execTime = exitTime - entryTime;
 
-            float f = (Math.round((1000.0f * execTime) / Math.min(totalRecords, 1)) / 1000.0f);
+            float f = (Math.round((1000.0f * execTime) / Math.max(totalRecords, 1)) / 1000.0f);
 
             logInfo(context.getString(R.string.log_END_STATS, execTime, f));
 
