@@ -19,6 +19,7 @@ import org.fitchfamily.android.gsmlocation.DatabaseCreator;
 import org.fitchfamily.android.gsmlocation.LogUtils;
 import org.fitchfamily.android.gsmlocation.R;
 import org.fitchfamily.android.gsmlocation.Settings;
+import org.fitchfamily.android.gsmlocation.data.Source;
 
 import java.io.BufferedInputStream;
 import java.net.HttpURLConnection;
@@ -105,11 +106,11 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
      * @param context a context
      * @return a list of data urls based on the settings
      */
-    private static List<String> getDownloadUrls(Context context) {
-        List<String> urlList = new ArrayList<>();
+    private static List<Source> getSources(Context context) {
+        List<Source> sources = new ArrayList<>();
 
         if (Settings.with(context).useOpenCellId()) {
-            urlList.add(String.format(Locale.US, Config.OCI_URL_FMT, Settings.with(context).openCellIdApiKey()));
+            sources.add(new Source(String.format(Locale.US, Config.OCI_URL_FMT, Settings.with(context).openCellIdApiKey()), Source.Compression.gzip));
         }
 
         if (Settings.with(context).useMozillaLocationService()) {
@@ -118,10 +119,10 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
             // a new day in GMT time. Get the time for a place a couple hours
             // west of Greenwich to allow time for the data to be posted.
             dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT-03"));
-            urlList.add(String.format(Locale.US, Config.MLS_URL_FMT, dateFormatGmt.format(new Date())));
+            sources.add(new Source(String.format(Locale.US, Config.MLS_URL_FMT, dateFormatGmt.format(new Date())), Source.Compression.gzip));
         }
 
-        return Collections.unmodifiableList(urlList);
+        return Collections.unmodifiableList(sources);
     }
 
     @Override
@@ -155,15 +156,15 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
             try {
                 databaseCreator = DatabaseCreator.withTempFile().open().createTable();
 
-                final List<String> urls = getDownloadUrls(context);
-                final int urls_size = urls.size();
+                final List<Source> sources = getSources(context);
+                final int sources_size = sources.size();
 
-                for (int i = 0; i < urls_size; i++) {
-                    final String url = urls.get(i);
-                    final int progressStart = i * PROGRESS_MAX / urls_size;
-                    final int progressEnd = (i + 1) * PROGRESS_MAX / urls_size;
+                for (int i = 0; i < sources_size; i++) {
+                    final Source source = sources.get(i);
+                    final int progressStart = i * PROGRESS_MAX / sources_size;
+                    final int progressEnd = (i + 1) * PROGRESS_MAX / sources_size;
 
-                    getData(url, progressStart, progressEnd);
+                    getData(source, progressStart, progressEnd);
 
                     if (isCancelled()) {
                         break;
@@ -243,7 +244,7 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
         return true;
     }
 
-    private void getData(String url, int progressStart, int progressEnd) throws Exception {
+    private void getData(Source source, int progressStart, int progressEnd) throws Exception {
         if(progressStart >= progressEnd) {
             throw new IllegalArgumentException(progressStart + " >= " + progressEnd);
         }
@@ -257,10 +258,10 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
 
             long entryTime = System.currentTimeMillis();
 
-            logInfo(context.getString(R.string.log_URL, url));
+            logInfo(context.getString(R.string.log_URL, source));
 
             HttpURLConnection c;
-            URL u = new URL(url);
+            URL u = new URL(source.url());
 
             if (u.getProtocol().equals("https")) {
                 c = (HttpsURLConnection) u.openConnection();
@@ -365,7 +366,7 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
             logInfo(context.getString(R.string.log_END_STATS, execTime, f));
 
         } catch (MalformedURLException e) {
-            logError("getData('" + url + "') failed: " + e.getMessage());
+            logError("getData('" + source + "') failed: " + e.getMessage());
 
             throw e;
         } catch (Exception e) {
