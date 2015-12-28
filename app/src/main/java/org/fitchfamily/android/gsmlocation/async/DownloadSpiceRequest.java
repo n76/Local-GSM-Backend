@@ -25,7 +25,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -97,6 +99,31 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
         });
     }
 
+    /**
+     * Use this function to get the download url
+     *
+     * @param context a context
+     * @return a list of data urls based on the settings
+     */
+    private static List<String> getDownloadUrls(Context context) {
+        List<String> urlList = new ArrayList<>();
+
+        if (Settings.with(context).useOpenCellId()) {
+            urlList.add(String.format(Locale.US, Config.OCI_URL_FMT, Settings.with(context).openCellIdApiKey()));
+        }
+
+        if (Settings.with(context).useMozillaLocationService()) {
+            SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+            // Mozilla publishes new CSV files at a bit after the beginning of
+            // a new day in GMT time. Get the time for a place a couple hours
+            // west of Greenwich to allow time for the data to be posted.
+            dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT-03"));
+            urlList.add(String.format(Locale.US, Config.MLS_URL_FMT, dateFormatGmt.format(new Date())));
+        }
+
+        return Collections.unmodifiableList(urlList);
+    }
+
     @Override
     public Result loadDataFromNetwork() throws Exception {
         lastInstance = this;
@@ -127,28 +154,20 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
 
             try {
                 databaseCreator = DatabaseCreator.withTempFile().open().createTable();
-                final boolean openCellId = Settings.with(context).useOpenCellId();
-                final boolean mozillaLocationService = Settings.with(context).useMozillaLocationService();
-                final boolean nothing = (!openCellId) && (!mozillaLocationService);
-                final int sources = (openCellId ? 1 : 0) + (mozillaLocationService ? 1 : 0);
-                final int progress_per_source = nothing ? 0 : PROGRESS_MAX / sources;
-                int progress = 0;
 
-                if (openCellId && !isCancelled()) {
-                    logInfo(context.getString(R.string.log_GETTING_OCID));
-                    getData(String.format(Locale.US, Config.OCI_URL_FMT, Settings.with(context).openCellIdApiKey()), progress, progress + progress_per_source);
-                    progress += progress_per_source;
-                }
+                final List<String> urls = getDownloadUrls(context);
+                final int urls_size = urls.size();
 
-                if (mozillaLocationService && !isCancelled()) {
-                    logInfo(context.getString(R.string.log_GETTING_MOZ));
-                    SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-                    // Mozilla publishes new CSV files at a bit after the beginning of
-                    // a new day in GMT time. Get the time for a place a couple hours
-                    // west of Greenwich to allow time for the data to be posted.
-                    dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT-03"));
-                    getData(String.format(Locale.US, Config.MLS_URL_FMT, dateFormatGmt.format(new Date())), progress, progress + progress_per_source);
-                    progress += progress_per_source;
+                for (int i = 0; i < urls_size; i++) {
+                    final String url = urls.get(i);
+                    final int progressStart = i * PROGRESS_MAX / urls_size;
+                    final int progressEnd = (i + 1) * PROGRESS_MAX / urls_size;
+
+                    getData(url, progressStart, progressEnd);
+
+                    if (isCancelled()) {
+                        break;
+                    }
                 }
 
                 if (!isCancelled()) {
