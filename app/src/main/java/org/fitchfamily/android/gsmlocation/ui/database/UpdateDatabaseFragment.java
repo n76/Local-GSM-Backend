@@ -150,7 +150,7 @@ public class UpdateDatabaseFragment extends BaseFragment implements
     }
 
     private void resetProgress() {
-        setProgress(0, 100);
+        setProgress(100, 100);
     }
 
     private void updateShownErrors() {
