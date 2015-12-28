@@ -64,6 +64,9 @@ public class SettingsFragment extends BaseFragment {
     protected CheckBox mozillaLocationServices;
 
     @ViewById
+    protected CheckBox lacells;
+
+    @ViewById
     protected ProgressBar openCellIdProgress;
 
     private final PendingRequestListener<ObtainOpenCellIdKeySpiceRequest.Result> openCellIdListener = new PendingRequestListener<ObtainOpenCellIdKeySpiceRequest.Result>() {
@@ -107,6 +110,13 @@ public class SettingsFragment extends BaseFragment {
     protected void init() {
         openCellId.setChecked(Settings.with(this).useOpenCellId());
         mozillaLocationServices.setChecked(Settings.with(this).useMozillaLocationService());
+        lacells.setChecked(Settings.with(this).useLacells());
+        updateSourcesVisibility();
+    }
+
+    private void updateSourcesVisibility() {
+        openCellId.setVisibility(lacells.isChecked() ? View.GONE : View.VISIBLE);
+        mozillaLocationServices.setVisibility(lacells.isChecked() ? View.GONE : View.VISIBLE);
     }
 
     @AfterViews
@@ -128,6 +138,12 @@ public class SettingsFragment extends BaseFragment {
     @CheckedChange
     protected void mozillaLocationServices(boolean checked) {
         Settings.with(this).useMozillaLocationService(checked);
+    }
+
+    @CheckedChange
+    protected void lacells(boolean enabled) {
+        Settings.with(this).useLacells(enabled);
+        updateSourcesVisibility();
     }
 
     private void obtainOpenCellIdApiKey() {

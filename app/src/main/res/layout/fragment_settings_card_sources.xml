@@ -19,6 +19,12 @@
             android:textAppearance="?android:attr/textAppearanceLarge"/>
 
         <CheckBox
+            android:id="@+id/lacells"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/use_lacells"/>
+
+        <CheckBox
             android:id="@+id/open_cell_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
