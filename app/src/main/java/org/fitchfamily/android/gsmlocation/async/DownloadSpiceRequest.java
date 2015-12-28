@@ -22,14 +22,18 @@ import org.fitchfamily.android.gsmlocation.Settings;
 import org.fitchfamily.android.gsmlocation.data.Source;
 import org.fitchfamily.android.gsmlocation.data.SourceConnection;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
@@ -101,23 +105,92 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
      * @param context a context
      * @return a list of data urls based on the settings
      */
-    private static List<Source> getSources(Context context) {
+    private static List<Source> getSources(Context context) throws IOException {
         List<Source> sources = new ArrayList<>();
 
-        if (Settings.with(context).useOpenCellId()) {
-            sources.add(new Source(String.format(Locale.US, Config.OCI_URL_FMT, Settings.with(context).openCellIdApiKey()), Source.Compression.gzip));
-        }
+        if (Settings.with(context).useLacells()) {
+            Map<Integer, Integer> mccRecordCountMap = new HashMap<>();
+            try {
+                SourceConnection connection = new Source(Config.LACELLS_MCC_URL, Source.Compression.none).connect();
+                CsvParser parser = new CsvParser(connection.inputStream());
+                final List<String> header = parser.parseLine();
+                final int index_mcc = header.indexOf("mcc");
+                final int index_cells = header.indexOf("cells");
 
-        if (Settings.with(context).useMozillaLocationService()) {
-            SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-            // Mozilla publishes new CSV files at a bit after the beginning of
-            // a new day in GMT time. Get the time for a place a couple hours
-            // west of Greenwich to allow time for the data to be posted.
-            dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT-03"));
-            sources.add(new Source(String.format(Locale.US, Config.MLS_URL_FMT, dateFormatGmt.format(new Date())), Source.Compression.gzip));
+                List<String> line;
+
+                while ((line = parser.parseLine()) != null && line.size() > index_mcc) {
+                    mccRecordCountMap.put(Integer.parseInt(line.get(index_mcc)), Integer.parseInt(line.get(index_cells)));
+                }
+            } catch (Exception ex) {
+                throw new IOException(ex);
+            }
+
+            Set<Integer> mccs = Settings.with(context).mccFilterSet();
+
+            if (mccs.isEmpty()) {
+                // get all supported
+                mccs = mccRecordCountMap.keySet();
+            }
+
+            for (int mcc : mccs) {
+                Integer records = mccRecordCountMap.get(mcc);
+
+                if (records == null) {
+                    throw new IOException("lacells does not contain " + mcc);
+                }
+
+                String[] postfixes = null;
+
+                // exceptions
+                if (mcc == 262) {
+                    postfixes = new String[]{"_a", "_b", "_c"};
+                } else if (mcc == 310) {
+                    postfixes = new String[]{"_a", "_b", "_c", "_d"};
+                }
+
+                if (postfixes == null) {
+                    sources.add(new Source(String.format(Locale.US, Config.LACELLS_URL, String.valueOf(mcc)), Source.Compression.none, records));
+                } else {
+                    List<String> urls = new ArrayList<>();
+
+                    for (String postfix : postfixes) {
+                        urls.add(String.format(Locale.US, Config.LACELLS_URL, String.valueOf(mcc) + postfix));
+                    }
+
+                    sources.add(new Source(urls, Source.Compression.none, records));
+                }
+            }
+        } else {
+            // only use the other sources when lacells is not enabled
+
+            if (Settings.with(context).useOpenCellId()) {
+                sources.add(new Source(String.format(Locale.US, Config.OCI_URL_FMT, Settings.with(context).openCellIdApiKey()), Source.Compression.gzip));
+            }
+
+            if (Settings.with(context).useMozillaLocationService()) {
+                SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                // Mozilla publishes new CSV files at a bit after the beginning of
+                // a new day in GMT time. Get the time for a place a couple hours
+                // west of Greenwich to allow time for the data to be posted.
+                dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT-03"));
+                sources.add(new Source(String.format(Locale.US, Config.MLS_URL_FMT, dateFormatGmt.format(new Date())), Source.Compression.gzip));
+            }
         }
 
         return Collections.unmodifiableList(sources);
+    }
+
+    private static int indexOf(List<String> data, String[] searched) {
+        for (String search : searched) {
+            final int index = data.indexOf(search);
+
+            if (index != -1) {
+                return index;
+            }
+        }
+
+        return -1;
     }
 
     @Override
@@ -276,14 +349,14 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
             // created      ==>
             // updated      ==>
             // averageSignal==>
-            List headers = cvs.parseLine();
+            List<String> headers = cvs.parseLine();
             int mccIndex = headers.indexOf("mcc");
-            int mncIndex = headers.indexOf("net");
-            int lacIndex = headers.indexOf("area");
-            int cidIndex = headers.indexOf("cell");
-            int lonIndex = headers.indexOf("lon");
-            int latIndex = headers.indexOf("lat");
-            int accIndex = headers.indexOf("range");
+            int mncIndex = indexOf(headers, new String[]{"net", "mnc"});
+            int lacIndex = indexOf(headers, new String[]{"area", "lac"});
+            int cidIndex = indexOf(headers, new String[]{"cell", "cid"});
+            int lonIndex = indexOf(headers, new String[]{"lon", "longitude"});
+            int latIndex = indexOf(headers, new String[]{"lat", "latitude"});
+            int accIndex = indexOf(headers, new String[]{"range", "accuracy"});
             int smpIndex = headers.indexOf("samples");
 
             databaseCreator.beginTransaction();
@@ -298,7 +371,14 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
 
                 if ((totalRecords % 1000) == 0) {
                     final String statusText = context.getString(R.string.log_REC_STATS, totalRecords, insertedRecords);
-                    final long progress = ((((long) cvs.bytesRead()) * progressSize)) / maxLength;
+                    long progress;
+
+                    if (source.expectedRecords() != Source.UNKNOWN) {
+                        progress = Math.min(totalRecords, source.expectedRecords()) * progressSize / source.expectedRecords();
+                    } else {
+                        progress = ((((long) cvs.bytesRead()) * progressSize)) / maxLength;
+                    }
+
                     publishProgress(progressStart + (int) progress, statusText);
                 }
 
