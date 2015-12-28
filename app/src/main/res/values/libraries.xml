@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources,MissingTranslation">
     <string name="define_androidsupportlibrary"></string>
     <!-- Author section -->
     <string name="library_androidsupportlibrary_author">The Android Open Source Project</string>

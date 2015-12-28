@@ -18,23 +18,12 @@ otherwise.
 This software is derived from LocalGSMLocationProvider at https://github.com/rtreffer/LocalGSMLocationProvider but differs as follows:
 
 1. This software uses a sqlite database rather than the custom built one in LocalGSMLocationProvider.
-2. This software does not ship with a built in database. Databases can be generated with the scripts at https://github.com/n76/lacells-creator
+2. This software does not ship with a built in database. Databases can be generated with the scripts at https://github.com/n76/lacells-creator or using the built in database generation facility.
 3. The database used by this software includes an estimated range of coverage for each cell tower. That information is used to provide a location estimate weighted by coverage area and to make an estimate of position accuracy. (The original LocalGSMLocationProvider assumes 800 meter range for all towers.)
-
-Requirement for building
-========================
-
-1. Android development platform
 
 Requirements on phone
 =====================
 1. This is a plug in for µg UnifiedNlp which can be installed from f-droid.
-
-How to build and install
-========================
-
-1. ant debug
-2. adb install bin/android_apps_gsmlp-debug.apk
 
 Setup on phone
 ==============
@@ -54,7 +43,7 @@ At least on a Google Galaxy Nexus (Maguro), download and creation of the databas
 
 Filtering
 =========
-You are very likely to want to filter the data going into the on-phone database so that it only contains the Mobile Country Codes (MCCs) in your area of interest. For the United States (MCC codes of 310 and 311) the final on-phone database is about 96MB.
+You are very likely to want to filter the data going into the on-phone database so that it only contains the Mobile Country Codes (MCCs) in your area of interest.
 
 In addition to filtering by Mobile Country Code (MCCs), the on phone database generator can filter by Mobile Network Code (MNCs). This can further decrease the size of the on phone database but may decrease accuracy of the location result.
 
@@ -79,4 +68,5 @@ Update History
 1.0.6|21Dec2015|Revise required API to allow install on Gingerbread
 1.0.7|23Dec2015|Revise target API to allow install on Gingerbread through Marshmallow
 1.1.0|25Dec2015|Thanks to @UnknownUntilNow Improve database download, add German translation
+1.2.0|27Dec2015|Thanks to @UnknownUntilNow Improve database download, new UI allows selection of countries by name for many countries.
 
