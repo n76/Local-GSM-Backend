@@ -69,4 +69,5 @@ Update History
 1.0.7|23Dec2015|Revise target API to allow install on Gingerbread through Marshmallow
 1.1.0|25Dec2015|Thanks to @UnknownUntilNow Improve database download, add German translation
 1.2.0|27Dec2015|Thanks to @UnknownUntilNow Improve database download, new UI allows selection of countries by name for many countries.
+1.2.1|28Dec2015|Correct report on processing time per record.
 
