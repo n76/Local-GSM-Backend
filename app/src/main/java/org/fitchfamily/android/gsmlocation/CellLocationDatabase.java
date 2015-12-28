@@ -4,8 +4,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.util.LruCache;
 import android.util.Log;
-import android.util.LruCache;
 
 import org.microg.nlp.api.LocationHelper;
 
@@ -30,65 +30,14 @@ public class CellLocationDatabase {
     private SQLiteDatabase database;
 
     /**
-     * Used internally for caching. HashMap compatible entity class.
-     */
-    private static class QueryArgs {
-        private Integer mcc;
-        private Integer mnc;
-        private int cid;
-        private int lac;
-
-        private QueryArgs(Integer mcc, Integer mnc, int cid, int lac) {
-            this.mcc = mcc;
-            this.mnc = mnc;
-            this.cid = cid;
-            this.lac = lac;
-        }
-
-        public boolean equals(Object o) {
-            if (this == o)
-                return true;
-            if (o == null || getClass() != o.getClass())
-                return false;
-
-            QueryArgs queryArgs = (QueryArgs) o;
-
-            if (cid != queryArgs.cid)
-                return false;
-
-            if (lac != queryArgs.lac)
-                return false;
-
-            if (mcc != null ? !mcc.equals(queryArgs.mcc) : queryArgs.mcc != null)
-                return false;
-
-            if (mnc != null ? !mnc.equals(queryArgs.mnc) : queryArgs.mnc != null)
-                return false;
-
-            return true;
-        }
-        public int hashCode() {
-            int result = mcc != null ? mcc.hashCode() : (1 << 16);
-            result = 31 * result + (mnc != null ? mnc.hashCode() : (1 << 16));
-            result = 31 * result + cid;
-            result = 31 * result + lac;
-            return result;
-        }
-
-        public String toString() {
-            return "mcc=" + mcc + ", mnc=" + mnc + ", lac=" + lac +", cid=" + cid;
-        }
-    }
-
-    /**
      * DB negative query cache (not found in db).
      */
     private LruCache<QueryArgs, Boolean> queryResultNegativeCache = new LruCache<QueryArgs, Boolean>(10000);
+
     /**
      * DB positive query cache (found in the db).
      */
     private LruCache<QueryArgs, Location> queryResultCache = new LruCache<QueryArgs, Location>(10000);
-
 
     public void checkForNewDatabase() {
         if (Config.DB_NEW_FILE.exists() && Config.DB_NEW_FILE.canRead()) {
@@ -176,21 +125,21 @@ public class CellLocationDatabase {
         bySpec = bySpec + delim + "cid=?";
         specArgs.add(Integer.toString(cid));
 
-        String[] specArgArry = new String[ specArgs.size() ];
-        specArgs.toArray( specArgArry );
+        String[] specArgArry = new String[specArgs.size()];
+        specArgs.toArray(specArgArry);
 
         Location cellLocInfo = null;
 
         Cursor cursor =
                 database.query(TABLE_CELLS, new String[]{COL_MCC,
-                                            COL_MNC,
-                                            COL_LAC,
-                                            COL_CID,
-                                            COL_LATITUDE,
-                                            COL_LONGITUDE,
-                                            COL_ACCURACY,
-                                            COL_SAMPLES},
-                               bySpec, specArgArry, null, null, null);
+                                COL_MNC,
+                                COL_LAC,
+                                COL_CID,
+                                COL_LATITUDE,
+                                COL_LONGITUDE,
+                                COL_ACCURACY,
+                                COL_SAMPLES},
+                        bySpec, specArgArry, null, null, null);
         if (cursor != null) {
             if (cursor.getCount() > 0) {
                 int db_mcc = 0;
@@ -222,8 +171,8 @@ public class CellLocationDatabase {
                     thisRng = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_ACCURACY));
                     thisSamples = cursor.getInt(cursor.getColumnIndexOrThrow(COL_SAMPLES));
                     if (DEBUG) Log.d(TAG, "query result: " +
-                                          db_mcc + ", " + db_mnc + ", " + db_lac + ", " + db_cid + ", " +
-                                          thisLat + ", " + thisLng + ", " + thisRng + ", " + thisSamples);
+                            db_mcc + ", " + db_mnc + ", " + db_lac + ", " + db_cid + ", " +
+                            thisLat + ", " + thisLng + ", " + thisRng + ", " + thisSamples);
                     if (thisSamples < 1)
                         thisSamples = 1;
 
@@ -235,24 +184,79 @@ public class CellLocationDatabase {
                     samples += thisSamples;
                 }
                 if (DEBUG) Log.d(TAG, "Final result: " +
-                                      db_mcc + ", " + db_mnc + ", " + db_lac + ", " + db_cid + ", " +
-                                      lat/samples + ", " + lng/samples + ", " + rng );
+                        db_mcc + ", " + db_mnc + ", " + db_lac + ", " + db_cid + ", " +
+                        lat / samples + ", " + lng / samples + ", " + rng);
                 Bundle extras = new Bundle();
-                cellLocInfo = LocationHelper.create("gsm", (float)lat/samples, (float)lng/samples, (float)rng, extras);
+                cellLocInfo = LocationHelper.create("gsm", (float) lat / samples, (float) lng / samples, (float) rng, extras);
                 queryResultCache.put(args, cellLocInfo);
                 if (DEBUG)
-                    Log.d(TAG,"Cell info found: "+args.toString());
+                    Log.d(TAG, "Cell info found: " + args.toString());
             } else {
                 if (DEBUG)
-                    Log.d(TAG,"DB Cursor empty for: "+args.toString());
+                    Log.d(TAG, "DB Cursor empty for: " + args.toString());
                 queryResultNegativeCache.put(args, true);
             }
             cursor.close();
         } else {
             if (DEBUG)
-                Log.d(TAG,"DB Cursor null for: "+args.toString());
+                Log.d(TAG, "DB Cursor null for: " + args.toString());
             queryResultNegativeCache.put(args, true);
         }
         return cellLocInfo;
+    }
+
+    /**
+     * Used internally for caching. HashMap compatible entity class.
+     */
+    private static class QueryArgs {
+        private Integer mcc;
+
+        private Integer mnc;
+
+        private int cid;
+
+        private int lac;
+
+        private QueryArgs(Integer mcc, Integer mnc, int cid, int lac) {
+            this.mcc = mcc;
+            this.mnc = mnc;
+            this.cid = cid;
+            this.lac = lac;
+        }
+
+        public boolean equals(Object o) {
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
+
+            QueryArgs queryArgs = (QueryArgs) o;
+
+            if (cid != queryArgs.cid)
+                return false;
+
+            if (lac != queryArgs.lac)
+                return false;
+
+            if (mcc != null ? !mcc.equals(queryArgs.mcc) : queryArgs.mcc != null)
+                return false;
+
+            if (mnc != null ? !mnc.equals(queryArgs.mnc) : queryArgs.mnc != null)
+                return false;
+
+            return true;
+        }
+
+        public int hashCode() {
+            int result = mcc != null ? mcc.hashCode() : (1 << 16);
+            result = 31 * result + (mnc != null ? mnc.hashCode() : (1 << 16));
+            result = 31 * result + cid;
+            result = 31 * result + lac;
+            return result;
+        }
+
+        public String toString() {
+            return "mcc=" + mcc + ", mnc=" + mnc + ", lac=" + lac + ", cid=" + cid;
+        }
     }
 }

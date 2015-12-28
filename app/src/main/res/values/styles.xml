@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="MaterialDrawerTheme.Light.DarkToolbar">
+        <item name="colorPrimary">@color/md_green_500</item>
+        <item name="colorPrimaryDark">@color/md_green_700</item>
+        <item name="colorAccent">?colorPrimary</item>
+        <item name="material_drawer_selected_text">?colorAccent</item>
+    </style>
+</resources>

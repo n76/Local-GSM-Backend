@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="MissingTranslation" >
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
+    tools:ignore="MissingTranslation">
     <string name="app_name">Услуга локације помоћу ГСМ-а</string>
     <string name="summary">Лоцирање помоћу базе података базних станица на телефону.</string>
 
     <!-- Strings for settings -->
-    <string name="data_sources">Извори података</string>
     <string name="use_mls">Мозилине услуге лоцирања</string>
-
-    <string name="dl_data">Преузми податке о базним станицама</string>
 
     <string name="oci_config">Поставке за OpenCellID</string>
     <string name="oci_api_label">OpenCellId АПИ</string>
@@ -17,55 +15,49 @@
 
     <string name="filter_title">Филтер</string>
     <string name="mcc_filter_label">МЦЦ филтер</string>
-    <string name="mcc_default">218,219,220,297</string>
     <string name="mcc_filter_description">Списак мобилних кôдова земље (MCC) за коришћење, одвојених зарезом. Погледајте http://en.wikipedia.org/wiki/Mobile_country_code</string>
 
     <string name="mnc_filter_label">МНЦ филтер</string>
     <string name="mnc_default">1,2,3,4,5,7,10,12,90</string>
     <string name="mnc_filter_description">Списак кôдова мобилних мрежа (MNC) за коришћење, одвојених зарезом. Погледајте http://en.wikipedia.org/wiki/Mobile_country_code</string>
 
-    <string name="request_new_api_key">Захтевај нови OpenCellID кључ</string>
-    <string name="oci_key_already_entered">Већ је унет кључ, желите ли заиста нови кључ?</string>
-    <string name="oci_key_req_request_start">Захтевам нови OpenCellID АПИ кључ…</string>
-    <string name="oci_key_req_new_key_success">Нови кључ успешно сачуван</string>
-    <string name="oci_key_req_key_invalid">Грешка: примљен је неисправан АПИ кључ</string>
-    <string name="oci_key_req_only_one_req_per_day">Захтев није успео, можете да захтевате само један нови кључ дневно</string>
-    <string name="oci_key_req_unexpected_status_code">Грешка добављања кључа, примљен неочекиван кôд стања</string>
-    <string name="oci_key_req_failed_read">Грешка читања кључа из одзива</string>
-    <string name="oci_key_req_connection_error">Грешка добављања кључа, грешка везе</string>
-
-    <string name="generate_database">Направи базу података</string>
-    <string name="db_file_unreadable">Фајл базе података постоји али не може да се очита. Измените дозволе за %s, или тапните за покушај прављења нове базе података.</string>
-    <string name="db_file_last_modified">Последња измена: %s\nТапните за прављење нове базе података.</string>
-    <string name="db_file_not_found">Фајл базе података није нађен. Тапните за прављење нове базе података.</string>
-
-    <string name="no_api_key">Изабран OpenCellID за извор података али није наведен АПИ кључ. Да наставим без коришћења OpenCellID података?</string>
-    <string name="no_data_requested">Ниједан извор података није изабран. Немам шта да радим.</string>
     <string name="invalid_oci_api_key">Задати АПИ кључ није исправан. Задајте исправан кључ (или искључите OpenCellID извор података).</string>
 
-    <string name="log_MCC_FILTER">МЦЦ филтер:</string>
+    <string name="log_MCC_FILTER">МЦЦ филтер:
+        <xliff:g example="42,48" id="MCC filter">%1$s</xliff:g>
+    </string>
     <string name="log_MCC_WORLD">Без МЦЦ филтера, претпостављам све државе</string>
-    <string name="log_MNC_FILTER">МНЦ филтер:</string>
+    <string name="log_MNC_FILTER">МНЦ филтер:
+        <xliff:g example="1,2,3,4" id="MNC filter">%1$s</xliff:g>
+    </string>
     <string name="log_MNC_WORLD">Без МНЦ филтера, претпостављам све мреже</string>
     <string name="log_GETTING_OCID">Добављам податке о базним станицама са OpenCell ID. . .</string>
     <string name="log_GETTING_MOZ">Добављам податке о базним станицама са Мозилиних услуга лоцирања. . .</string>
-    <string name="log_URL">УРЛ је</string>
-    <string name="log_CONT_LENGTH">Дужина садржаја =</string>
-    <string name="log_REC_READ">Уноса прочитано:</string>
-    <string name="log_REC_INSERTED">Уметнуто:</string>
+    <string name="log_URL">УРЛ је
+        <xliff:g example="http://opencellid.org/downloads/" id="url">%1$s</xliff:g>
+    </string>
+    <string name="log_CONT_LENGTH">Дужина садржаја =
+        <xliff:g example="5535" id="content length">%1$s</xliff:g>
+    </string>
+    <string name="log_REC_STATS">
+        Уноса прочитаноe:<xliff:g example="1000" id="records read">%1$d</xliff:g>,
+        Уметнуто:
+        <xliff:g id="records inserted">%2$d</xliff:g>
+    </string>
     <string name="log_INDICIES">Стварам индексе за бржи приступ.</string>
-    <string name="log_CLEANING">Чистим привремене фајлове.</string>
-    <string name="log_TOT_TIME">Укупно време:</string>
-    <string name="log_MILLISEC">ms</string>
-    <string name="log_MILLISEC_PER_REC">ms/унос</string>
+    <string name="log_TOT_TIME">Укупно време:
+        <xliff:g example="29530" id="time in milliseconds">%1$d</xliff:g>
+        ms
+    </string>
     <string name="log_FINISHED">Завршено.</string>
-    <string name="log_TOTAL_TIME">Укупно време:</string>
-    <string name="log_ABORTED">Прекинуто променом стања, стање =</string>
+    <string name="log_END_STATS">Укупно време:
+        <xliff:g id="time in milliseconds">%1$s</xliff:g>
+        ms
+        (
+        <xliff:g id="milliseconds per record">%2$s</xliff:g>
+        ms/унос)
+    </string>
 
-    <string name="st_RUNNING">ПОКРЕНУТО</string>
     <string name="st_CANCELED">ОТКАЗАНО</string>
-    <string name="st_FAILED">НЕУСПЕХ</string>
-    <string name="st_SUCCESS">УСПЕХ</string>
-    <string name="st_UNKNOWN">НЕПОЗНАТО</string>
 </resources>
 

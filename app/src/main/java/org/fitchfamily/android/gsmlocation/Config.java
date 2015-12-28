@@ -34,4 +34,6 @@ public class Config {
 
     public static final int MIN_RANGE = 500;
     public static final int MAX_RANGE = 100000;
+
+    public static final String ABOUT_URL = "https://github.com/n76/Local-GSM-Backend/blob/master/README.md";
 }

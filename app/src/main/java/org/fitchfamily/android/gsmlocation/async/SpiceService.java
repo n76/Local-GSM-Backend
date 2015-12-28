@@ -1,4 +1,4 @@
-package org.fitchfamily.android.gsmlocation;
+package org.fitchfamily.android.gsmlocation.async;
 
 import android.content.Context;
 

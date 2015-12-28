@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="MissingTranslation" >
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
+    tools:ignore="MissingTranslation">
     <string name="app_name">GSM Ortungsdienst</string>
     <string name="summary">Ortung mittels Datenbank auf dem Telefon</string>
 
     <!-- Strings for settings -->
-    <string name="data_sources">Datenquellen</string>
     <string name="use_mls">Mozilla Location Service</string>
-
-    <string name="dl_data">Mobilfunkmastdaten herunterladen</string>
 
     <string name="oci_config">OpenCellID-Einstellungen</string>
     <string name="oci_api_label">OpenCellId-API-Schlüssel</string>
@@ -17,58 +15,121 @@
 
     <string name="filter_title">Filtern</string>
     <string name="mcc_filter_label">MCC Filter</string>
-    <string name="mcc_default">262</string>
     <string name="mcc_filter_description">Komma-getrennte List von Mobile Country Code-Nummern (MCC). siehe https://de.wikipedia.org/wiki/Mobile_Country_Code</string>
 
     <string name="mnc_filter_label">MNC Filter</string>
     <string name="mnc_filter_description">Komma-getrennte Liste von Mobile Network Code-Nummern (MNC). siehe https://de.wikipedia.org/wiki/Mobile_Network_Code</string>
 
-    <string name="request_new_api_key">OpenCellID-Schlüssel erstellen</string>
-    <string name="oci_key_already_entered">Es gibt schon einen Schlüssel. Wirklich einen neuen erstellen?</string>
-    <string name="oci_key_req_request_start">Schlüssel wird erstellt…</string>
-    <string name="oci_key_req_new_key_success">Neuen Schlüssel gespeichert</string>
-    <string name="oci_key_req_only_one_req_per_day">Es kann maximal ein Schlüssel am Tag erstellt werden</string>
-    <string name="oci_key_req_connection_error">Verbindungsfehler</string>
-
-    <string name="generate_database">Datenbank erstellen</string>
-    <string name="db_file_unreadable">Datenbank vorhanden aber nicht lesbar. Erlaube Zugriff auf %s oder tippe um eine neue Datenbank zu erstellen</string>
-    <string name="db_file_last_modified">Letzte Änderung: %s\nTippe um eine neue Datenbank zu erstellen</string>
-    <string name="db_file_not_found">Keine Datenbank gefunden. Tippe um eine neue Datenbank zu erstellen</string>
-
-    <string name="no_api_key">OpenCellID gewählt, aber kein API-Schlüssel vorhanden. Deaktiviere OpenCellID oder gebe einen gültigen OpenCellID-API.Schlüssel ein.</string>
-    <string name="no_data_requested">Weder OpenCellId noch Mozilla Location Service aktiviert. Nichts zu tun.</string>
     <string name="invalid_oci_api_key">Der API-Schlüssel ist ungültig. Gebe einen gültigen ein (oder deaktiviere die OpenCellID-Option).</string>
 
-    <string name="log_MCC_FILTER">MCC Filter:</string>
+    <string name="log_MCC_FILTER">MCC Filter:
+        <xliff:g example="42,48" id="MCC filter">%1$s</xliff:g>
+    </string>
     <string name="log_MCC_WORLD">Keine MCC Filter, nehme alle Länder</string>
-    <string name="log_MNC_FILTER">MNC Filter:</string>
+    <string name="log_MNC_FILTER">MNC Filter:
+        <xliff:g example="1,2,3,4" id="MNC filter">%1$s</xliff:g>
+    </string>
     <string name="log_MNC_WORLD">Keine MNC Filter, nehme alle Netzwerke</string>
     <string name="log_GETTING_OCID">Abrufen von Mobilfunkmastdaten von OpenCellId …</string>
     <string name="log_GETTING_MOZ">Abrufen von Mobilfunkmastdaten vom Mozilla Location Service …</string>
-    <string name="log_URL">Die URL lautet</string>
-    <string name="log_CONT_LENGTH">Datengröße =</string>
-    <string name="log_REC_READ">Gelesene Einträge:</string>
-    <string name="log_REC_INSERTED">Gespeichert:</string>
+    <string name="log_URL">Die URL lautet
+        <xliff:g example="http://opencellid.org/downloads/" id="url">%1$s</xliff:g>
+    </string>
+    <string name="log_CONT_LENGTH">Datengröße =
+        <xliff:g example="5535" id="content length">%1$s</xliff:g>
+    </string>
+    <string name="log_REC_STATS">
+        Gelesene Einträge:<xliff:g example="1000" id="records read">%1$d</xliff:g>,
+        Gespeichert:
+        <xliff:g id="records inserted">%2$d</xliff:g>
+    </string>
     <string name="log_INDICIES">Erstelle Index für schnellen Zugriff.</string>
-    <string name="log_CLEANING">Lösche temporäre Dateien.</string>
-    <string name="log_TOT_TIME">Gesamtzeit:</string>
-    <string name="log_MILLISEC">Millisekunden</string>
-    <string name="log_MILLISEC_PER_REC">Millisekunden je Eintrag</string>
+    <string name="log_TOT_TIME">Gesamtzeit:
+        <xliff:g example="29530" id="time in milliseconds">%1$d</xliff:g>
+        Millisekunden
+    </string>
     <string name="log_FINISHED">Fertig.</string>
-    <string name="log_TOTAL_TIME">Gesamtzeit:</string>
-    <string name="log_ABORTED">Abgebrochen durch Statusänderung, Status=</string>
+    <string name="log_END_STATS">Gesamtzeit:
+        <xliff:g id="time in milliseconds">%1$s</xliff:g>
+        Millisekunden
+        (
+        <xliff:g id="milliseconds per record">%2$s</xliff:g>
+        Millisekunden je Eintrag)
+    </string>
 
-    <string name="st_RUNNING">AKTIV</string>
     <string name="st_CANCELED">ABGEBROCHEN</string>
-    <string name="st_FAILED">FEHLGESCHLAGEN</string>
-    <string name="st_SUCCESS">ERFOLGREICH</string>
-    <string name="st_UNKNOWN">UNBEKANNT</string>
 
     <!-- Strings related to requesting/granting permissions -->
     <string name="notification_location_permission">Berühren um erforderlichen Standortzugriff zu erlauben.</string>
     <string name="dialog_location_perm_granted">Nun ist es erforderlich, den GSM Ortungsdienst (oder den Standort in den Schnelleinstellungen) zu deaktivieren und wiederaktivieren.</string>
     <string name="dialog_location_perm_denied">Der Dienst ist nutzlos ohne die Berechtigung, da er keine Mobilfunkmasten sehen kann.</string>
-    <string name="dialog_write_ext_storage_perm_granted">Die Datenbank kann nicht ohne Dateizugriff erstellt werden.</string>
 
+    <!-- string for the new UI -->
+    <string name="fragment_settings_title">Einstellungen</string>
+
+    <string name="fragment_update_database_title">Datenbank</string>
+
+    <string name="fragment_update_database_last_update">Letztes Datenbankupdate:
+        <xliff:g example="3 minutes ago" id="time">%1$s</xliff:g>
+    </string>
+    <string name="fragment_update_database_no_database_found">Keine Datenbank gefunden</string>
+    <string name="fragment_update_database_no_permission">Datenbank exsistiert, aber ist nicht
+        lesbar.
+        Bitte Berechtigungen für
+        <xliff:g id="file">%s</xliff:g>
+        bearbeiten
+    </string>
+    <string name="fragment_update_database_start_update">Datenbank aktualisiren</string>
+    <string name="fragment_update_database_create_database">Datenbank erstellen</string>
+    <string name="fragment_update_database_show_details">Details anzeigen</string>
+
+    <string name="fragment_update_database_exception_title">Fehler während des Datenbankupdates
+    </string>
+
+    <string name="fragment_settings_card_sources_title">Quellen</string>
+
+    <string name="fragment_settings_opencellid_error_title">OpenCellID konnte nicht aktiviert
+        werden
+    </string>
+    <string name="fragment_settings_opencellid_error_connection">Verbindung fehlgeschlagen</string>
+    <string name="fragment_settings_opencellid_error_day_limit">Möglicherweise funktioniert es
+        morgen?
+    </string>
+
+    <string name="activity_main_libraries">Externe Bibliotheken</string>
+
+    <string name="fragment_settings_card_areas_title">Gebiete</string>
+
+    <string name="fragment_settings_card_areas_nothing_chosen">Nichts ausgewählt (alle werden
+        verwendet)
+    </string>
+    <string name="fragment_settings_card_areas_other">Andere</string>
+
+    <string name="fragment_settings_blocked_database_update">Die Einstellungen können nicht
+        verändert
+        werden, während die Datenbank aktualisiert wird.
+    </string>
+
+    <string name="activity_area_list_title">Gebiete wählen</string>
+
+    <string name="fragment_area_list_unknown">Unbekanntes Gebiet (MCC:<xliff:g example="42"
+                                                                               id="mcc">
+        %1$s</xliff:g>)
+    </string>
+
+    <string name="fragment_database_update_error_no_sources">Sie müssen zuerst Quellen wählen
+    </string>
+    <string name="fragment_database_update_button_settings">Einstellungen öffnen</string>
+
+    <string name="fragment_database_update_error_no_permission">Berechtigung zum Speichern von Daten
+        ist erforderlich
+    </string>
+    <string name="fragment_database_update_button_permission_allow">Erlauben</string>
+
+    <string name="fragment_settings_advanced_title">Experteneinstellungen</string>
+
+    <string name="activity_area_list_search_hint">Suchen</string>
+
+    <string name="activity_main_about">Über</string>
 </resources>
 

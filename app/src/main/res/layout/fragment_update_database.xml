@@ -1,0 +1,150 @@
+<ViewSwitcher
+    android:id="@+id/switcher"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.database.UpdateDatabaseFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/activity_margin">
+
+                <TextView
+                    android:id="@+id/last_update"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="@string/fragment_update_database_last_update"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <Button
+                    android:id="@+id/update"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="?selectableItemBackground"
+                    android:text="@string/fragment_update_database_start_update"/>
+
+                <TextView
+                    android:id="@+id/error_sources"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="@string/fragment_database_update_error_no_sources"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <Button
+                    android:id="@+id/settings"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="?selectableItemBackground"
+                    android:text="@string/fragment_database_update_button_settings"/>
+
+                <TextView
+                    android:id="@+id/error_permission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="@string/fragment_database_update_error_no_permission"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <Button
+                    android:id="@+id/permission_allow"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="?selectableItemBackground"
+                    android:text="@string/fragment_database_update_button_permission_allow"/>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/progress_string"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:padding="@dimen/view_margin"
+                android:textAppearance="?android:textAppearanceLarge"/>
+
+            <ProgressBar
+                android:id="@+id/progress"
+                style="?android:progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:padding="@dimen/view_margin"/>
+
+            <com.mikepenz.iconics.view.IconicsButton
+                android:id="@+id/cancel"
+                style="?buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="?selectableItemBackground"
+                android:padding="@dimen/view_margin"
+                android:text="{gmd-close}"/>
+
+        </LinearLayout>
+
+        <ViewSwitcher
+            android:id="@+id/details_switcher"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="?selectableItemBackground"
+                    android:text="@string/fragment_update_database_show_details"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/log"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:padding="@dimen/view_margin"
+                android:textAppearance="?android:textAppearanceSmall"/>
+
+        </ViewSwitcher>
+
+    </LinearLayout>
+
+</ViewSwitcher>

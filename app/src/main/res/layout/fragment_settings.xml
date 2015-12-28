@@ -1,0 +1,35 @@
+<ViewSwitcher
+    android:id="@+id/switcher"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.settings.SettingsFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="@dimen/activity_margin"
+        android:text="@string/fragment_settings_blocked_database_update"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/view_margin">
+
+            <include layout="@layout/fragment_settings_card_sources"/>
+
+            <include layout="@layout/fragment_settings_card_areas"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</ViewSwitcher>
