@@ -1,29 +1,33 @@
 package org.fitchfamily.android.gsmlocation.data;
 
-import android.text.TextUtils;
-
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public final class Source {
-    private final String url;
-
+    private final List<String> urls;
     private final Compression compression;
 
-    public Source(String url, Compression compression) {
-        if (TextUtils.isEmpty(url) || compression == null) {
+    public Source(List<String> urls, Compression compression) {
+        if (urls == null || urls.isEmpty() || compression == null) {
             throw new NullPointerException();
         }
 
-        this.url = url;
+        this.urls = Collections.unmodifiableList(urls);
         this.compression = compression;
+    }
+
+    public Source(String url, Compression compression) {
+        this(Arrays.asList(url), compression);
     }
 
     public Compression compression() {
         return compression;
     }
 
-    public String url() {
-        return url;
+    public List<String> urls() {
+        return urls;
     }
 
     public SourceConnection connect() throws IOException {
@@ -32,7 +36,7 @@ public final class Source {
 
     @Override
     public String toString() {
-        return url() + " (" + compression().name() + ")";
+        return urls() + " (" + compression().name() + ")";
     }
 
     public enum Compression {
