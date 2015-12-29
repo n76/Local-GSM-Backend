@@ -155,7 +155,9 @@ public class UpdateDatabaseFragment extends BaseFragment implements
 
     private void updateShownErrors() {
         final boolean hasNoSources = !Settings.with(this).useMozillaLocationService() &&
-                !Settings.with(this).useOpenCellId();
+                !Settings.with(this).useOpenCellId() &&
+                !Settings.with(this).useLacells();
+
         final boolean hasNoPermission = ContextCompat.checkSelfPermission(
                 getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE
         ) != PackageManager.PERMISSION_GRANTED;
