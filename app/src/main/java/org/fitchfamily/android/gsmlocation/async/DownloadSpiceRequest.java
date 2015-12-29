@@ -226,11 +226,23 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
 
                 final List<Source> sources = getSources(context);
                 final int sources_size = sources.size();
+                final long expected_records = Source.expectedRecords(sources);
+                final boolean progress_by_records_count = expected_records != Source.UNKNOWN;
+                long processed_records = 0;
 
                 for (int i = 0; i < sources_size; i++) {
                     final Source source = sources.get(i);
-                    final int progressStart = i * PROGRESS_MAX / sources_size;
-                    final int progressEnd = (i + 1) * PROGRESS_MAX / sources_size;
+
+                    int progressStart, progressEnd;
+
+                    if(progress_by_records_count) {
+                        progressStart = (int) (processed_records * PROGRESS_MAX / expected_records);
+                        processed_records += source.expectedRecords();
+                        progressEnd = (int) (processed_records * PROGRESS_MAX / expected_records);
+                    } else {
+                        progressStart = i * PROGRESS_MAX / sources_size;
+                        progressEnd = (i + 1) * PROGRESS_MAX / sources_size;
+                    }
 
                     getData(source, progressStart, progressEnd);
 
