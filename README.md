@@ -12,6 +12,8 @@ Alternatively, the on-phone database can be generated from scripts at https://gi
 
 You can improve the quality of the data used by this location provider by contributing to either or both of those projects.
 
+See http://opencellid.org for information about the OpenCellID project and see https://location.services.mozilla.com for information about the Mozilla Location Services initiative.
+
 This software is licensed as "Apache License, Version 2.0" unless noted
 otherwise.
 
@@ -37,17 +39,21 @@ The on-phone database can be created using this settings in the app or via scrip
 1. OpenCellID requires an API key to download its CSV file and limits downloads to one per day. Information on getting an API key can be found at http://wiki.opencellid.org/wiki/How_to_join
 2. Mozilla publishes new CSV files once per day.
 
-Both of these are large files and take time to transfer and process: The current OpenCellID gzip 152MB data file contains over 6.7 million records and Mozilla’s gzip 48MB data file contains over 2.2 million records.
-
-At least on a Google Galaxy Nexus (Maguro), download and creation of the database is much slower than using the scripts at https://github.com/n76/lacells-creator though with a decent data connection it can be done in a reasonable amount of time directly on the phone.
+At least on a Google Galaxy Nexus (Maguro), download and creation of the database is much slower than using the scripts at https://github.com/n76/lacells-creator though with a good data connection it can be done in a reasonable amount of time directly on the phone.
 
 Filtering
 =========
-You are very likely to want to filter the data going into the on-phone database so that it only contains the Mobile Country Codes (MCCs) in your area of interest.
+You are very likely to want to filter the data going into the on-phone database so that it only contains the Mobile Country Codes (MCCs) in your area of interest. As of version 1.2 of this plug-in, it is now possible to select the Mobile Country Codes for a country by country name. The advanced setup still allows for individual codes to be selected.
 
 In addition to filtering by Mobile Country Code (MCCs), the on phone database generator can filter by Mobile Network Code (MNCs). This can further decrease the size of the on phone database but may decrease accuracy of the location result.
 
 Mobile Country Codes (MCC) and Mobile Network Codes (MNC) can be found at http://en.wikipedia.org/wiki/Mobile_country_code
+
+Pre-Filtered Data
+=================
+Downloading from Mozilla and/or OpenCellID will get you the absolutely latest data but at the cost of time and a large data usage on the phone.
+
+@wvengen has created a repository of per-MCC data for many but not all MCC codes at https://github.com/wvengen/lacells which is updated periodically. Starting with v1.3, this backend is capable of loading cell information from that data set which should be faster.
 
 Update History
 ==============
@@ -70,4 +76,5 @@ Update History
 1.1.0|25Dec2015|Thanks to @UnknownUntilNow Improve database download, add German translation
 1.2.0|27Dec2015|Thanks to @UnknownUntilNow Improve database download, new UI allows selection of countries by name for many countries.
 1.2.1|28Dec2015|Correct report on processing time per record.
+1.3.0|28Dec2015|Thanks to @UnknownUntilNow Add import of cell tower data from per MCC extracts provided by @wvengen
 
