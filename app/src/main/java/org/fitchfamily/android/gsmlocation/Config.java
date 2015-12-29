@@ -28,6 +28,11 @@ public class Config {
     // URL for requesting new OpenCellID API key
     public static final String OCI_API_GET_KEY_URL = "http://opencellid.org/gsmCell/user/generateApiKey";
 
+    // URL for lacells
+    public static final String LACELLS_URL = "https://wvengen.github.io/lacells/lacells-mcc_%s.csv";
+
+    public static final String LACELLS_MCC_URL = "https://wvengen.github.io/lacells/lacells-countries.csv";
+
     // Mozilla Location Services uses:
     // "https://d17pt8qph6ncyq.cloudfront.net/export/MLS-full-cell-export-${NOW}T000000.csv.gz"
     public static final String MLS_URL_FMT = "https://d17pt8qph6ncyq.cloudfront.net/export/MLS-full-cell-export-%sT000000.csv.gz";

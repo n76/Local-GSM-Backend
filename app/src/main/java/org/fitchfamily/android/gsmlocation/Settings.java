@@ -12,6 +12,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Settings {
+    private static final boolean USE_LACELLS_DEFAULT = false;
+
+    private static final String USE_LACELLS = "lacells_preference";
+
     private static final String USE_MOZILLA_LOCATION_SERVICE = "mls_preference";
 
     private static final String USE_OPEN_CELL_ID = "oci_preference";
@@ -63,6 +67,10 @@ public class Settings {
         return preferences.getString(OPEN_CELL_ID_API_KEY, "");
     }
 
+    public boolean useLacells() {
+        return preferences.getBoolean(USE_LACELLS, USE_LACELLS_DEFAULT);
+    }
+
     public boolean useOpenCellId() {
         return preferences.getBoolean(USE_OPEN_CELL_ID, false);
     }
@@ -102,6 +110,16 @@ public class Settings {
     public long databaseLastModified() {
         File databaseFile = databaseFile();
         return (databaseFile != null && databaseFile.canRead()) ? databaseFile.lastModified() : 0;
+    }
+
+    public Settings useLacells(boolean enable) {
+        if (enable != useLacells()) {
+            preferences.edit()
+                    .putBoolean(USE_LACELLS, enable)
+                    .commit();
+        }
+
+        return this;
     }
 
     public Settings useOpenCellId(boolean enable) {

@@ -19,20 +19,22 @@ import org.fitchfamily.android.gsmlocation.DatabaseCreator;
 import org.fitchfamily.android.gsmlocation.LogUtils;
 import org.fitchfamily.android.gsmlocation.R;
 import org.fitchfamily.android.gsmlocation.Settings;
+import org.fitchfamily.android.gsmlocation.data.Source;
+import org.fitchfamily.android.gsmlocation.data.SourceConnection;
 
-import java.io.BufferedInputStream;
-import java.net.HttpURLConnection;
+import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
-import java.util.zip.GZIPInputStream;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
@@ -97,6 +99,100 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
         });
     }
 
+    /**
+     * Use this function to get the download url
+     *
+     * @param context a context
+     * @return a list of data urls based on the settings
+     */
+    private static List<Source> getSources(Context context) throws IOException {
+        List<Source> sources = new ArrayList<>();
+
+        if (Settings.with(context).useLacells()) {
+            Map<Integer, Integer> mccRecordCountMap = new HashMap<>();
+            try {
+                SourceConnection connection = new Source(Config.LACELLS_MCC_URL, Source.Compression.none).connect();
+                CsvParser parser = new CsvParser(connection.inputStream());
+                final List<String> header = parser.parseLine();
+                final int index_mcc = header.indexOf("mcc");
+                final int index_cells = header.indexOf("cells");
+
+                List<String> line;
+
+                while ((line = parser.parseLine()) != null && line.size() > index_mcc) {
+                    mccRecordCountMap.put(Integer.parseInt(line.get(index_mcc)), Integer.parseInt(line.get(index_cells)));
+                }
+            } catch (Exception ex) {
+                throw new IOException(ex);
+            }
+
+            Set<Integer> mccs = Settings.with(context).mccFilterSet();
+
+            if (mccs.isEmpty()) {
+                // get all supported
+                mccs = mccRecordCountMap.keySet();
+            }
+
+            for (int mcc : mccs) {
+                Integer records = mccRecordCountMap.get(mcc);
+
+                if (records == null) {
+                    throw new IOException("lacells does not contain " + mcc);
+                }
+
+                String[] postfixes = null;
+
+                // exceptions
+                if (mcc == 262) {
+                    postfixes = new String[]{"_a", "_b", "_c"};
+                } else if (mcc == 310) {
+                    postfixes = new String[]{"_a", "_b", "_c", "_d"};
+                }
+
+                if (postfixes == null) {
+                    sources.add(new Source(String.format(Locale.US, Config.LACELLS_URL, String.valueOf(mcc)), Source.Compression.none, records));
+                } else {
+                    List<String> urls = new ArrayList<>();
+
+                    for (String postfix : postfixes) {
+                        urls.add(String.format(Locale.US, Config.LACELLS_URL, String.valueOf(mcc) + postfix));
+                    }
+
+                    sources.add(new Source(urls, Source.Compression.none, records));
+                }
+            }
+        } else {
+            // only use the other sources when lacells is not enabled
+
+            if (Settings.with(context).useOpenCellId()) {
+                sources.add(new Source(String.format(Locale.US, Config.OCI_URL_FMT, Settings.with(context).openCellIdApiKey()), Source.Compression.gzip));
+            }
+
+            if (Settings.with(context).useMozillaLocationService()) {
+                SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                // Mozilla publishes new CSV files at a bit after the beginning of
+                // a new day in GMT time. Get the time for a place a couple hours
+                // west of Greenwich to allow time for the data to be posted.
+                dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT-03"));
+                sources.add(new Source(String.format(Locale.US, Config.MLS_URL_FMT, dateFormatGmt.format(new Date())), Source.Compression.gzip));
+            }
+        }
+
+        return Collections.unmodifiableList(sources);
+    }
+
+    private static int indexOf(List<String> data, String[] searched) {
+        for (String search : searched) {
+            final int index = data.indexOf(search);
+
+            if (index != -1) {
+                return index;
+            }
+        }
+
+        return -1;
+    }
+
     @Override
     public Result loadDataFromNetwork() throws Exception {
         lastInstance = this;
@@ -127,28 +223,20 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
 
             try {
                 databaseCreator = DatabaseCreator.withTempFile().open().createTable();
-                final boolean openCellId = Settings.with(context).useOpenCellId();
-                final boolean mozillaLocationService = Settings.with(context).useMozillaLocationService();
-                final boolean nothing = (!openCellId) && (!mozillaLocationService);
-                final int sources = (openCellId ? 1 : 0) + (mozillaLocationService ? 1 : 0);
-                final int progress_per_source = nothing ? 0 : PROGRESS_MAX / sources;
-                int progress = 0;
 
-                if (openCellId && !isCancelled()) {
-                    logInfo(context.getString(R.string.log_GETTING_OCID));
-                    getData(String.format(Locale.US, Config.OCI_URL_FMT, Settings.with(context).openCellIdApiKey()), progress, progress + progress_per_source);
-                    progress += progress_per_source;
-                }
+                final List<Source> sources = getSources(context);
+                final int sources_size = sources.size();
 
-                if (mozillaLocationService && !isCancelled()) {
-                    logInfo(context.getString(R.string.log_GETTING_MOZ));
-                    SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-                    // Mozilla publishes new CSV files at a bit after the beginning of
-                    // a new day in GMT time. Get the time for a place a couple hours
-                    // west of Greenwich to allow time for the data to be posted.
-                    dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT-03"));
-                    getData(String.format(Locale.US, Config.MLS_URL_FMT, dateFormatGmt.format(new Date())), progress, progress + progress_per_source);
-                    progress += progress_per_source;
+                for (int i = 0; i < sources_size; i++) {
+                    final Source source = sources.get(i);
+                    final int progressStart = i * PROGRESS_MAX / sources_size;
+                    final int progressEnd = (i + 1) * PROGRESS_MAX / sources_size;
+
+                    getData(source, progressStart, progressEnd);
+
+                    if (isCancelled()) {
+                        break;
+                    }
                 }
 
                 if (!isCancelled()) {
@@ -224,7 +312,7 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
         return true;
     }
 
-    private void getData(String url, int progressStart, int progressEnd) throws Exception {
+    private void getData(Source source, int progressStart, int progressEnd) throws Exception {
         if(progressStart >= progressEnd) {
             throw new IllegalArgumentException(progressStart + " >= " + progressEnd);
         }
@@ -232,34 +320,19 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
         final long progressSize = progressEnd - progressStart;
 
         try {
-            long maxLength;
             int totalRecords = 0;
             int insertedRecords = 0;
 
             long entryTime = System.currentTimeMillis();
 
-            logInfo(context.getString(R.string.log_URL, url));
+            logInfo(context.getString(R.string.log_URL, source));
 
-            HttpURLConnection c;
-            URL u = new URL(url);
+            SourceConnection connection = source.connect();
 
-            if (u.getProtocol().equals("https")) {
-                c = (HttpsURLConnection) u.openConnection();
-            } else {
-                c = (HttpURLConnection) u.openConnection();
-            }
-            c.setRequestMethod("GET");
-            c.connect();
+            logInfo(context.getString(R.string.log_CONT_LENGTH, String.valueOf(connection.getCompressedContentLength())));
+            final long maxLength = connection.getContentLength();
 
-            // Looks like .gz is about a 4 to 1 compression ratio
-            logInfo(context.getString(R.string.log_CONT_LENGTH, String.valueOf(c.getContentLength())));
-            maxLength = c.getContentLength() * 4;
-
-            CsvParser cvs = new CsvParser(
-                    new BufferedInputStream(
-                            new GZIPInputStream(
-                                    new BufferedInputStream(
-                                            c.getInputStream()))));
+            CsvParser cvs = new CsvParser(connection.inputStream());
 
             // CSV Field    ==> Database Field
             // radio        ==>
@@ -276,14 +349,14 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
             // created      ==>
             // updated      ==>
             // averageSignal==>
-            List headers = cvs.parseLine();
+            List<String> headers = cvs.parseLine();
             int mccIndex = headers.indexOf("mcc");
-            int mncIndex = headers.indexOf("net");
-            int lacIndex = headers.indexOf("area");
-            int cidIndex = headers.indexOf("cell");
-            int lonIndex = headers.indexOf("lon");
-            int latIndex = headers.indexOf("lat");
-            int accIndex = headers.indexOf("range");
+            int mncIndex = indexOf(headers, new String[]{"net", "mnc"});
+            int lacIndex = indexOf(headers, new String[]{"area", "lac"});
+            int cidIndex = indexOf(headers, new String[]{"cell", "cid"});
+            int lonIndex = indexOf(headers, new String[]{"lon", "longitude"});
+            int latIndex = indexOf(headers, new String[]{"lat", "latitude"});
+            int accIndex = indexOf(headers, new String[]{"range", "accuracy"});
             int smpIndex = headers.indexOf("samples");
 
             databaseCreator.beginTransaction();
@@ -298,7 +371,14 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
 
                 if ((totalRecords % 1000) == 0) {
                     final String statusText = context.getString(R.string.log_REC_STATS, totalRecords, insertedRecords);
-                    final long progress = ((((long) cvs.bytesRead()) * progressSize)) / maxLength;
+                    long progress;
+
+                    if (source.expectedRecords() != Source.UNKNOWN) {
+                        progress = Math.min(totalRecords, source.expectedRecords()) * progressSize / source.expectedRecords();
+                    } else {
+                        progress = ((((long) cvs.bytesRead()) * progressSize)) / maxLength;
+                    }
+
                     publishProgress(progressStart + (int) progress, statusText);
                 }
 
@@ -346,7 +426,7 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
             logInfo(context.getString(R.string.log_END_STATS, execTime, f));
 
         } catch (MalformedURLException e) {
-            logError("getData('" + url + "') failed: " + e.getMessage());
+            logError("getData('" + source + "') failed: " + e.getMessage());
 
             throw e;
         } catch (Exception e) {

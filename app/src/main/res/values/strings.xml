@@ -7,6 +7,7 @@
     <string name="summary">Locate using on phone database.</string>
 
     <!-- Strings for settings -->
+    <string name="use_lacells" translatable="false">lacells</string>
     <string name="use_oci" translatable="false">OpenCellID</string>
     <string name="use_mls">Mozilla Location Services</string>
 
