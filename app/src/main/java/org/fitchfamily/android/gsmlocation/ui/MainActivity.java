@@ -143,4 +143,13 @@ public class MainActivity extends AppCompatActivity implements UpdateDatabaseFra
         drawer.saveInstanceState(drawerState = new Bundle());
         super.onSaveInstanceState(outState);
     }
+
+    @Override
+    public void onBackPressed() {
+        if(drawer != null && drawer.isDrawerOpen()) {
+            drawer.closeDrawer();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

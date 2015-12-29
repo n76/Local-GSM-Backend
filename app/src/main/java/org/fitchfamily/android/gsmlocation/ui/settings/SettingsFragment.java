@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
@@ -64,10 +65,13 @@ public class SettingsFragment extends BaseFragment {
     protected CheckBox mozillaLocationServices;
 
     @ViewById
-    protected CheckBox lacells;
+    protected ProgressBar openCellIdProgress;
 
     @ViewById
-    protected ProgressBar openCellIdProgress;
+    protected RadioButton filterOnPhone;
+
+    @ViewById
+    protected RadioButton filterRemote;
 
     private final PendingRequestListener<ObtainOpenCellIdKeySpiceRequest.Result> openCellIdListener = new PendingRequestListener<ObtainOpenCellIdKeySpiceRequest.Result>() {
         @Override
@@ -110,13 +114,19 @@ public class SettingsFragment extends BaseFragment {
     protected void init() {
         openCellId.setChecked(Settings.with(this).useOpenCellId());
         mozillaLocationServices.setChecked(Settings.with(this).useMozillaLocationService());
-        lacells.setChecked(Settings.with(this).useLacells());
+
+        if(Settings.with(this).useLacells()) {
+            filterRemote.setChecked(true);
+        } else {
+            filterOnPhone.setChecked(true);
+        }
+
         updateSourcesVisibility();
     }
 
     private void updateSourcesVisibility() {
-        openCellId.setVisibility(lacells.isChecked() ? View.GONE : View.VISIBLE);
-        mozillaLocationServices.setVisibility(lacells.isChecked() ? View.GONE : View.VISIBLE);
+        openCellId.setVisibility(filterOnPhone.isChecked() ? View.VISIBLE : View.GONE);
+        mozillaLocationServices.setVisibility(filterOnPhone.isChecked() ? View.VISIBLE : View.GONE);
     }
 
     @AfterViews
@@ -141,9 +151,14 @@ public class SettingsFragment extends BaseFragment {
     }
 
     @CheckedChange
-    protected void lacells(boolean enabled) {
+    protected void filterRemote(boolean enabled) {
         Settings.with(this).useLacells(enabled);
         updateSourcesVisibility();
+    }
+
+    @CheckedChange
+    protected void filterOnPhone(boolean enabled) {
+        filterRemote(!enabled);
     }
 
     private void obtainOpenCellIdApiKey() {

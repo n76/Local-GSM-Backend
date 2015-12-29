@@ -59,4 +59,18 @@ public final class Source {
     public enum Compression {
         gzip, none
     }
+
+    public static long expectedRecords(List<Source> sources) {
+        long expectedRecords = 0;
+
+        for(Source source : sources) {
+            if(source.expectedRecords() == UNKNOWN) {
+                return UNKNOWN;
+            } else {
+                expectedRecords += source.expectedRecords();
+            }
+        }
+
+        return expectedRecords;
+    }
 }
