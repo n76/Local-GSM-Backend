@@ -208,4 +208,13 @@ public class AreaListActivity extends AppCompatActivity implements AreaDialogFra
         super.onPause();
         Settings.with(this).mccFilterSet(getMccSet());
     }
+
+    @Override
+    public void onBackPressed() {
+        if(search != null && !TextUtils.isEmpty(search.getText())) {
+            search.setText(null);
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
