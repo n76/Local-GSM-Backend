@@ -325,8 +325,9 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
     }
 
     private void getData(Source source, int progressStart, int progressEnd) throws Exception {
-        if(progressStart >= progressEnd) {
-            throw new IllegalArgumentException(progressStart + " >= " + progressEnd);
+        // no risk, because progressStart + (x * 0) == progressStart
+        if(progressStart > progressEnd) {
+            throw new IllegalArgumentException(progressStart + " > " + progressEnd);
         }
 
         final long progressSize = progressEnd - progressStart;
