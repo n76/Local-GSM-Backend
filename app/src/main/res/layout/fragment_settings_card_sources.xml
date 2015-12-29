@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     app:cardUseCompatPadding="true">
 
-    <LinearLayout
+    <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -18,11 +18,17 @@
             android:text="@string/fragment_settings_card_sources_title"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
 
+        <RadioButton
+            android:text="@string/fragment_settings_card_sources_filter_on_phone"
+            android:id="@+id/filter_on_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <CheckBox
-            android:id="@+id/lacells"
+            android:id="@+id/mozilla_location_services"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/use_lacells"/>
+            android:text="@string/use_mls"/>
 
         <CheckBox
             android:id="@+id/open_cell_id"
@@ -38,12 +44,12 @@
             android:indeterminate="true"
             android:visibility="gone"/>
 
-        <CheckBox
-            android:id="@+id/mozilla_location_services"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/use_mls"/>
+        <RadioButton
+            android:text="@string/fragment_settings_card_sources_filter_remote"
+            android:id="@+id/filter_remote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-    </LinearLayout>
+    </RadioGroup>
 
 </android.support.v7.widget.CardView>

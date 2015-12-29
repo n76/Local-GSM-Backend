@@ -7,7 +7,6 @@
     <string name="summary">Locate using on phone database.</string>
 
     <!-- Strings for settings -->
-    <string name="use_lacells" translatable="false">lacells</string>
     <string name="use_oci" translatable="false">OpenCellID</string>
     <string name="use_mls">Mozilla Location Services</string>
 
@@ -101,6 +100,9 @@
     <string name="fragment_update_database_exception_title">Error during updating database</string>
 
     <string name="fragment_settings_card_sources_title">Sources</string>
+
+    <string name="fragment_settings_card_sources_filter_on_phone">Download all areas and only save chosen</string>
+    <string name="fragment_settings_card_sources_filter_remote">Download chosen areas from lacells (data is outdated)</string>
 
     <string name="fragment_settings_opencellid_error_title">Couldn\'t enable OpenCellID</string>
     <string name="fragment_settings_opencellid_error_connection">Connection failed</string>
