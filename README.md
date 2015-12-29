@@ -77,4 +77,5 @@ Update History
 1.2.0|27Dec2015|Thanks to @UnknownUntilNow Improve database download, new UI allows selection of countries by name for many countries.
 1.2.1|28Dec2015|Correct report on processing time per record.
 1.3.0|28Dec2015|Thanks to @UnknownUntilNow Add import of cell tower data from per MCC extracts provided by @wvengen
+1.3.1|29Dec2015|Fix bug on downloading small files from lacells
 
