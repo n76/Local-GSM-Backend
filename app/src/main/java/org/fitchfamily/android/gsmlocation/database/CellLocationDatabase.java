@@ -104,8 +104,6 @@ public class CellLocationDatabase {
                 .and()
                 .columnIs("cid", String.valueOf(cid));
 
-        Location cellLocInfo = null;
-
         Cursor cursor =
                 database.query(TABLE_CELLS, new String[]{COL_MCC,
                                 COL_MNC,
@@ -165,10 +163,11 @@ public class CellLocationDatabase {
                             db_mcc + ", " + db_mnc + ", " + db_lac + ", " + db_cid + ", " +
                             lat / samples + ", " + lng / samples + ", " + rng);
                     Bundle extras = new Bundle();
-                    cellLocInfo = LocationHelper.create("gsm", (float) lat / samples, (float) lng / samples, (float) rng, extras);
+                    Location cellLocInfo = LocationHelper.create("gsm", (float) lat / samples, (float) lng / samples, (float) rng, extras);
                     queryCache.put(args, cellLocInfo);
                     if (DEBUG)
                         Log.d(TAG, "Cell info found: " + args.toString());
+                    return cellLocInfo;
                 } else {
                     if (DEBUG)
                         Log.d(TAG, "DB Cursor empty for: " + args.toString());
@@ -179,7 +178,8 @@ public class CellLocationDatabase {
                     Log.d(TAG, "DB Cursor null for: " + args.toString());
                 queryCache.putUnresolved(args);
             }
-            return cellLocInfo;
+
+            return null;
         } finally {
             if(cursor != null) {
                 cursor.close();
