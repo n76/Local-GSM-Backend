@@ -24,6 +24,7 @@ import org.fitchfamily.android.gsmlocation.data.SourceConnection;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -109,18 +110,30 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
         List<Source> sources = new ArrayList<>();
 
         if (Settings.with(context).useLacells()) {
-            Map<Integer, Integer> mccRecordCountMap = new HashMap<>();
+            Map<Integer, MccDetails> mccMap = new HashMap<>();
+
             try {
+                final URI baseUrl = new URI(Config.LACELLS_MCC_URL);
+
                 SourceConnection connection = new Source(Config.LACELLS_MCC_URL, Source.Compression.none).connect();
                 CsvParser parser = new CsvParser(connection.inputStream());
                 final List<String> header = parser.parseLine();
+
                 final int index_mcc = header.indexOf("mcc");
                 final int index_cells = header.indexOf("cells");
+                final int index_urls = header.indexOf("urls");
 
                 List<String> line;
 
                 while ((line = parser.parseLine()) != null && line.size() > index_mcc) {
-                    mccRecordCountMap.put(Integer.parseInt(line.get(index_mcc)), Integer.parseInt(line.get(index_cells)));
+                    int cells = Integer.parseInt(line.get(index_cells));
+                    int mcc = Integer.parseInt(line.get(index_mcc));
+                    List<String> urls = new ArrayList<>();
+                    for(String url : line.get(index_urls).split(" ")) {
+                        urls.add(baseUrl.resolve(url).toString());
+                    }
+
+                    mccMap.put(mcc, new MccDetails(cells, urls));
                 }
             } catch (Exception ex) {
                 throw new IOException(ex);
@@ -130,36 +143,17 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
 
             if (mccs.isEmpty()) {
                 // get all supported
-                mccs = mccRecordCountMap.keySet();
+                mccs = mccMap.keySet();
             }
 
             for (int mcc : mccs) {
-                Integer records = mccRecordCountMap.get(mcc);
+                MccDetails details = mccMap.get(mcc);
 
-                if (records == null) {
+                if (details == null) {
                     throw new IOException("lacells does not contain " + mcc);
                 }
 
-                String[] postfixes = null;
-
-                // exceptions
-                if (mcc == 262) {
-                    postfixes = new String[]{"_a", "_b", "_c"};
-                } else if (mcc == 310) {
-                    postfixes = new String[]{"_a", "_b", "_c", "_d"};
-                }
-
-                if (postfixes == null) {
-                    sources.add(new Source(String.format(Locale.US, Config.LACELLS_URL, String.valueOf(mcc)), Source.Compression.none, records));
-                } else {
-                    List<String> urls = new ArrayList<>();
-
-                    for (String postfix : postfixes) {
-                        urls.add(String.format(Locale.US, Config.LACELLS_URL, String.valueOf(mcc) + postfix));
-                    }
-
-                    sources.add(new Source(urls, Source.Compression.none, records));
-                }
+                sources.add(new Source(details.urls(), Source.Compression.none, details.numberOfRecords()));
             }
         } else {
             // only use the other sources when lacells is not enabled
