@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.util.LruCache;
 import android.util.Log;
 
 import org.fitchfamily.android.gsmlocation.Config;
@@ -30,15 +29,7 @@ public class CellLocationDatabase {
     private static final String COL_CID = "cid";
     private SQLiteDatabase database;
 
-    /**
-     * DB negative query cache (not found in db).
-     */
-    private LruCache<QueryArgs, Boolean> queryResultNegativeCache = new LruCache<QueryArgs, Boolean>(10000);
-
-    /**
-     * DB positive query cache (found in the db).
-     */
-    private LruCache<QueryArgs, Location> queryResultCache = new LruCache<QueryArgs, Location>(10000);
+    private QueryCache queryCache = new QueryCache();
 
     public void checkForNewDatabase() {
         if (Config.DB_NEW_FILE.exists() && Config.DB_NEW_FILE.canRead()) {
@@ -48,8 +39,6 @@ public class CellLocationDatabase {
                 database.close();
 
             database = null;
-            queryResultCache = new LruCache<QueryArgs, Location>(10000);
-            queryResultNegativeCache = new LruCache<QueryArgs, Boolean>(10000);
 
             Config.DB_FILE.renameTo(Config.DB_BAK_FILE);
             Config.DB_NEW_FILE.renameTo(Config.DB_FILE);
@@ -90,14 +79,10 @@ public class CellLocationDatabase {
 
         // short circuit duplicate calls
         QueryArgs args = new QueryArgs(mcc, mnc, cid, lac);
-        Boolean negative = queryResultNegativeCache.get(args);
 
-        if (negative != null && negative)
-            return null;
-
-        Location cached = queryResultCache.get(args);
-        if (cached != null)
-            return cached;
+        if(queryCache.contains(args)) {
+            return queryCache.get(args);
+        }
 
         openDatabase();
         if (database == null) {
@@ -189,19 +174,19 @@ public class CellLocationDatabase {
                         lat / samples + ", " + lng / samples + ", " + rng);
                 Bundle extras = new Bundle();
                 cellLocInfo = LocationHelper.create("gsm", (float) lat / samples, (float) lng / samples, (float) rng, extras);
-                queryResultCache.put(args, cellLocInfo);
+                queryCache.put(args, cellLocInfo);
                 if (DEBUG)
                     Log.d(TAG, "Cell info found: " + args.toString());
             } else {
                 if (DEBUG)
                     Log.d(TAG, "DB Cursor empty for: " + args.toString());
-                queryResultNegativeCache.put(args, true);
+                queryCache.putUnresolved(args);
             }
             cursor.close();
         } else {
             if (DEBUG)
                 Log.d(TAG, "DB Cursor null for: " + args.toString());
-            queryResultNegativeCache.put(args, true);
+            queryCache.putUnresolved(args);
         }
         return cellLocInfo;
     }
