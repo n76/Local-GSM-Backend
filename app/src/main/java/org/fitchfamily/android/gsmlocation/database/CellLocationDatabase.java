@@ -124,29 +124,19 @@ public class CellLocationDatabase {
             if (cursor != null) {
                 if (cursor.getCount() > 0) {
                     LocationCalculator locationCalculator = new LocationCalculator();
-
-                    int db_mcc = 0;
-                    int db_mnc = 0;
-                    int db_lac = 0;
-                    int db_cid = 0;
-                    double thisLat;
-                    double thisLng;
-                    double thisRng;
-                    int thisSamples;
-
                     // Get weighted average of tower locations and coverage
                     // range from reports by the various providers (OpenCellID,
                     // Mozilla location services, etc.)
                     while (!cursor.isLast()) {
                         cursor.moveToNext();
-                        db_mcc = cursor.getInt(cursor.getColumnIndexOrThrow(COL_MCC));
-                        db_mnc = cursor.getInt(cursor.getColumnIndexOrThrow(COL_MNC));
-                        db_lac = cursor.getInt(cursor.getColumnIndexOrThrow(COL_LAC));
-                        db_cid = cursor.getInt(cursor.getColumnIndexOrThrow(COL_CID));
-                        thisLat = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LATITUDE));
-                        thisLng = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LONGITUDE));
-                        thisRng = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_ACCURACY));
-                        thisSamples = cursor.getInt(cursor.getColumnIndexOrThrow(COL_SAMPLES));
+                        int db_mcc = cursor.getInt(cursor.getColumnIndexOrThrow(COL_MCC));
+                        int db_mnc = cursor.getInt(cursor.getColumnIndexOrThrow(COL_MNC));
+                        int db_lac = cursor.getInt(cursor.getColumnIndexOrThrow(COL_LAC));
+                        int db_cid = cursor.getInt(cursor.getColumnIndexOrThrow(COL_CID));
+                        double thisLat = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LATITUDE));
+                        double thisLng = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LONGITUDE));
+                        double thisRng = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_ACCURACY));
+                        int thisSamples = cursor.getInt(cursor.getColumnIndexOrThrow(COL_SAMPLES));
 
                         if (DEBUG) {
                             Log.d(TAG, "query result: " +
