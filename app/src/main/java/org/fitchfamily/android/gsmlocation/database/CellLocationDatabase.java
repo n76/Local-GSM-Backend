@@ -91,8 +91,10 @@ public class CellLocationDatabase {
 
         openDatabase();
         if (database == null) {
-            if (DEBUG)
+            if (DEBUG) {
                 Log.d(TAG, "Unable to open cell tower database file.");
+            }
+
             return null;
         }
 
@@ -145,27 +147,39 @@ public class CellLocationDatabase {
                         thisLng = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LONGITUDE));
                         thisRng = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_ACCURACY));
                         thisSamples = cursor.getInt(cursor.getColumnIndexOrThrow(COL_SAMPLES));
-                        if (DEBUG) Log.d(TAG, "query result: " +
-                                db_mcc + ", " + db_mnc + ", " + db_lac + ", " + db_cid + ", " +
-                                thisLat + ", " + thisLng + ", " + thisRng + ", " + thisSamples);
+
+                        if (DEBUG) {
+                            Log.d(TAG, "query result: " +
+                                    db_mcc + ", " + db_mnc + ", " + db_lac + ", " + db_cid + ", " +
+                                    thisLat + ", " + thisLng + ", " + thisRng + ", " + thisSamples);
+                        }
 
                         locationCalculator.add(thisLat, thisLng, thisSamples, thisRng);
                     }
-                    if (DEBUG) Log.d(TAG, "Final result: " + locationCalculator);
+                    if (DEBUG) {
+                        Log.d(TAG, "Final result: " + locationCalculator);
+                    }
 
                     Location cellLocInfo = locationCalculator.toLocation();
                     queryCache.put(args, cellLocInfo);
-                    if (DEBUG)
+
+                    if (DEBUG) {
                         Log.d(TAG, "Cell info found: " + args.toString());
+                    }
+
                     return cellLocInfo;
                 } else {
-                    if (DEBUG)
+                    if (DEBUG) {
                         Log.d(TAG, "DB Cursor empty for: " + args.toString());
+                    }
+
                     queryCache.putUnresolved(args);
                 }
             } else {
-                if (DEBUG)
+                if (DEBUG) {
                     Log.d(TAG, "DB Cursor null for: " + args.toString());
+                }
+
                 queryCache.putUnresolved(args);
             }
 
