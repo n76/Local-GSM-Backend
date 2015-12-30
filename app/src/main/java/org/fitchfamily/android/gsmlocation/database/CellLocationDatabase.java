@@ -89,20 +89,20 @@ public class CellLocationDatabase {
         // Build up where clause and arguments based on what we were passed
         if (mcc != null) {
             queryBuilder
-                    .columnIs("mcc", String.valueOf(mcc))
+                    .columnIs(COL_MCC, String.valueOf(mcc))
                     .and();
         }
 
         if (mnc != null) {
             queryBuilder
-                    .columnIs("mnc", String.valueOf(mnc))
+                    .columnIs(COL_MNC, String.valueOf(mnc))
                     .and();
         }
 
         queryBuilder
-                .columnIs("lac", String.valueOf(lac))
+                .columnIs(COL_LAC, String.valueOf(lac))
                 .and()
-                .columnIs("cid", String.valueOf(cid));
+                .columnIs(COL_CID, String.valueOf(cid));
 
         Cursor cursor =
                 database.query(TABLE_CELLS, new String[]{COL_MCC,
