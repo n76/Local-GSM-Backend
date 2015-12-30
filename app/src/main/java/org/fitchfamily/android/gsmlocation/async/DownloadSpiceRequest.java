@@ -24,6 +24,7 @@ import org.fitchfamily.android.gsmlocation.data.SourceConnection;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -112,6 +113,8 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
             Map<Integer, MccDetails> mccMap = new HashMap<>();
 
             try {
+                final URI baseUrl = new URI(Config.LACELLS_MCC_URL);
+
                 SourceConnection connection = new Source(Config.LACELLS_MCC_URL, Source.Compression.none).connect();
                 CsvParser parser = new CsvParser(connection.inputStream());
                 final List<String> header = parser.parseLine();
@@ -125,7 +128,10 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
                 while ((line = parser.parseLine()) != null && line.size() > index_mcc) {
                     int cells = Integer.parseInt(line.get(index_cells));
                     int mcc = Integer.parseInt(line.get(index_mcc));
-                    List<String> urls = Arrays.asList(line.get(index_urls).split(" "));
+                    List<String> urls = new ArrayList<>();
+                    for(String url : line.get(index_urls).split(" ")) {
+                        urls.add(baseUrl.resolve(url).toString());
+                    }
 
                     mccMap.put(mcc, new MccDetails(cells, urls));
                 }
