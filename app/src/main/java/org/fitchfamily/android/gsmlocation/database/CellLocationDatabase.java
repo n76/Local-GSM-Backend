@@ -50,8 +50,10 @@ public class CellLocationDatabase {
 
     public void checkForNewDatabase() {
         if (Config.DB_NEW_FILE.exists() && Config.DB_NEW_FILE.canRead()) {
-            if (DEBUG)
+            if (DEBUG) {
                 Log.d(TAG, "New database file detected.");
+            }
+
             if (database != null)
                 database.close();
 
@@ -64,8 +66,9 @@ public class CellLocationDatabase {
 
     private void openDatabase() {
         if (database == null) {
-            if (DEBUG)
+            if (DEBUG) {
                 Log.d(TAG, "Attempting to open database.");
+            }
 
             if (Config.DB_FILE.exists() && Config.DB_FILE.canRead()) {
                 try {
@@ -73,17 +76,26 @@ public class CellLocationDatabase {
                             null,
                             SQLiteDatabase.NO_LOCALIZED_COLLATORS);
                 } catch (Exception e) {
-                    if (DEBUG) Log.e(TAG, "Error opening database: "+ e.getMessage());
+                    if (DEBUG) {
+                        Log.e(TAG, "Error opening database: "+ e.getMessage());
+                    }
+
                     database = null;
                     Config.DB_FILE.delete();
                     if (Config.DB_BAK_FILE.exists() && Config.DB_BAK_FILE.canRead()) {
-                        if (DEBUG) Log.e(TAG, "Reverting to old database");
+                        if (DEBUG) {
+                            Log.e(TAG, "Reverting to old database");
+                        }
+
                         Config.DB_BAK_FILE.renameTo(Config.DB_FILE);
                         openDatabase();
                     }
                 }
             } else {
-                if (DEBUG) Log.e(TAG, "Unable to open database "+ Config.DB_FILE);
+                if (DEBUG) {
+                    Log.e(TAG, "Unable to open database "+ Config.DB_FILE);
+                }
+
                 database = null;
             }
         }
