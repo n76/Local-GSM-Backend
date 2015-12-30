@@ -1,11 +1,13 @@
 package org.fitchfamily.android.gsmlocation.database;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.util.Log;
 
 import org.fitchfamily.android.gsmlocation.Config;
+import org.fitchfamily.android.gsmlocation.Settings;
 
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
@@ -48,8 +50,14 @@ public class CellLocationDatabase {
 
     private QueryCache queryCache = new QueryCache();
 
+    private Settings settings;
+
+    public CellLocationDatabase(Context context) {
+        settings = Settings.with(context);
+    }
+
     public void checkForNewDatabase() {
-        if (Config.DB_NEW_FILE.exists() && Config.DB_NEW_FILE.canRead()) {
+        if (settings.newDatabaseFile().exists() && settings.newDatabaseFile().canRead()) {
             if (DEBUG) {
                 Log.d(TAG, "New database file detected.");
             }
@@ -59,8 +67,8 @@ public class CellLocationDatabase {
 
             database = null;
 
-            Config.DB_FILE.renameTo(Config.DB_BAK_FILE);
-            Config.DB_NEW_FILE.renameTo(Config.DB_FILE);
+            settings.currentDatabaseFile().renameTo(settings.bakDatabaseFile());
+            settings.newDatabaseFile().renameTo(settings.currentDatabaseFile());
         }
     }
 
@@ -70,9 +78,9 @@ public class CellLocationDatabase {
                 Log.d(TAG, "Attempting to open database.");
             }
 
-            if (Config.DB_FILE.exists() && Config.DB_FILE.canRead()) {
+            if (settings.currentDatabaseFile().exists() && settings.currentDatabaseFile().canRead()) {
                 try {
-                    database = SQLiteDatabase.openDatabase(Config.DB_FILE.getAbsolutePath(),
+                    database = SQLiteDatabase.openDatabase(settings.currentDatabaseFile().getAbsolutePath(),
                             null,
                             SQLiteDatabase.NO_LOCALIZED_COLLATORS);
                 } catch (Exception e) {
@@ -81,19 +89,19 @@ public class CellLocationDatabase {
                     }
 
                     database = null;
-                    Config.DB_FILE.delete();
-                    if (Config.DB_BAK_FILE.exists() && Config.DB_BAK_FILE.canRead()) {
+                    settings.currentDatabaseFile().delete();
+                    if (settings.bakDatabaseFile().exists() && settings.bakDatabaseFile().canRead()) {
                         if (DEBUG) {
                             Log.e(TAG, "Reverting to old database");
                         }
 
-                        Config.DB_BAK_FILE.renameTo(Config.DB_FILE);
+                        settings.bakDatabaseFile().renameTo(settings.currentDatabaseFile());
                         openDatabase();
                     }
                 }
             } else {
                 if (DEBUG) {
-                    Log.e(TAG, "Unable to open database "+ Config.DB_FILE);
+                    Log.e(TAG, "Unable to open database " + settings.currentDatabaseFile());
                 }
 
                 database = null;

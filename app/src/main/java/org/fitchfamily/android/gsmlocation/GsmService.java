@@ -44,7 +44,7 @@ public class GsmService extends LocationBackendService {
 
         final Context ctx = getApplicationContext();
         tm = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        th = new TelephonyHelper(tm);
+        th = new TelephonyHelper(ctx);
 
         try {
             if (worker != null && worker.isAlive()) worker.interrupt();

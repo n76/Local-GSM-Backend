@@ -2,6 +2,7 @@ package org.fitchfamily.android.gsmlocation;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -12,6 +13,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Settings {
+    private static final String DB_NAME = "lacells.db";
+    private static final String DB_BAK_NAME = DB_NAME + ".bak";
+    private static final String DB_NEW_NAME = DB_NAME + ".new";
+
     private static final boolean USE_LACELLS_DEFAULT = false;
 
     private static final String USE_LACELLS = "lacells_preference";
@@ -79,12 +84,24 @@ public class Settings {
         return preferences.getBoolean(USE_MOZILLA_LOCATION_SERVICE, false);
     }
 
-    public File newDatabaseFile() {
-        return Config.DB_NEW_FILE;
+    public File databaseDirectory() {
+        return new File(Environment.getExternalStorageDirectory(), ".nogapps");
     }
 
-    public File oldDatabaseFile() {
-        return Config.DB_FILE;
+    public File newDatabaseFile() {
+        return new File(databaseDirectory(), DB_NEW_NAME);
+    }
+
+    public File currentDatabaseFile() {
+        return new File(databaseDirectory(), DB_NAME);
+    }
+
+    public File bakDatabaseFile() {
+        return new File(databaseDirectory(), DB_BAK_NAME);
+    }
+
+    public File logfile() {
+        return new File(databaseDirectory(), "lacells_gen.log");
     }
 
     /**
@@ -95,8 +112,8 @@ public class Settings {
     public File databaseFile() {
         if (newDatabaseFile().exists()) {
             return newDatabaseFile();
-        } else if (oldDatabaseFile().exists()) {
-            return oldDatabaseFile();
+        } else if (currentDatabaseFile().exists()) {
+            return currentDatabaseFile();
         } else {
             return null;
         }
