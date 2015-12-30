@@ -3,11 +3,9 @@ package org.fitchfamily.android.gsmlocation.database;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
-import android.os.Bundle;
 import android.util.Log;
 
 import org.fitchfamily.android.gsmlocation.Config;
-import org.microg.nlp.api.LocationHelper;
 
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
@@ -123,16 +121,12 @@ public class CellLocationDatabase {
         try {
             if (cursor != null) {
                 if (cursor.getCount() > 0) {
+                    LocationCalculator locationCalculator = new LocationCalculator();
+
                     int db_mcc = 0;
                     int db_mnc = 0;
                     int db_lac = 0;
                     int db_cid = 0;
-
-                    double lat = 0d;
-                    double lng = 0d;
-                    double rng = 0d;
-                    int samples = 0;
-
                     double thisLat;
                     double thisLng;
                     double thisRng;
@@ -154,21 +148,12 @@ public class CellLocationDatabase {
                         if (DEBUG) Log.d(TAG, "query result: " +
                                 db_mcc + ", " + db_mnc + ", " + db_lac + ", " + db_cid + ", " +
                                 thisLat + ", " + thisLng + ", " + thisRng + ", " + thisSamples);
-                        if (thisSamples < 1)
-                            thisSamples = 1;
 
-                        lat += (thisLat * thisSamples);
-                        lng += (thisLng * thisSamples);
-
-                        if (thisRng > rng)
-                            rng = thisRng;
-                        samples += thisSamples;
+                        locationCalculator.add(thisLat, thisLng, thisSamples, thisRng);
                     }
-                    if (DEBUG) Log.d(TAG, "Final result: " +
-                            db_mcc + ", " + db_mnc + ", " + db_lac + ", " + db_cid + ", " +
-                            lat / samples + ", " + lng / samples + ", " + rng);
-                    Bundle extras = new Bundle();
-                    Location cellLocInfo = LocationHelper.create("gsm", (float) lat / samples, (float) lng / samples, (float) rng, extras);
+                    if (DEBUG) Log.d(TAG, "Final result: " + locationCalculator);
+
+                    Location cellLocInfo = locationCalculator.toLocation();
                     queryCache.put(args, cellLocInfo);
                     if (DEBUG)
                         Log.d(TAG, "Cell info found: " + args.toString());
