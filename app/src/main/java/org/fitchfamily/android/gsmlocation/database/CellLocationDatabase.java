@@ -116,68 +116,74 @@ public class CellLocationDatabase {
                                 COL_ACCURACY,
                                 COL_SAMPLES},
                         queryBuilder.selection(), queryBuilder.selectionArgs(), null, null, null);
-        if (cursor != null) {
-            if (cursor.getCount() > 0) {
-                int db_mcc = 0;
-                int db_mnc = 0;
-                int db_lac = 0;
-                int db_cid = 0;
 
-                double lat = 0d;
-                double lng = 0d;
-                double rng = 0d;
-                int samples = 0;
+        try {
+            if (cursor != null) {
+                if (cursor.getCount() > 0) {
+                    int db_mcc = 0;
+                    int db_mnc = 0;
+                    int db_lac = 0;
+                    int db_cid = 0;
 
-                double thisLat;
-                double thisLng;
-                double thisRng;
-                int thisSamples;
+                    double lat = 0d;
+                    double lng = 0d;
+                    double rng = 0d;
+                    int samples = 0;
 
-                // Get weighted average of tower locations and coverage
-                // range from reports by the various providers (OpenCellID,
-                // Mozilla location services, etc.)
-                while (!cursor.isLast()) {
-                    cursor.moveToNext();
-                    db_mcc = cursor.getInt(cursor.getColumnIndexOrThrow(COL_MCC));
-                    db_mnc = cursor.getInt(cursor.getColumnIndexOrThrow(COL_MNC));
-                    db_lac = cursor.getInt(cursor.getColumnIndexOrThrow(COL_LAC));
-                    db_cid = cursor.getInt(cursor.getColumnIndexOrThrow(COL_CID));
-                    thisLat = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LATITUDE));
-                    thisLng = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LONGITUDE));
-                    thisRng = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_ACCURACY));
-                    thisSamples = cursor.getInt(cursor.getColumnIndexOrThrow(COL_SAMPLES));
-                    if (DEBUG) Log.d(TAG, "query result: " +
+                    double thisLat;
+                    double thisLng;
+                    double thisRng;
+                    int thisSamples;
+
+                    // Get weighted average of tower locations and coverage
+                    // range from reports by the various providers (OpenCellID,
+                    // Mozilla location services, etc.)
+                    while (!cursor.isLast()) {
+                        cursor.moveToNext();
+                        db_mcc = cursor.getInt(cursor.getColumnIndexOrThrow(COL_MCC));
+                        db_mnc = cursor.getInt(cursor.getColumnIndexOrThrow(COL_MNC));
+                        db_lac = cursor.getInt(cursor.getColumnIndexOrThrow(COL_LAC));
+                        db_cid = cursor.getInt(cursor.getColumnIndexOrThrow(COL_CID));
+                        thisLat = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LATITUDE));
+                        thisLng = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LONGITUDE));
+                        thisRng = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_ACCURACY));
+                        thisSamples = cursor.getInt(cursor.getColumnIndexOrThrow(COL_SAMPLES));
+                        if (DEBUG) Log.d(TAG, "query result: " +
+                                db_mcc + ", " + db_mnc + ", " + db_lac + ", " + db_cid + ", " +
+                                thisLat + ", " + thisLng + ", " + thisRng + ", " + thisSamples);
+                        if (thisSamples < 1)
+                            thisSamples = 1;
+
+                        lat += (thisLat * thisSamples);
+                        lng += (thisLng * thisSamples);
+
+                        if (thisRng > rng)
+                            rng = thisRng;
+                        samples += thisSamples;
+                    }
+                    if (DEBUG) Log.d(TAG, "Final result: " +
                             db_mcc + ", " + db_mnc + ", " + db_lac + ", " + db_cid + ", " +
-                            thisLat + ", " + thisLng + ", " + thisRng + ", " + thisSamples);
-                    if (thisSamples < 1)
-                        thisSamples = 1;
-
-                    lat += (thisLat * thisSamples);
-                    lng += (thisLng * thisSamples);
-
-                    if (thisRng > rng)
-                        rng = thisRng;
-                    samples += thisSamples;
+                            lat / samples + ", " + lng / samples + ", " + rng);
+                    Bundle extras = new Bundle();
+                    cellLocInfo = LocationHelper.create("gsm", (float) lat / samples, (float) lng / samples, (float) rng, extras);
+                    queryCache.put(args, cellLocInfo);
+                    if (DEBUG)
+                        Log.d(TAG, "Cell info found: " + args.toString());
+                } else {
+                    if (DEBUG)
+                        Log.d(TAG, "DB Cursor empty for: " + args.toString());
+                    queryCache.putUnresolved(args);
                 }
-                if (DEBUG) Log.d(TAG, "Final result: " +
-                        db_mcc + ", " + db_mnc + ", " + db_lac + ", " + db_cid + ", " +
-                        lat / samples + ", " + lng / samples + ", " + rng);
-                Bundle extras = new Bundle();
-                cellLocInfo = LocationHelper.create("gsm", (float) lat / samples, (float) lng / samples, (float) rng, extras);
-                queryCache.put(args, cellLocInfo);
-                if (DEBUG)
-                    Log.d(TAG, "Cell info found: " + args.toString());
             } else {
                 if (DEBUG)
-                    Log.d(TAG, "DB Cursor empty for: " + args.toString());
+                    Log.d(TAG, "DB Cursor null for: " + args.toString());
                 queryCache.putUnresolved(args);
             }
-            cursor.close();
-        } else {
-            if (DEBUG)
-                Log.d(TAG, "DB Cursor null for: " + args.toString());
-            queryCache.putUnresolved(args);
+            return cellLocInfo;
+        } finally {
+            if(cursor != null) {
+                cursor.close();
+            }
         }
-        return cellLocInfo;
     }
 }
