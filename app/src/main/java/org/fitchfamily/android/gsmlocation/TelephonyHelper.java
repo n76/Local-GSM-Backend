@@ -10,6 +10,7 @@ import android.telephony.TelephonyManager;
 import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 
+import org.fitchfamily.android.gsmlocation.database.CellLocationDatabase;
 import org.microg.nlp.api.LocationHelper;
 
 import java.lang.reflect.InvocationTargetException;

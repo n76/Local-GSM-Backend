@@ -1,4 +1,4 @@
-package org.fitchfamily.android.gsmlocation;
+package org.fitchfamily.android.gsmlocation.database;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 
+import org.fitchfamily.android.gsmlocation.Config;
 import org.microg.nlp.api.LocationHelper;
 
 import java.util.ArrayList;
