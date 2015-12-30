@@ -9,9 +9,6 @@ import android.util.Log;
 import org.fitchfamily.android.gsmlocation.Config;
 import org.microg.nlp.api.LocationHelper;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
 public class CellLocationDatabase {
@@ -73,9 +70,7 @@ public class CellLocationDatabase {
     }
 
     public synchronized Location query(final Integer mcc, final Integer mnc, final int cid, final int lac) {
-        List<String> specArgs = new ArrayList<String>();
-        String delim = "";
-        String bySpec = "";
+        SqlWhereBuilder queryBuilder = new SqlWhereBuilder();
 
         // short circuit duplicate calls
         QueryArgs args = new QueryArgs(mcc, mnc, cid, lac);
@@ -93,26 +88,21 @@ public class CellLocationDatabase {
 
         // Build up where clause and arguments based on what we were passed
         if (mcc != null) {
-            bySpec = bySpec + delim + "mcc=?";
-            delim = " AND ";
-            specArgs.add(Integer.toString(mcc));
+            queryBuilder
+                    .columnIs("mcc", String.valueOf(mcc))
+                    .and();
         }
 
         if (mnc != null) {
-            bySpec = bySpec + delim + "mnc=?";
-            delim = " AND ";
-            specArgs.add(Integer.toString(mnc));
+            queryBuilder
+                    .columnIs("mnc", String.valueOf(mnc))
+                    .and();
         }
 
-        bySpec = bySpec + delim + "lac=?";
-        delim = " AND ";
-        specArgs.add(Integer.toString(lac));
-
-        bySpec = bySpec + delim + "cid=?";
-        specArgs.add(Integer.toString(cid));
-
-        String[] specArgArry = new String[specArgs.size()];
-        specArgs.toArray(specArgArry);
+        queryBuilder
+                .columnIs("lac", String.valueOf(lac))
+                .and()
+                .columnIs("cid", String.valueOf(cid));
 
         Location cellLocInfo = null;
 
@@ -125,7 +115,7 @@ public class CellLocationDatabase {
                                 COL_LONGITUDE,
                                 COL_ACCURACY,
                                 COL_SAMPLES},
-                        bySpec, specArgArry, null, null, null);
+                        queryBuilder.selection(), queryBuilder.selectionArgs(), null, null, null);
         if (cursor != null) {
             if (cursor.getCount() > 0) {
                 int db_mcc = 0;
