@@ -34,6 +34,16 @@ public class CellLocationDatabase {
             COL_CID
     };
 
+    // the indexes are always the same because we always use the COLUMNS array
+    private static final int INDEX_LATITUDE = 0;
+    private static final int INDEX_LONGITUDE = 1;
+    private static final int INDEX_ACCURACY = 2;
+    private static final int INDEX_SAMPLES = 3;
+    private static final int INDEX_MCC = 4;
+    private static final int INDEX_MNC = 5;
+    private static final int INDEX_LAC = 6;
+    private static final int INDEX_CID = 7;
+
     private SQLiteDatabase database;
 
     private QueryCache queryCache = new QueryCache();
@@ -129,14 +139,14 @@ public class CellLocationDatabase {
                     // Mozilla location services, etc.)
                     while (!cursor.isLast()) {
                         cursor.moveToNext();
-                        int db_mcc = cursor.getInt(cursor.getColumnIndexOrThrow(COL_MCC));
-                        int db_mnc = cursor.getInt(cursor.getColumnIndexOrThrow(COL_MNC));
-                        int db_lac = cursor.getInt(cursor.getColumnIndexOrThrow(COL_LAC));
-                        int db_cid = cursor.getInt(cursor.getColumnIndexOrThrow(COL_CID));
-                        double thisLat = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LATITUDE));
-                        double thisLng = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LONGITUDE));
-                        double thisRng = cursor.getDouble(cursor.getColumnIndexOrThrow(COL_ACCURACY));
-                        int thisSamples = cursor.getInt(cursor.getColumnIndexOrThrow(COL_SAMPLES));
+                        int db_mcc = cursor.getInt(INDEX_MCC);
+                        int db_mnc = cursor.getInt(INDEX_MNC);
+                        int db_lac = cursor.getInt(INDEX_LAC);
+                        int db_cid = cursor.getInt(INDEX_CID);
+                        double thisLat = cursor.getDouble(INDEX_LATITUDE);
+                        double thisLng = cursor.getDouble(INDEX_LONGITUDE);
+                        double thisRng = cursor.getDouble(INDEX_ACCURACY);
+                        int thisSamples = cursor.getInt(INDEX_SAMPLES);
 
                         if (DEBUG) {
                             Log.d(TAG, "query result: " +
