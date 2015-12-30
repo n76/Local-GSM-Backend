@@ -24,6 +24,18 @@ public class CellLocationDatabase {
     private static final String COL_MNC = "mnc";
     private static final String COL_LAC = "lac";
     private static final String COL_CID = "cid";
+
+    private static final String[] COLUMNS = new String[] {
+            COL_LATITUDE,
+            COL_LONGITUDE,
+            COL_ACCURACY,
+            COL_SAMPLES,
+            COL_MCC,
+            COL_MNC,
+            COL_LAC,
+            COL_CID
+    };
+
     private SQLiteDatabase database;
 
     private QueryCache queryCache = new QueryCache();
@@ -105,14 +117,7 @@ public class CellLocationDatabase {
                 .columnIs(COL_CID, String.valueOf(cid));
 
         Cursor cursor =
-                database.query(TABLE_CELLS, new String[]{COL_MCC,
-                                COL_MNC,
-                                COL_LAC,
-                                COL_CID,
-                                COL_LATITUDE,
-                                COL_LONGITUDE,
-                                COL_ACCURACY,
-                                COL_SAMPLES},
+                database.query(TABLE_CELLS, COLUMNS,
                         queryBuilder.selection(), queryBuilder.selectionArgs(), null, null, null);
 
         try {
