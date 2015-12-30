@@ -16,6 +16,7 @@ import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import org.fitchfamily.android.gsmlocation.util.LocationUtil;
 import org.microg.nlp.api.LocationBackendService;
 
 import java.util.List;
@@ -55,23 +56,6 @@ public class GsmService extends LocationBackendService {
                     Looper.prepare();
 
                     final PhoneStateListener listener = new PhoneStateListener() {
-
-                        private boolean sameLoc(Location l1, Location l2) {
-
-                            if (l1 == null && l2 == null)
-                                return true;
-
-                            if (l1 == null && l2 != null)
-                                return false;
-
-                            if(l1 != null && l2 == null)
-                                return false;
-
-                            return (l1.getLatitude() == l2.getLatitude()) &&
-                                   (l1.getLongitude() == l2.getLongitude()) &&
-                                   (l1.getAccuracy() == l2.getAccuracy());
-                        }
-
                         private synchronized void doIt(String from) {
                             if (isConnected()) {
                                 Location rslt = th.getLocationEstimate();
@@ -85,7 +69,7 @@ public class GsmService extends LocationBackendService {
                                 if (DEBUG)
                                     Log.d(TAG, logString);
 
-                                if (!sameLoc(lastLocation, rslt)) {
+                                if (!LocationUtil.equals(lastLocation, rslt)) {
                                     if (DEBUG)
                                         Log.d(TAG, "Location Changed.");
 
