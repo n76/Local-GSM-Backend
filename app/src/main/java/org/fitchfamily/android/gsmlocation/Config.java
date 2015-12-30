@@ -29,8 +29,6 @@ public class Config {
     public static final String OCI_API_GET_KEY_URL = "http://opencellid.org/gsmCell/user/generateApiKey";
 
     // URL for lacells
-    public static final String LACELLS_URL = "https://wvengen.github.io/lacells/lacells-mcc_%s.csv";
-
     public static final String LACELLS_MCC_URL = "https://wvengen.github.io/lacells/lacells-countries.csv";
 
     // Mozilla Location Services uses:
