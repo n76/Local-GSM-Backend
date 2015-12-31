@@ -17,6 +17,8 @@ public class Settings {
     private static final String DB_BAK_NAME = DB_NAME + ".bak";
     private static final String DB_NEW_NAME = DB_NAME + ".new";
 
+    private static final File DATABASE_DIRECTORY_OLD = new File(Environment.getExternalStorageDirectory(), ".nogapps");
+
     private static final boolean USE_LACELLS_DEFAULT = false;
 
     private static final String USE_LACELLS = "lacells_preference";
@@ -35,9 +37,24 @@ public class Settings {
     private static Settings instance;
 
     private final SharedPreferences preferences;
+    private final Context context;
 
     private Settings(Context context) {
+        this.context = context;
         preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+
+        // move directory to the new location
+        if(DATABASE_DIRECTORY_OLD.exists() && DATABASE_DIRECTORY_OLD.canWrite()) {
+            File[] files = DATABASE_DIRECTORY_OLD.listFiles();
+
+            if(files != null) {
+                for(File file : files) {
+                    file.renameTo(new File(databaseDirectory(), file.getName()));
+                }
+            }
+
+            DATABASE_DIRECTORY_OLD.delete();
+        }
     }
 
     public static Settings with(Fragment fragment) {
@@ -85,7 +102,7 @@ public class Settings {
     }
 
     public File databaseDirectory() {
-        return new File(Environment.getExternalStorageDirectory(), ".nogapps");
+        return context.getExternalFilesDir(null);
     }
 
     public File newDatabaseFile() {
