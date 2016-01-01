@@ -16,6 +16,7 @@ public class Settings {
     private static final String DB_NAME = "lacells.db";
     private static final String DB_BAK_NAME = DB_NAME + ".bak";
     private static final String DB_NEW_NAME = DB_NAME + ".new";
+    private static final String LOG_NAME = "lacells_gen.log";
 
     private static final File DATABASE_DIRECTORY_OLD = new File(Environment.getExternalStorageDirectory(), ".nogapps");
 
@@ -118,7 +119,7 @@ public class Settings {
     }
 
     public File logfile() {
-        return new File(databaseDirectory(), "lacells_gen.log");
+        return new File(databaseDirectory(), LOG_NAME);
     }
 
     /**
