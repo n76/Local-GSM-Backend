@@ -197,7 +197,7 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
         wifiLock.acquire();
 
         try {
-            LogUtils.clearLog();
+            LogUtils.with(context).clearLog();
 
             // Prepare the MCC and MNC code filters.
             final String mccCodes = Settings.with(context).mccFilters();
@@ -216,7 +216,7 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
             }
 
             try {
-                databaseCreator = DatabaseCreator.withTempFile().open().createTable();
+                databaseCreator = DatabaseCreator.withTempFile(context).open().createTable();
 
                 final List<Source> sources = getSources(context);
                 final int sources_size = sources.size();
@@ -252,7 +252,7 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
                             .createIndex()
                             .close()
                             .removeJournal()
-                            .replace(Config.DB_NEW_FILE);
+                            .replace(Settings.with(context).newDatabaseFile());
 
                 } else {
                     databaseCreator.close().delete();
@@ -495,7 +495,7 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
                     .append('\n');
         }
 
-        LogUtils.appendToLog(tag + ": " + message);
+        LogUtils.with(context).appendToLog(tag + ": " + message);
 
         publishProgress(lastProgress);
     }

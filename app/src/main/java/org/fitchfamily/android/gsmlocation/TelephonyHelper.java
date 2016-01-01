@@ -1,5 +1,6 @@
 package org.fitchfamily.android.gsmlocation;
 
+import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.telephony.CellIdentityGsm;
@@ -10,6 +11,7 @@ import android.telephony.TelephonyManager;
 import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 
+import org.fitchfamily.android.gsmlocation.database.CellLocationDatabase;
 import org.microg.nlp.api.LocationHelper;
 
 import java.lang.reflect.InvocationTargetException;
@@ -116,10 +118,11 @@ public class TelephonyHelper {
     }
 
     private TelephonyManager tm;
-    private CellLocationDatabase db = new CellLocationDatabase();
+    private CellLocationDatabase db;
 
-    public TelephonyHelper(TelephonyManager teleMgr) {
-        tm = teleMgr;
+    public TelephonyHelper(Context context) {
+        tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        db = new CellLocationDatabase(context);
     }
 
     // call getAllCellInfo() in a way that is safe for many

@@ -1,5 +1,6 @@
 package org.fitchfamily.android.gsmlocation;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
@@ -9,8 +10,8 @@ import java.io.IOException;
 public class DatabaseCreator {
     private static final String SQL_INSERT = "INSERT INTO cells (mcc, mnc, lac, cid, longitude, latitude, accuracy, samples, altitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, -1);";
 
-    public static DatabaseCreator withTempFile() throws IOException {
-        return with(File.createTempFile("new_lacells", ".db", Config.DB_DIR));
+    public static DatabaseCreator withTempFile(Context context) throws IOException {
+        return with(File.createTempFile("new_lacells", ".db", Settings.with(context).databaseDirectory()));
     }
 
     public static DatabaseCreator with(File file) {

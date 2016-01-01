@@ -1,24 +1,7 @@
 package org.fitchfamily.android.gsmlocation;
 
-import android.os.Environment;
-
-import java.io.File;
-
 public class Config {
     public static final boolean DEBUG = BuildConfig.DEBUG;
-
-    // Location of database
-    public static final String DB_NAME = "lacells.db";
-    public static final String DB_BAK_NAME = DB_NAME + ".bak";
-    public static final String DB_NEW_NAME = DB_NAME + ".new";
-
-    public static final File ROOT_DIR = Environment.getExternalStorageDirectory();
-    public static final File DB_DIR = new File(ROOT_DIR, ".nogapps");
-    public static final File DB_FILE = new File(DB_DIR, DB_NAME);
-    public static final File DB_BAK_FILE = new File(DB_DIR, DB_BAK_NAME);
-    public static final File DB_NEW_FILE = new File(DB_DIR, DB_NEW_NAME);
-
-    public static final File GEN_LOG_FILE = new File(DB_DIR, "lacells_gen.log");
 
     // Strings for building URLs
     // Open Cell ID uses:

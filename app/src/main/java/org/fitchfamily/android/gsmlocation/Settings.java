@@ -2,6 +2,7 @@ package org.fitchfamily.android.gsmlocation;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -12,6 +13,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Settings {
+    private static final String DB_NAME = "lacells.db";
+    private static final String DB_BAK_NAME = DB_NAME + ".bak";
+    private static final String DB_NEW_NAME = DB_NAME + ".new";
+    private static final String LOG_NAME = "lacells_gen.log";
+    private static final String[] FILE_NAMES = new String[] {
+            DB_NAME,
+            DB_BAK_NAME,
+            DB_NEW_NAME,
+            LOG_NAME
+    };
+
+    private static final File DATABASE_DIRECTORY_OLD = new File(Environment.getExternalStorageDirectory(), ".nogapps");
+
     private static final boolean USE_LACELLS_DEFAULT = false;
 
     private static final String USE_LACELLS = "lacells_preference";
@@ -30,9 +44,32 @@ public class Settings {
     private static Settings instance;
 
     private final SharedPreferences preferences;
+    private final Context context;
 
     private Settings(Context context) {
+        this.context = context;
         preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        moveFilesToNewDirectory(FILE_NAMES);
+    }
+
+    private void moveFilesToNewDirectory(String... filenames) {
+        for(String filename : filenames) {
+            moveFileToNewDirectory(filename);
+        }
+    }
+
+    private void moveFileToNewDirectory(String filename) {
+        File oldFile = new File(DATABASE_DIRECTORY_OLD, filename);
+
+        if(oldFile.exists() && oldFile.canWrite()) {
+            /*
+             * This will work because "/sdcard/.nogapps/" and
+             * "/sdcard/Android/data/org.fitchfamily.android-gsmlocation/files" are on the
+             * same mount point "/sdcard/" (The new directory is the external files directory, not
+             * the internal one so that both are on the emulated sdcard (internal memory) or an real sdcard)
+             */
+            oldFile.renameTo(new File(databaseDirectory(), filename));
+        }
     }
 
     public static Settings with(Fragment fragment) {
@@ -79,12 +116,24 @@ public class Settings {
         return preferences.getBoolean(USE_MOZILLA_LOCATION_SERVICE, false);
     }
 
-    public File newDatabaseFile() {
-        return Config.DB_NEW_FILE;
+    public File databaseDirectory() {
+        return context.getExternalFilesDir(null);
     }
 
-    public File oldDatabaseFile() {
-        return Config.DB_FILE;
+    public File newDatabaseFile() {
+        return new File(databaseDirectory(), DB_NEW_NAME);
+    }
+
+    public File currentDatabaseFile() {
+        return new File(databaseDirectory(), DB_NAME);
+    }
+
+    public File bakDatabaseFile() {
+        return new File(databaseDirectory(), DB_BAK_NAME);
+    }
+
+    public File logfile() {
+        return new File(databaseDirectory(), LOG_NAME);
     }
 
     /**
@@ -95,8 +144,8 @@ public class Settings {
     public File databaseFile() {
         if (newDatabaseFile().exists()) {
             return newDatabaseFile();
-        } else if (oldDatabaseFile().exists()) {
-            return oldDatabaseFile();
+        } else if (currentDatabaseFile().exists()) {
+            return currentDatabaseFile();
         } else {
             return null;
         }

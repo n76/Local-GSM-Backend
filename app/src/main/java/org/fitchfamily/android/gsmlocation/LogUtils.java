@@ -1,10 +1,15 @@
 package org.fitchfamily.android.gsmlocation;
 
+import android.content.Context;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class LogUtils {
+    private static LogUtils instance;
+    private static final Object lock = new Object();
+
     private static final String LOG_PREFIX = "gsmloc_";
     private static final int LOG_PREFIX_LENGTH = LOG_PREFIX.length();
     private static final int MAX_LOG_TAG_LENGTH = 25;
@@ -21,10 +26,28 @@ public class LogUtils {
         return makeLogTag(cls.getSimpleName());
     }
 
-    public static void appendToLog(String message) {
-        if (!Config.GEN_LOG_FILE.exists()) {
+    public static LogUtils with(Context context) {
+        if(instance == null) {
+            synchronized (lock) {
+                if(instance == null) {
+                    instance = new LogUtils(context);
+                }
+            }
+        }
+
+        return instance;
+    }
+
+    private Settings settings;
+
+    private LogUtils(Context context) {
+        settings = Settings.with(context);
+    }
+
+    public void appendToLog(String message) {
+        if (!settings.logfile().exists()) {
             try {
-                Config.GEN_LOG_FILE.createNewFile();
+                settings.logfile().createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -32,7 +55,7 @@ public class LogUtils {
         }
 
         try {
-            BufferedWriter buf = new BufferedWriter(new FileWriter(Config.GEN_LOG_FILE, true));
+            BufferedWriter buf = new BufferedWriter(new FileWriter(settings.logfile(), true));
             buf.append(message);
             buf.newLine();
             buf.flush();
@@ -42,8 +65,8 @@ public class LogUtils {
         }
     }
 
-    public static void clearLog() {
-        Config.GEN_LOG_FILE.delete();
+    public void clearLog() {
+        settings.logfile().delete();
     }
 
     private LogUtils() {
