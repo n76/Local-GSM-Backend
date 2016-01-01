@@ -17,6 +17,12 @@ public class Settings {
     private static final String DB_BAK_NAME = DB_NAME + ".bak";
     private static final String DB_NEW_NAME = DB_NAME + ".new";
     private static final String LOG_NAME = "lacells_gen.log";
+    private static final String[] FILE_NAMES = new String[] {
+            DB_NAME,
+            DB_BAK_NAME,
+            DB_NEW_NAME,
+            LOG_NAME
+    };
 
     private static final File DATABASE_DIRECTORY_OLD = new File(Environment.getExternalStorageDirectory(), ".nogapps");
 
@@ -43,18 +49,26 @@ public class Settings {
     private Settings(Context context) {
         this.context = context;
         preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        moveFilesToNewDirectory(FILE_NAMES);
+    }
 
-        // move directory to the new location
-        if(DATABASE_DIRECTORY_OLD.exists() && DATABASE_DIRECTORY_OLD.canWrite()) {
-            File[] files = DATABASE_DIRECTORY_OLD.listFiles();
+    private void moveFilesToNewDirectory(String... filenames) {
+        for(String filename : filenames) {
+            moveFileToNewDirectory(filename);
+        }
+    }
 
-            if(files != null) {
-                for(File file : files) {
-                    file.renameTo(new File(databaseDirectory(), file.getName()));
-                }
-            }
+    private void moveFileToNewDirectory(String filename) {
+        File oldFile = new File(DATABASE_DIRECTORY_OLD, filename);
 
-            DATABASE_DIRECTORY_OLD.delete();
+        if(oldFile.exists() && oldFile.canWrite()) {
+            /*
+             * This will work because "/sdcard/.nogapps/" and
+             * "/sdcard/Android/data/org.fitchfamily.android-gsmlocation/files" are on the
+             * same mount point "/sdcard/" (The new directory is the external files directory, not
+             * the internal one so that both are on the emulated sdcard (internal memory) or an real sdcard)
+             */
+            oldFile.renameTo(new File(databaseDirectory(), filename));
         }
     }
 
