@@ -79,4 +79,5 @@ Update History
 1.3.0|28Dec2015|Thanks to @UnknownUntilNow Add import of cell tower data from per MCC extracts provided by @wvengen
 1.3.1|29Dec2015|Fix bug on downloading small files from lacells.
 1.3.2|29Dec2015|Improve download of lacells MCC extract files.
+1.3.3|29Dec2015|Move database to reduce permissions needed.
 
