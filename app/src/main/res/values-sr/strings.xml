@@ -40,8 +40,8 @@
         <xliff:g example="5535" id="content length">%1$s</xliff:g>
     </string>
     <string name="log_REC_STATS">
-        Уноса прочитаноe:<xliff:g example="1000" id="records read">%1$d</xliff:g>,
-        Уметнуто:
+        Уноса прочитано:<xliff:g example="1000" id="records read">%1$d</xliff:g>,
+        уметнуто:
         <xliff:g id="records inserted">%2$d</xliff:g>
     </string>
     <string name="log_INDICIES">Стварам индексе за бржи приступ.</string>
@@ -59,5 +59,75 @@
     </string>
 
     <string name="st_CANCELED">ОТКАЗАНО</string>
+
+    <!-- Strings related to requesting/granting permissions -->
+    <string name="notification_location_permission">Тапните да одобрите потребне дозволе за локацију.
+    </string>
+    <string name="dialog_location_perm_granted">Сада искључите и поново укључите услугу локације помоћу ГСМ-а
+        у поставкама за ОбједињениNlp да би радило. Или искључите па поново укључите лоцирање у менију брзих поставки.
+    </string>
+    <string name="dialog_location_perm_denied">Услуга неће моћи да сакупља податке о мобилним
+        базним станицама и биће бескорисна док не одобрите дозволе лоцирања.
+    </string>
+
+    <!-- string for the new UI -->
+    <string name="fragment_settings_title">Поставке</string>
+
+    <string name="fragment_update_database_title">База података</string>
+
+    <string name="fragment_update_database_last_update">Последње освежавање базе:
+        <xliff:g example="3 minutes ago" id="time">%1$s</xliff:g>
+    </string>
+    <string name="fragment_update_database_no_database_found">Нема базе података</string>
+    <string name="fragment_update_database_no_permission">Фајл базе података постоји али не могу да га очитам.
+        Промените дозволе на
+        <xliff:g id="file">%s</xliff:g>
+    </string>
+    <string name="fragment_update_database_start_update">Освежи базу података</string>
+    <string name="fragment_update_database_create_database">Направи базу података</string>
+    <string name="fragment_update_database_show_details">Прикажи детаље</string>
+
+    <string name="fragment_update_database_exception_title">Грешка приликом освежавања базе података</string>
+
+    <string name="fragment_settings_card_sources_title">Извори</string>
+
+    <string name="fragment_settings_card_sources_filter_on_phone">Преузми све области и сачувај само наведене</string>
+    <string name="fragment_settings_card_sources_filter_remote">Преузми наведене области са lacells (подаци су можда застарели)</string>
+
+    <string name="fragment_settings_opencellid_error_title">Не могу да укључим OpenCellID</string>
+    <string name="fragment_settings_opencellid_error_connection">Неуспех повезивања</string>
+    <string name="fragment_settings_opencellid_error_day_limit">Покушајте опет сутра</string>
+
+    <string name="activity_main_libraries">Спољашње библиотеке</string>
+
+    <string name="fragment_settings_card_areas_title">Области</string>
+
+    <string name="fragment_settings_card_areas_nothing_chosen">Ништа није одређено (користим све)
+    </string>
+    <string name="fragment_settings_card_areas_other">Остало</string>
+
+    <string name="fragment_settings_blocked_database_update">Не можете да измените поставке док
+        је у току освежавање базе података.
+    </string>
+
+    <string name="activity_area_list_title">Одредите области</string>
+
+    <string name="fragment_area_list_unknown">Непозната област (МЦЦ:<xliff:g example="42" id="mcc">
+        %1$s</xliff:g>)
+    </string>
+
+    <string name="fragment_database_update_error_no_sources">Најпре морате да одредите изворе у поставкама
+    </string>
+    <string name="fragment_database_update_button_settings">Open Settings</string>
+
+    <string name="fragment_database_update_error_no_permission">Permission to store files required
+    </string>
+    <string name="fragment_database_update_button_permission_allow">Allow</string>
+
+    <string name="fragment_settings_advanced_title">Напредне поставке</string>
+
+    <string name="activity_area_list_search_hint">Тражи</string>
+
+    <string name="activity_main_about">О програму</string>
 </resources>
 
