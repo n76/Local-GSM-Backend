@@ -80,4 +80,5 @@ Update History
 1.3.1|29Dec2015|Fix bug on downloading small files from lacells.
 1.3.2|29Dec2015|Improve download of lacells MCC extract files.
 1.3.3|29Dec2015|Move database to reduce permissions needed.
+1.3.4|2Jan2016|Update Serbian translation
 
