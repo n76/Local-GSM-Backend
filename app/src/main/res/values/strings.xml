@@ -131,10 +131,6 @@
     </string>
     <string name="fragment_database_update_button_settings">Open Settings</string>
 
-    <string name="fragment_database_update_error_no_permission">Permission to store files required
-    </string>
-    <string name="fragment_database_update_button_permission_allow">Allow</string>
-
     <string name="fragment_settings_advanced_title">Advanced Settings</string>
 
     <string name="activity_area_list_search_hint">Search</string>
