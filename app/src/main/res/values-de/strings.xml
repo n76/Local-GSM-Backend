@@ -124,11 +124,6 @@
     </string>
     <string name="fragment_database_update_button_settings">Einstellungen öffnen</string>
 
-    <string name="fragment_database_update_error_no_permission">Berechtigung zum Speichern von Daten
-        ist erforderlich
-    </string>
-    <string name="fragment_database_update_button_permission_allow">Erlauben</string>
-
     <string name="fragment_settings_advanced_title">Experteneinstellungen</string>
 
     <string name="activity_area_list_search_hint">Suchen</string>
