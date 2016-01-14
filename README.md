@@ -55,6 +55,14 @@ Downloading from Mozilla and/or OpenCellID will get you the absolutely latest da
 
 @wvengen has created a repository of per-MCC data for many but not all MCC codes at https://github.com/wvengen/lacells which is updated periodically. Starting with v1.3, this backend is capable of loading cell information from that data set which should be faster.
 
+Permisssions
+============
+|Permission|Use|
+|:----------|:---|
+ACCESS_COARSE_LOCATION|Allows backend to determine which cell towers your phone detects.
+INTERNET|Allows database creator to pull cell tower data from OpenCellID, Mozilla, etc.
+WAKE_LOCK|Allows database generation service to run without being put to sleep.
+
 Update History
 ==============
 |Version|Date|Comment|
@@ -81,4 +89,5 @@ Update History
 1.3.2|29Dec2015|Improve download of lacells MCC extract files.
 1.3.3|29Dec2015|Move database to reduce permissions needed.
 1.3.4|2Jan2016|Update Serbian translation
+1.3.5|14Jan2016|Remove all access and permissions required for access to old database storage location. If upgrading from a version prior to 1.3.3 you will need to re-generate your database and you should manually remove the old database from the /sdcard/.nogapps/ directory.
 
