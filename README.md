@@ -23,6 +23,8 @@ This software is derived from LocalGSMLocationProvider at https://github.com/rtr
 2. This software does not ship with a built in database. Databases can be generated with the scripts at https://github.com/n76/lacells-creator or using the built in database generation facility.
 3. The database used by this software includes an estimated range of coverage for each cell tower. That information is used to provide a location estimate weighted by coverage area and to make an estimate of position accuracy. (The original LocalGSMLocationProvider assumes 800 meter range for all towers.)
 
+[![Get it on F-Droid](get_it_on_f-droid.png?raw=true)](https://f-droid.org/repository/browse/?fdid=org.fitchfamily.android.gsmlocation)
+
 Requirements on phone
 =====================
 1. This is a plug in for µg UnifiedNlp which can be installed from f-droid.
