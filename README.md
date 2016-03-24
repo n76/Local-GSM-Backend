@@ -92,4 +92,5 @@ Update History
 1.3.3|29Dec2015|Move database to reduce permissions needed.
 1.3.4|2Jan2016|Update Serbian translation
 1.3.5|14Jan2016|Remove all access and permissions required for access to old database storage location. If upgrading from a version prior to 1.3.3 you will need to re-generate your database and you should manually remove the old database from the /sdcard/.nogapps/ directory.
+1.3.6|23Mar2016|Support location aging in newest version of UnifiedNlp
 

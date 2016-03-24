@@ -73,6 +73,7 @@ public class GsmService extends LocationBackendService {
                                     if (DEBUG)
                                         Log.d(TAG, "Location Changed.");
 
+                                    rslt.setTime(System.currentTimeMillis());
                                     report(rslt);
                                 }
                                 lastLocation = rslt;
