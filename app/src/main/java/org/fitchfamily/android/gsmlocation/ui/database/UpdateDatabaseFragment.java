@@ -1,6 +1,11 @@
 package org.fitchfamily.android.gsmlocation.ui.database;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.Button;
@@ -39,6 +44,8 @@ public class UpdateDatabaseFragment extends BaseFragment implements
 
     private static final int DETAILS_PAGE_LOG = 1;
 
+    private static final int REQUEST_PERMISSION_STORAGE = 2;
+
     @ViewById
     protected TextView progressString;
 
@@ -61,7 +68,13 @@ public class UpdateDatabaseFragment extends BaseFragment implements
     protected TextView errorSources;
 
     @ViewById
+    protected TextView errorPermission;
+
+    @ViewById
     protected Button settings;
+
+    @ViewById
+    protected Button permissionAllow;
 
     @ViewById
     protected Button update;
@@ -110,6 +123,11 @@ public class UpdateDatabaseFragment extends BaseFragment implements
         listener.openSettings();
     }
 
+    @Click
+    protected void permissionAllow() {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_STORAGE);
+    }
+
     private void onDownloadDone() {
         switcher.setDisplayedChild(PAGE_INFO);
         setShowLog(false);
@@ -140,10 +158,16 @@ public class UpdateDatabaseFragment extends BaseFragment implements
                 !Settings.with(this).useOpenCellId() &&
                 !Settings.with(this).useLacells();
 
-        final boolean hasProblem = hasNoSources;
+        final boolean hasNoPermission = ContextCompat.checkSelfPermission(
+                getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) != PackageManager.PERMISSION_GRANTED;
+        final boolean hasProblem = hasNoSources | hasNoPermission;
 
         errorSources.setVisibility(hasNoSources ? View.VISIBLE : View.GONE);
         settings.setVisibility(hasNoSources ? View.VISIBLE : View.GONE);
+
+        errorPermission.setVisibility(hasNoPermission ? View.VISIBLE : View.GONE);
+        permissionAllow.setVisibility(hasNoPermission ? View.VISIBLE : View.GONE);
 
         update.setEnabled(!hasProblem);
     }
@@ -233,6 +257,17 @@ public class UpdateDatabaseFragment extends BaseFragment implements
     public void onRequestProgressUpdate(RequestProgress progress) {
         updateLogView();
         setProgress((int) progress.getProgress(), DownloadSpiceRequest.PROGRESS_MAX);
+    }
+
+    @Override
+    @TargetApi(23)
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_PERMISSION_STORAGE) {
+            updateShownErrors();
+            updateLastDatabaseUpdate();
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     public interface Listener {

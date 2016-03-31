@@ -55,6 +55,23 @@
                     android:background="?selectableItemBackground"
                     android:text="@string/fragment_database_update_button_settings"/>
 
+                <TextView
+                    android:id="@+id/error_permission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="@string/fragment_database_update_error_no_permission"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <Button
+                    android:id="@+id/permission_allow"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="?selectableItemBackground"
+                    android:text="@string/fragment_database_update_button_permission_allow"/>
+
             </LinearLayout>
         </ScrollView>
 

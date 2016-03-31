@@ -2,6 +2,7 @@ package org.fitchfamily.android.gsmlocation;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -22,6 +23,8 @@ public class Settings {
             DB_NEW_NAME,
             LOG_NAME
     };
+
+    private static final File DATABASE_DIRECTORY_OLD = new File(Environment.getExternalStorageDirectory(), ".nogapps");
 
     private static final boolean USE_LACELLS_DEFAULT = false;
 
@@ -46,6 +49,27 @@ public class Settings {
     private Settings(Context context) {
         this.context = context;
         preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        moveFilesToNewDirectory(FILE_NAMES);
+    }
+
+    private void moveFilesToNewDirectory(String... filenames) {
+        for(String filename : filenames) {
+            moveFileToNewDirectory(filename);
+        }
+    }
+
+    private void moveFileToNewDirectory(String filename) {
+        File oldFile = new File(DATABASE_DIRECTORY_OLD, filename);
+
+        if(oldFile.exists() && oldFile.canWrite()) {
+            /*
+             * This will work because "/sdcard/.nogapps/" and
+             * "/sdcard/Android/data/org.fitchfamily.android-gsmlocation/files" are on the
+             * same mount point "/sdcard/" (The new directory is the external files directory, not
+             * the internal one so that both are on the emulated sdcard (internal memory) or an real sdcard)
+             */
+            oldFile.renameTo(new File(databaseDirectory(), filename));
+        }
     }
 
     public static Settings with(Fragment fragment) {

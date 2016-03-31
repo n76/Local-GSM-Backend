@@ -167,7 +167,7 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
                 // Mozilla publishes new CSV files at a bit after the beginning of
                 // a new day in GMT time. Get the time for a place a couple hours
                 // west of Greenwich to allow time for the data to be posted.
-                dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT-05"));
+                dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT-03"));
                 sources.add(new Source(String.format(Locale.US, Config.MLS_URL_FMT, dateFormatGmt.format(new Date())), Source.Compression.gzip));
             }
         }

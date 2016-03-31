@@ -61,8 +61,10 @@ public class GsmService extends LocationBackendService {
                                 Location rslt = th.getLocationEstimate();
                                 String logString;
 
-                                if (rslt != null)
+                                if (rslt != null) {
+                                    rslt.setTime(System.currentTimeMillis());
                                     logString = from + rslt.toString();
+                                }
                                 else
                                     logString = from + " null position";
 
@@ -73,7 +75,6 @@ public class GsmService extends LocationBackendService {
                                     if (DEBUG)
                                         Log.d(TAG, "Location Changed.");
 
-                                    rslt.setTime(System.currentTimeMillis());
                                     report(rslt);
                                 }
                                 lastLocation = rslt;
