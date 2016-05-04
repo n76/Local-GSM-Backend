@@ -4,7 +4,7 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
     tools:ignore="MissingTranslation">
     <string name="app_name">GSM Location Service</string>
-    <string name="summary">Locate using on phone database.</string>
+    <string name="summary" translatable="false">Locate using on phone database.</string>
 
     <!-- Strings for settings -->
     <string name="use_oci" translatable="false">OpenCellID</string>
@@ -16,13 +16,13 @@
 
     <string name="filter_title">Filtering</string>
     <string name="mcc_filter_label">MCC Filter</string>
-    <string name="mcc_default"></string>
+    <string name="mcc_default" translatable="false"></string>
     <string name="mcc_filter_description">Comma separated list of numeric Mobile Country Codes (MCC)
         to be used. See http://en.wikipedia.org/wiki/Mobile_country_code
     </string>
 
     <string name="mnc_filter_label">MNC Filter</string>
-    <string name="mnc_default"></string>
+    <string name="mnc_default" translatable="false"></string>
     <string name="mnc_filter_description">Comma separated list of numeric Mobile Network Codes (MNC)
         to be used. See http://en.wikipedia.org/wiki/Mobile_country_code
     </string>
@@ -79,6 +79,7 @@
     <string name="dialog_location_perm_denied">The service won\'t be able to gather information
         about mobile network cells and will be useless until you grant the location permission.
     </string>
+    <string name="preference_grant_permission">Tap to grant required permission</string>
 
     <!-- string for the new UI -->
     <string name="fragment_settings_title">Settings</string>

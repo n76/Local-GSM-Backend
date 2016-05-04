@@ -4,7 +4,9 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
     tools:ignore="MissingTranslation">
     <string name="app_name">Услуга локације помоћу ГСМ-а</string>
+    <!--
     <string name="summary">Лоцирање помоћу базе података базних станица на телефону.</string>
+    -->
 
     <!-- Strings for settings -->
     <string name="use_mls">Мозилине услуге лоцирања</string>
@@ -18,7 +20,7 @@
     <string name="mcc_filter_description">Списак мобилних кôдова земље (MCC) за коришћење, одвојених зарезом. Погледајте http://en.wikipedia.org/wiki/Mobile_country_code</string>
 
     <string name="mnc_filter_label">МНЦ филтер</string>
-    <string name="mnc_default">1,2,3,4,5,7,10,12,90</string>
+
     <string name="mnc_filter_description">Списак кôдова мобилних мрежа (MNC) за коришћење, одвојених зарезом. Погледајте http://en.wikipedia.org/wiki/Mobile_country_code</string>
 
     <string name="invalid_oci_api_key">Задати АПИ кључ није исправан. Задајте исправан кључ (или искључите OpenCellID извор података).</string>
@@ -129,5 +131,6 @@
     <string name="activity_area_list_search_hint">Тражи</string>
 
     <string name="activity_main_about">О програму</string>
+    <string name="preference_grant_permission">Додирните да изда потребну дозволу</string>
 </resources>
 

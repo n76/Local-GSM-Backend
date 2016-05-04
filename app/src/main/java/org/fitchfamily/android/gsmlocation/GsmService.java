@@ -10,12 +10,19 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Looper;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.telephony.CellLocation;
 import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.EService;
+import org.androidannotations.annotations.SystemService;
+import org.fitchfamily.android.gsmlocation.ui.MainActivity;
+import org.fitchfamily.android.gsmlocation.ui.MainActivity_;
 import org.fitchfamily.android.gsmlocation.util.LocationUtil;
 import org.microg.nlp.api.LocationBackendService;
 
@@ -23,6 +30,7 @@ import java.util.List;
 
 import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
 
+@EService
 public class GsmService extends LocationBackendService {
     private static final String TAG = makeLogTag("service");
     private static final boolean DEBUG = Config.DEBUG;
@@ -34,79 +42,27 @@ public class GsmService extends LocationBackendService {
 
     private Location lastLocation = null;
 
-    public synchronized void start() {
+    private Context ctx = null;
 
-        if (worker != null && worker.isAlive())
-            return;
+    private static final int NOTIFICATION = 42;
+    private boolean permissionNotificationShown = false;
+
+    @SystemService
+    protected NotificationManager notificationManager;
+
+    public synchronized void start() {
 
         if (DEBUG)
             Log.d(TAG, "Starting location backend");
 
-        final Context ctx = getApplicationContext();
-        tm = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        th = new TelephonyHelper(ctx);
+        ctx = getApplicationContext();
 
-        try {
-            if (worker != null && worker.isAlive()) worker.interrupt();
-
-            worker = new Thread() {
-
-                public void run() {
-                    if (DEBUG) Log.d(TAG, "Starting reporter thread");
-                    Looper.prepare();
-
-                    final PhoneStateListener listener = new PhoneStateListener() {
-                        private synchronized void doIt(String from) {
-                            if (isConnected()) {
-                                Location rslt = th.getLocationEstimate();
-                                String logString;
-
-                                if (rslt != null) {
-                                    rslt.setTime(System.currentTimeMillis());
-                                    logString = from + rslt.toString();
-                                }
-                                else
-                                    logString = from + " null position";
-
-                                if (DEBUG)
-                                    Log.d(TAG, logString);
-
-                                if (!LocationUtil.equals(lastLocation, rslt)) {
-                                    if (DEBUG)
-                                        Log.d(TAG, "Location Changed.");
-
-                                    report(rslt);
-                                }
-                                lastLocation = rslt;
-                            }
-                        }
-
-                        public void onServiceStateChanged(ServiceState serviceState) {
-                            doIt("onServiceStateChanged: ");
-                        }
-
-                        public void onCellLocationChanged(CellLocation location) {
-                            doIt("onCellLocationChanged: ");
-                        }
-
-                        public void onCellInfoChanged(List<android.telephony.CellInfo> cellInfo) {
-                            doIt("onCellInfoChanged: ");
-                        }
-                    };
-                    tm.listen(
-                        listener,
-                        PhoneStateListener.LISTEN_CELL_INFO |
-                        PhoneStateListener.LISTEN_CELL_LOCATION |
-                        PhoneStateListener.LISTEN_SERVICE_STATE
-                    );
-                    Looper.loop();
-                }
-            };
-            worker.start();
-        } catch (Exception e) {
-            if (DEBUG) Log.e(TAG, "Start failed: " + e.getMessage());
-            e.printStackTrace();
-            worker = null;
+        if (hasLocationAccess()) {
+            setShowPermissionNotification(false);
+            setServiceRunning(true);
+        } else {
+            setShowPermissionNotification(true);
+            setServiceRunning(false);
         }
     }
 
@@ -146,16 +102,137 @@ public class GsmService extends LocationBackendService {
     protected synchronized void onClose() {
         if (DEBUG) Log.d(TAG, "Binder CLOSE called");
         super.onClose();
+        setServiceRunning(false);
+    }
 
-        try {
-            if (worker != null && worker.isAlive())
-                worker.interrupt();
+    private boolean hasLocationAccess() {
+        return ContextCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
 
-            if (worker != null)
+    private void setServiceRunning(boolean st) {
+        final boolean cur_st = (worker != null);
+
+        if (cur_st  == st)
+            return;
+
+        if (st) {
+            tm = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
+            th = new TelephonyHelper(ctx);
+
+            try {
+                if (worker != null && worker.isAlive()) worker.interrupt();
+
+                worker = new Thread() {
+
+                    public void run() {
+                        if (DEBUG) Log.d(TAG, "Starting reporter thread");
+                        Looper.prepare();
+
+                        final PhoneStateListener listener = new PhoneStateListener() {
+                            private synchronized void doIt(String from) {
+                                if (isConnected()) {
+                                    Location rslt = th.getLocationEstimate();
+                                    String logString;
+
+                                    if (rslt != null) {
+                                        rslt.setTime(System.currentTimeMillis());
+                                        logString = from + rslt.toString();
+                                    }
+                                    else
+                                        logString = from + " null position";
+
+                                    if (DEBUG)
+                                        Log.d(TAG, logString);
+
+                                    if (!LocationUtil.equals(lastLocation, rslt)) {
+                                        if (DEBUG)
+                                            Log.d(TAG, "Location Changed.");
+
+                                        report(rslt);
+                                    }
+                                    lastLocation = rslt;
+                                }
+                            }
+
+                            public void onServiceStateChanged(ServiceState serviceState) {
+                                doIt("onServiceStateChanged: ");
+                            }
+
+                            public void onCellLocationChanged(CellLocation location) {
+                                doIt("onCellLocationChanged: ");
+                            }
+
+                            public void onCellInfoChanged(List<android.telephony.CellInfo> cellInfo) {
+                                doIt("onCellInfoChanged: ");
+                            }
+                        };
+                        tm.listen(
+                                listener,
+                                PhoneStateListener.LISTEN_CELL_INFO |
+                                        PhoneStateListener.LISTEN_CELL_LOCATION |
+                                        PhoneStateListener.LISTEN_SERVICE_STATE
+                        );
+                        Looper.loop();
+                    }
+                };
+                worker.start();
+            } catch (Exception e) {
+                if (DEBUG) Log.e(TAG, "Start failed: " + e.getMessage());
+                e.printStackTrace();
                 worker = null;
+            }
+        } else {
+            try {
+                if (worker != null && worker.isAlive())
+                    worker.interrupt();
 
-        } finally {
-            worker = null;
+                if (worker != null)
+                    worker = null;
+
+            } finally {
+                worker = null;
+            }
         }
     }
+
+    private void setShowPermissionNotification(boolean visible) {
+        if(visible != permissionNotificationShown) {
+            if(visible) {
+                if(DEBUG) {
+                    Log.i(TAG, "setShowPermissionNotification(true)");
+                }
+
+                notificationManager.notify(
+                        NOTIFICATION,
+                        new NotificationCompat.Builder(this)
+                                .setWhen(0)
+                                .setShowWhen(false)
+                                .setAutoCancel(false)
+                                .setOngoing(true)
+                                .setContentIntent(
+                                        PendingIntent.getActivity(
+                                                this,
+                                                0,
+                                                MainActivity_.intent(this).action(MainActivity.Action.request_permission).get(),
+                                                PendingIntent.FLAG_UPDATE_CURRENT
+                                        )
+                                )
+                                .setContentTitle(getString(R.string.app_name))
+                                .setContentText(getString(R.string.preference_grant_permission))
+                                .setSmallIcon(R.drawable.ic_stat_no_location)
+                                .build()
+                );
+
+            } else {
+                if(DEBUG) {
+                    Log.i(TAG, "setShowPermissionNotification(false)");
+                }
+
+                notificationManager.cancel(NOTIFICATION);
+            }
+
+            permissionNotificationShown = visible;
+        }
+    }
+
 }

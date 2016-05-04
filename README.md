@@ -95,5 +95,6 @@ Update History
 1.3.5|14Jan2016|Remove all access and permissions required for access to old database storage location. If upgrading from a version prior to 1.3.3 you will need to re-generate your database and you should manually remove the old database from the /sdcard/.nogapps/ directory.
 1.3.6|23Mar2016|Support location aging in newest version of UnifiedNlp
 1.3.7|30Mar2016|Revert changes from 1.3.4 to 1.3.5 as some users are reporting file permission issues. Fix crash introduced in v1.3.6.
+1.4.0|4May2016|Support Marshmallow (Android 6.x) permissions.
 
 

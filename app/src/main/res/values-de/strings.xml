@@ -4,7 +4,9 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
     tools:ignore="MissingTranslation">
     <string name="app_name">GSM Ortungsdienst</string>
+    <!--
     <string name="summary">Ortung mittels Datenbank auf dem Telefon</string>
+    -->
 
     <!-- Strings for settings -->
     <string name="use_mls">Mozilla Location Service</string>
@@ -134,5 +136,6 @@
     <string name="activity_area_list_search_hint">Suchen</string>
 
     <string name="activity_main_about">Über</string>
+    <string name="preference_grant_permission">Tippen Sie gewähren erforderliche Berechtigung</string>
 </resources>
 

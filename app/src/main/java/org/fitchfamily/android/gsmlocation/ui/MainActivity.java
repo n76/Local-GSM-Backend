@@ -18,6 +18,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.ViewById;
 import org.fitchfamily.android.gsmlocation.Config;
@@ -38,6 +39,9 @@ public class MainActivity extends AppCompatActivity implements UpdateDatabaseFra
     private static final int SETTINGS_ADVANCED = 4;
 
     private static final int ABOUT = 5;
+
+    @Extra
+    protected Action action;
 
     @InstanceState
     protected Bundle drawerState;
@@ -113,6 +117,10 @@ public class MainActivity extends AppCompatActivity implements UpdateDatabaseFra
                 .build();
 
         updateTitle();
+        if(action == Action.request_permission) {
+            drawer.setSelection(SETTINGS);
+        }
+
     }
 
     private void setFragment(Fragment fragment) {
@@ -151,5 +159,9 @@ public class MainActivity extends AppCompatActivity implements UpdateDatabaseFra
         } else {
             super.onBackPressed();
         }
+    }
+
+    public enum Action {
+        request_permission
     }
 }
