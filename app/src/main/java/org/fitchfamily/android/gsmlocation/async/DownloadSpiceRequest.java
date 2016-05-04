@@ -57,8 +57,8 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
 
     private static final String TAG = makeLogTag(DownloadSpiceRequest.class);
 
-//    private static final boolean DEBUG = Config.DEBUG;
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = Config.DEBUG;
+//    private static final boolean DEBUG = true;
 
     private static final int TRANSACTION_SIZE_LIMIT = 1000;
 
@@ -260,6 +260,7 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
                 }
             } catch (Exception ex) {
                 logError(ex.getMessage());
+                publishProgress(PROGRESS_MAX, ex.getMessage());
 
                 // On any failure, remove the result file.
                 if(databaseCreator != null) {

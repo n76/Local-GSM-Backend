@@ -94,11 +94,14 @@ public class DatabaseCreator {
      */
     public DatabaseCreator close() {
         if(database != null) {
-            database.close();
-
-            database = null;
-            insertStatement = null;
+            try {
+                database.close();
+            } catch (Exception ex) {
+                // We don't want a close to fail for our upper level stuff so ignore exception.
+            }
         }
+        database = null;
+        insertStatement = null;
 
         return this;
     }
