@@ -40,8 +40,6 @@ public class GsmService extends LocationBackendService {
 
     protected Thread worker = null;
 
-    private Location lastLocation = null;
-
     private Context ctx = null;
 
     private static final int NOTIFICATION = 42;
@@ -65,11 +63,6 @@ public class GsmService extends LocationBackendService {
             setServiceRunning(false);
         }
     }
-
-     @Override
-     protected synchronized Location update() {
-         return lastLocation;
-     }
 
     @Override
     protected synchronized void onOpen() {
@@ -144,13 +137,7 @@ public class GsmService extends LocationBackendService {
                                     if (DEBUG)
                                         Log.d(TAG, logString);
 
-                                    if (!LocationUtil.equals(lastLocation, rslt)) {
-                                        if (DEBUG)
-                                            Log.d(TAG, "Location Changed.");
-
-                                        report(rslt);
-                                    }
-                                    lastLocation = rslt;
+                                    report(rslt);
                                 }
                             }
 

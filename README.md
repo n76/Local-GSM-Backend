@@ -97,5 +97,6 @@ Update History
 1.3.7|30Mar2016|Revert changes from 1.3.4 to 1.3.5 as some users are reporting file permission issues. Fix crash introduced in v1.3.6.
 1.4.0|4May2016|Support Marshmallow (Android 6.x) permissions.
 1.4.1|6May2016|Remove confusion about mobile country code 505 Australia and Norfolk Island in favor of Australia.
+1.4.2|19May2016|Only report new samples, not old ones with old times, to reduce debug logging in UnifiedNLP.
 
 
