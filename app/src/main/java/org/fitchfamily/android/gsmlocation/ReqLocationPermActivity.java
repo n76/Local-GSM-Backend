@@ -21,7 +21,7 @@ public class ReqLocationPermActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (DEBUG) Log.d(TAG, "onCreate() called");
+        if (DEBUG) Log.i(TAG, "onCreate() called");
         super.onCreate(savedInstanceState);
 
         requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
@@ -29,7 +29,7 @@ public class ReqLocationPermActivity extends Activity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (DEBUG) Log.d(TAG, "onRequestPermissionsResult() called");
+        if (DEBUG) Log.i(TAG, "onRequestPermissionsResult() called");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(R.string.app_name)
                 .setCancelable(false).setPositiveButton(android.R.string.ok,

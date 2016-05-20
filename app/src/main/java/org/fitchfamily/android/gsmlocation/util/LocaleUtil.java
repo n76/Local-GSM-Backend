@@ -33,7 +33,7 @@ public abstract class LocaleUtil {
             return LocaleUtils.toLocale("en_" + code.toUpperCase(Locale.ENGLISH)).getDisplayCountry();
         } catch (IllegalArgumentException ex) {
             if (DEBUG) {
-                Log.d(TAG, "couldn't resolve " + code, ex);
+                Log.i(TAG, "couldn't resolve " + code, ex);
             }
 
             return code;

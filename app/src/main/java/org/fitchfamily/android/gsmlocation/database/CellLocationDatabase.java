@@ -59,7 +59,7 @@ public class CellLocationDatabase {
     public void checkForNewDatabase() {
         if (settings.newDatabaseFile().exists() && settings.newDatabaseFile().canRead()) {
             if (DEBUG) {
-                Log.d(TAG, "New database file detected.");
+                Log.i(TAG, "New database file detected.");
             }
 
             if (database != null)
@@ -75,7 +75,7 @@ public class CellLocationDatabase {
     private void openDatabase() {
         if (database == null) {
             if (DEBUG) {
-                Log.d(TAG, "Attempting to open database.");
+                Log.i(TAG, "Attempting to open database.");
             }
 
             if (settings.currentDatabaseFile().exists() && settings.currentDatabaseFile().canRead()) {
@@ -122,7 +122,7 @@ public class CellLocationDatabase {
         openDatabase();
         if (database == null) {
             if (DEBUG) {
-                Log.d(TAG, "Unable to open cell tower database file.");
+                Log.i(TAG, "Unable to open cell tower database file.");
             }
 
             return null;
@@ -169,7 +169,7 @@ public class CellLocationDatabase {
                         int thisSamples = cursor.getInt(INDEX_SAMPLES);
 
                         if (DEBUG) {
-                            Log.d(TAG, "query result: " +
+                            Log.i(TAG, "query result: " +
                                     db_mcc + ", " + db_mnc + ", " + db_lac + ", " + db_cid + ", " +
                                     thisLat + ", " + thisLng + ", " + thisRng + ", " + thisSamples);
                         }
@@ -177,29 +177,23 @@ public class CellLocationDatabase {
                         locationCalculator.add(thisLat, thisLng, thisSamples, thisRng);
                     }
                     if (DEBUG) {
-                        Log.d(TAG, "Final result: " + locationCalculator);
+                        Log.i(TAG, "Final result: " + locationCalculator);
                     }
 
                     Location cellLocInfo = locationCalculator.toLocation();
                     queryCache.put(args, cellLocInfo);
 
                     if (DEBUG) {
-                        Log.d(TAG, "Cell info found: " + args.toString());
+                        Log.i(TAG, "Cell info found: " + args.toString());
                     }
 
                     return cellLocInfo;
                 } else {
-                    if (DEBUG) {
-                        Log.d(TAG, "DB Cursor empty for: " + args.toString());
-                    }
-
+                    Log.i(TAG, "DB Cursor empty for: " + args.toString());
                     queryCache.putUnresolved(args);
                 }
             } else {
-                if (DEBUG) {
-                    Log.d(TAG, "DB Cursor null for: " + args.toString());
-                }
-
+                Log.i(TAG, "DB Cursor null for: " + args.toString());
                 queryCache.putUnresolved(args);
             }
 

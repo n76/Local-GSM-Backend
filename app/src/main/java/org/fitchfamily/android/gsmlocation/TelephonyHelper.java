@@ -139,10 +139,10 @@ public class TelephonyHelper {
             allCells = tm.getAllCellInfo();
         } catch (NoSuchMethodError e) {
             allCells = null;
-            if (DEBUG) Log.d(TAG, "no such member: getAllCellInfo().");
+            if (DEBUG) Log.i(TAG, "no such method: getAllCellInfo().");
         }
         if ((allCells == null) || allCells.isEmpty()) {
-            if (DEBUG) Log.d(TAG, "getAllCellInfo()  returned null or empty set");
+            if (DEBUG) Log.i(TAG, "getAllCellInfo()  returned null or empty set");
             return null;
         }
 
@@ -160,10 +160,10 @@ public class TelephonyHelper {
                     cellLocation = db.query(id.getMcc(), id.getMnc(), id.getCid(), id.getLac());
                 } catch(IllegalAccessException e) {
                     if (DEBUG)
-                        Log.d(TAG, "getAllCellInfoWrapper(), Wcdma: " + e.toString());
+                        Log.i(TAG, "getAllCellInfoWrapper(), Wcdma: " + e.toString());
                 } catch(InvocationTargetException e) {
                     if (DEBUG)
-                        Log.d(TAG, "getAllCellInfoWrapper(), Wcdma: " + e.toString());
+                        Log.i(TAG, "getAllCellInfoWrapper(), Wcdma: " + e.toString());
                 }
             }
 
@@ -185,7 +185,7 @@ public class TelephonyHelper {
 
         if ((mncString == null) || (mncString.length() < 5) || (mncString.length() > 6)) {
             if (DEBUG)
-                Log.d(TAG, "legacyGetCellTowers(): mncString is NULL or not recognized.");
+                Log.i(TAG, "legacyGetCellTowers(): mncString is NULL or not recognized.");
             return null;
         }
         int mcc = Integer.parseInt(mncString.substring(0, 3));
@@ -197,24 +197,32 @@ public class TelephonyHelper {
             Location cellLocInfo = db.query(mcc, mnc, cell.getCid(), cell.getLac());
             if (cellLocInfo != null)
                 rslt.add(cellLocInfo);
+            else if (DEBUG)
+                Log.i(TAG, "Unknown cell tower detected: mcc="+mcc+
+                        ", mnc="+mcc+", cid="+cell.getCid()+", lac="+cell.getLac());
         } else {
             if (DEBUG)
-                Log.d(TAG, "getCellLocation() returned null or no GsmCellLocation.");
+                Log.i(TAG, "getCellLocation() returned null or no GsmCellLocation.");
         }
 
-        final List<NeighboringCellInfo> neighbours = tm.getNeighboringCellInfo();
-        if ((neighbours != null) && !neighbours.isEmpty()) {
-            for (NeighboringCellInfo neighbour : neighbours) {
-                Location cellLocInfo = db.query(mcc, mnc, neighbour.getCid(), neighbour.getLac());
-                if (cellLocInfo != null) {
-                    rslt.add(cellLocInfo);
+        try {
+            final List<NeighboringCellInfo> neighbours = tm.getNeighboringCellInfo();
+            if ((neighbours != null) && !neighbours.isEmpty()) {
+                for (NeighboringCellInfo neighbour : neighbours) {
+                    Location cellLocInfo = db.query(mcc, mnc, neighbour.getCid(), neighbour.getLac());
+                    if (cellLocInfo != null) {
+                        rslt.add(cellLocInfo);
+                    }
                 }
+            } else {
+                if (DEBUG) Log.i(TAG, "getNeighboringCellInfo() returned null or empty set.");
             }
-        } else {
-            if (DEBUG) Log.d(TAG, "getNeighboringCellInfo() returned null or empty set.");
+        } catch (NoSuchMethodError e) {
+            if (DEBUG) Log.i(TAG, "no such method: getNeighboringCellInfo().");
         }
-        if (rslt.isEmpty())
-            return null;
+        if (rslt.isEmpty() && DEBUG) {
+            Log.i(TAG, "No known cell towers found.");
+        }
         return rslt;
     }
 
@@ -226,11 +234,11 @@ public class TelephonyHelper {
         List<Location> rslt = getAllCellInfoWrapper();
         if (rslt == null) {
             if (DEBUG)
-                Log.d(TAG, "getAllCellInfoWrapper() returned nothing, trying legacyGetCellTowers().");
+                Log.i(TAG, "getAllCellInfoWrapper() returned nothing, trying legacyGetCellTowers().");
             rslt = legacyGetCellTowers();
         }
         if ((rslt == null) || rslt.isEmpty()) {
-            if (DEBUG) Log.d(TAG, "getTowerLocations(): No tower information.");
+            if (DEBUG) Log.i(TAG, "getTowerLocations(): No tower information.");
             return null;
         }
         return rslt;
@@ -268,7 +276,7 @@ public class TelephonyHelper {
                 accuracy += (value.getAccuracy() * wgt);
                 totalWeight += wgt;
 
-//                if (DEBUG) Log.d(TAG, "(lat="+ latitude + ", lng=" + longitude + ", acc=" + accuracy + ") / wgt=" + totalWeight );
+//                if (DEBUG) Log.i(TAG, "(lat="+ latitude + ", lng=" + longitude + ", acc=" + accuracy + ") / wgt=" + totalWeight );
 
                 if (value.hasAltitude()) {
                     altitude += value.getAltitude();
@@ -282,7 +290,7 @@ public class TelephonyHelper {
         altitude = altitude / altitudes;
         Bundle extras = new Bundle();
         extras.putInt("AVERAGED_OF", num);
-//        if (DEBUG) Log.d(TAG, "Location est (lat="+ latitude + ", lng=" + longitude + ", acc=" + accuracy);
+//        if (DEBUG) Log.i(TAG, "Location est (lat="+ latitude + ", lng=" + longitude + ", acc=" + accuracy);
 
         if (altitudes > 0) {
             rslt = LocationHelper.create(source,

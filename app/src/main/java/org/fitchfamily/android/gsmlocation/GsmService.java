@@ -51,7 +51,7 @@ public class GsmService extends LocationBackendService {
     public synchronized void start() {
 
         if (DEBUG)
-            Log.d(TAG, "Starting location backend");
+            Log.i(TAG, "Starting location backend");
 
         ctx = getApplicationContext();
 
@@ -66,7 +66,7 @@ public class GsmService extends LocationBackendService {
 
     @Override
     protected synchronized void onOpen() {
-        if (DEBUG) Log.d(TAG, "Binder OPEN called");
+        if (DEBUG) Log.i(TAG, "Binder OPEN called");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Context ctx = getApplicationContext();
@@ -93,7 +93,7 @@ public class GsmService extends LocationBackendService {
     }
 
     protected synchronized void onClose() {
-        if (DEBUG) Log.d(TAG, "Binder CLOSE called");
+        if (DEBUG) Log.i(TAG, "Binder CLOSE called");
         super.onClose();
         setServiceRunning(false);
     }
@@ -118,7 +118,7 @@ public class GsmService extends LocationBackendService {
                 worker = new Thread() {
 
                     public void run() {
-                        if (DEBUG) Log.d(TAG, "Starting reporter thread");
+                        if (DEBUG) Log.i(TAG, "Starting reporter thread");
                         Looper.prepare();
 
                         final PhoneStateListener listener = new PhoneStateListener() {
@@ -135,7 +135,7 @@ public class GsmService extends LocationBackendService {
                                         logString = from + " null position";
 
                                     if (DEBUG)
-                                        Log.d(TAG, logString);
+                                        Log.i(TAG, logString);
 
                                     report(rslt);
                                 }
