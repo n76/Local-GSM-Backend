@@ -223,6 +223,8 @@ public class TelephonyHelper {
         if (rslt.isEmpty() && DEBUG) {
             Log.i(TAG, "No known cell towers found.");
         }
+        if (rslt.isEmpty())
+            return null;
         return rslt;
     }
 

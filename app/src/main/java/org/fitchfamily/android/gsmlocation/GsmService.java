@@ -40,6 +40,8 @@ public class GsmService extends LocationBackendService {
 
     protected Thread worker = null;
 
+    private Location lastLocation = null;
+
     private Context ctx = null;
 
     private static final int NOTIFICATION = 42;
@@ -63,6 +65,14 @@ public class GsmService extends LocationBackendService {
             setServiceRunning(false);
         }
     }
+
+     @Override
+     protected synchronized Location update() {
+         Location rslt = lastLocation;
+         if (rslt != null)
+             rslt.setTime(System.currentTimeMillis());
+         return rslt;
+     }
 
     @Override
     protected synchronized void onOpen() {
@@ -138,6 +148,7 @@ public class GsmService extends LocationBackendService {
                                         Log.i(TAG, logString);
 
                                     report(rslt);
+                                    lastLocation = rslt;
                                 }
                             }
 

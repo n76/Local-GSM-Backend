@@ -98,5 +98,6 @@ Update History
 1.4.0|4May2016|Support Marshmallow (Android 6.x) permissions.
 1.4.1|6May2016|Remove confusion about mobile country code 505 Australia and Norfolk Island in favor of Australia.
 1.4.2|19May2016|Only report new samples, not old ones with old times, to reduce debug logging in UnifiedNLP.
+1.4.3|22May2016|When asked for update, report current position (based on most recent changes reported by TelephonyManager) with current time.
 
 
