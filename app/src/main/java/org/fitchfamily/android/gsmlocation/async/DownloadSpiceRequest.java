@@ -58,7 +58,6 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
     private static final String TAG = makeLogTag(DownloadSpiceRequest.class);
 
     private static final boolean DEBUG = Config.DEBUG;
-//    private static final boolean DEBUG = true;
 
     private static final int TRANSACTION_SIZE_LIMIT = 1000;
 

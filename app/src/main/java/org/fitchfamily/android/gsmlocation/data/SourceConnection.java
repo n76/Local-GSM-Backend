@@ -1,18 +1,26 @@
 package org.fitchfamily.android.gsmlocation.data;
 
 import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.IOException;
 import java.io.SequenceInputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
-
 import javax.net.ssl.HttpsURLConnection;
 
+import android.util.Log;
+
+import org.fitchfamily.android.gsmlocation.async.DownloadSpiceRequest;
+import org.fitchfamily.android.gsmlocation.Config;
+import static org.fitchfamily.android.gsmlocation.LogUtils.makeLogTag;
+
 public final class SourceConnection {
+    private static final String TAG = makeLogTag(DownloadSpiceRequest.class);
+    private static final boolean DEBUG = Config.DEBUG;
+
     private HttpURLConnection connection;
 
     private Source source;
@@ -65,10 +73,10 @@ public final class SourceConnection {
         return source.urls().size() == 1 ? connection.getContentLength() : -1;
     }
 
-    public int getContentLength() {
+    public long getContentLength() {
         // Looks like .gz is about a 4 to 1 compression ratio
-        final int length = connection.getContentLength();
-        return length == -1 ? -1 : length * (source.compression() == Source.Compression.gzip ? 4 : 1);
+        final long length = connection.getContentLength();
+        return length == -1 ? -1 : (length * (source.compression() == Source.Compression.gzip ? 4 : 1));
     }
 
     public InputStream inputStream() {

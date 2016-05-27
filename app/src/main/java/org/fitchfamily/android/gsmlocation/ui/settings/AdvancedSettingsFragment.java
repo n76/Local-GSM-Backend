@@ -49,6 +49,7 @@ public class AdvancedSettingsFragment extends PreferenceFragment implements Pref
         bindPreferenceSummaryToValue(findPreference("oci_key_preference"));
         bindPreferenceSummaryToValue(findPreference("mcc_filter_preference"));
         bindPreferenceSummaryToValue(findPreference("mnc_filter_preference"));
+        bindPreferenceSummaryToValue(findPreference("ext_db_preference"));
 
         // only enable settings when the database download is not running
         setPreferencesEnabled(false);

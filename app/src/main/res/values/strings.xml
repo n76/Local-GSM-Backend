@@ -27,6 +27,10 @@
         to be used. See http://en.wikipedia.org/wiki/Mobile_country_code
     </string>
 
+    <string name="ext_db_location">External database location</string>
+    <string name="ext_db_label">Optional Path To Database Directory</string>
+    <string name="ext_db_description">Directory to use for database.</string>
+
     <string name="invalid_oci_api_key">The given API key is incorrect. Enter a valid one (or disable
         the OpenCellID data source).
     </string>
@@ -38,6 +42,7 @@
     <string name="log_MNC_FILTER">MNC Filter:
         <xliff:g example="1,2,3,4" id="MNC filter">%1$s</xliff:g>
     </string>
+
     <string name="log_MNC_WORLD">No MNC Filters, assume all networks</string>
     <string name="log_GETTING_OCID">Getting Tower Data From OpenCellID. . .</string>
     <string name="log_GETTING_MOZ">Getting Tower Data From Mozilla Location Services. . .</string>

@@ -23,4 +23,13 @@
             android:key="mnc_filter_preference"
             android:title="@string/mnc_filter_label" />
     </PreferenceCategory>
+    
+    <PreferenceCategory android:title="@string/ext_db_location">
+        <EditTextPreference
+            android:dialogTitle="@string/ext_db_description"
+            android:key="ext_db_preference"
+            android:maxLength="72"
+            android:title="@string/ext_db_label" />
+    </PreferenceCategory>
+    
 </PreferenceScreen>

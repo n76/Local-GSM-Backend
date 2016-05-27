@@ -39,6 +39,8 @@ public class Settings {
     private static final String MNC_FILTER = "mnc_filter_preference";
 
     private static final String MCC_FILTER = "mcc_filter_preference";
+    
+    private static final String EXTERNAL_DATABASE_LOCATION = "ext_db_preference";
 
     private static final Object lock = new Object();
     private static Settings instance;
@@ -117,6 +119,11 @@ public class Settings {
     }
 
     public File databaseDirectory() {
+        File extDir = new File(preferences.getString(EXTERNAL_DATABASE_LOCATION, ""));
+
+        if (extDir.exists() && extDir.isDirectory() && extDir.canRead() && extDir.canWrite()) {
+            return extDir;
+        }
         return context.getExternalFilesDir(null);
     }
 
@@ -195,6 +202,16 @@ public class Settings {
         if (!TextUtils.equals(key, openCellIdApiKey())) {
             preferences.edit()
                     .putString(OPEN_CELL_ID_API_KEY, key)
+                    .commit();
+        }
+
+        return this;
+    }
+
+    public Settings externalDatabaseLocation(String key) {
+        if (!TextUtils.equals(key, openCellIdApiKey())) {
+            preferences.edit()
+                    .putString(EXTERNAL_DATABASE_LOCATION, key)
                     .commit();
         }
 

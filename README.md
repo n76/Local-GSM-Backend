@@ -17,11 +17,13 @@ See http://opencellid.org for information about the OpenCellID project and see h
 This software is licensed as "Apache License, Version 2.0" unless noted
 otherwise.
 
-This software is derived from LocalGSMLocationProvider at https://github.com/rtreffer/LocalGSMLocationProvider but differs as follows:
+This software was forked from LocalGSMLocationProvider at https://github.com/rtreffer/LocalGSMLocationProvider with the following initial changes:
 
 1. This software uses a sqlite database rather than the custom built one in LocalGSMLocationProvider.
 2. This software does not ship with a built in database. Databases can be generated with the scripts at https://github.com/n76/lacells-creator or using the built in database generation facility.
 3. The database used by this software includes an estimated range of coverage for each cell tower. That information is used to provide a location estimate weighted by coverage area and to make an estimate of position accuracy. (The original LocalGSMLocationProvider assumes 800 meter range for all towers.)
+
+The code has evolved significantly since the initial fork.
 
 [![Get it on F-Droid](get_it_on_f-droid.png?raw=true)](https://f-droid.org/repository/browse/?fdid=org.fitchfamily.android.gsmlocation)
 
@@ -33,6 +35,7 @@ Setup on phone
 ==============
 1. Install a cell tower database. Either use the settings menu to select the data sources and mobile country codes (mcc) that you desire or use the scripts at https://github.com/n76/lacells-creator to build and install a database.
 2. In the NLP Controller app (interface for µg UnifiedNlp) select the "GSM Location Backend".
+3. Optionally, and highly discouraged, you can set the directory path used by the backend for database operations. The only reason for this option is to make some scripted operations involving off line generated databases easier. If you are using on phone generated data you should leave this setting alone.
 
 Notes on generating the database
 ================================
@@ -42,6 +45,11 @@ The on-phone database can be created using this settings in the app or via scrip
 2. Mozilla publishes new CSV files once per day.
 
 At least on a Google Galaxy Nexus (Maguro), download and creation of the database is much slower than using the scripts at https://github.com/n76/lacells-creator though with a good data connection it can be done in a reasonable amount of time directly on the phone.
+
+If the database is generated using off phone scripts, then:
+
+1. In the advanced settings area you may wish to change the location of the directory that the backend uses to store databases to one that you find easy to download to.
+2. The database you push to the phone should be named lacells.db.new The backend will detect a new database file, cleanly close the old file, rename the old file to lacells.db.bak, rename the new file to lacells.db and open it. If a failure occurs, the backend will revert to the lacells.db.bak version of the database.
 
 Filtering
 =========
@@ -99,5 +107,6 @@ Update History
 1.4.1|6May2016|Remove confusion about mobile country code 505 Australia and Norfolk Island in favor of Australia.
 1.4.2|19May2016|Only report new samples, not old ones with old times, to reduce debug logging in UnifiedNLP.
 1.4.3|22May2016|When asked for update, report current position (based on most recent changes reported by TelephonyManager) with current time.
+1.4.4|23May2016|Allow use of user defined database directory location. Fix negative progress indicator for large downloads.
 
 

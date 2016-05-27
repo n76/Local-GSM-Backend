@@ -76,6 +76,7 @@ public class CellLocationDatabase {
         if (database == null) {
             if (DEBUG) {
                 Log.i(TAG, "Attempting to open database.");
+                Log.i(TAG, "Using directory " + settings.databaseDirectory().getPath());
             }
 
             if (settings.currentDatabaseFile().exists() && settings.currentDatabaseFile().canRead()) {
