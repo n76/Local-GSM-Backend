@@ -11,6 +11,17 @@ public class DatabaseCreator {
     private static final String SQL_INSERT = "INSERT INTO cells (mcc, mnc, lac, cid, longitude, latitude, accuracy, samples, altitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, -1);";
 
     public static DatabaseCreator withTempFile(Context context) throws IOException {
+        // Remove any old failed download attempts
+        String path = Settings.with(context).databaseDirectory().toString();
+        File f = new File(path);
+        File file[] = f.listFiles();
+        for (int i=0; i < file.length; i++)
+        {
+            if (file[i].getName().startsWith("new_lacells")) {
+                file[i].delete();
+            }
+        }
+
         return with(File.createTempFile("new_lacells", ".db", Settings.with(context).databaseDirectory()));
     }
 
