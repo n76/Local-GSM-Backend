@@ -39,8 +39,7 @@ public class GsmService extends LocationBackendService {
     private TelephonyHelper th;
 
     protected Thread worker = null;
-
-    private Location lastLocation = null;
+    private Thread thread;
 
     private Context ctx = null;
 
@@ -68,10 +67,8 @@ public class GsmService extends LocationBackendService {
 
      @Override
      protected synchronized Location update() {
-         Location rslt = lastLocation;
-         if (rslt != null)
-             rslt.setTime(System.currentTimeMillis());
-         return rslt;
+         scanGsm("update");
+         return null;
      }
 
     @Override
@@ -132,36 +129,16 @@ public class GsmService extends LocationBackendService {
                         Looper.prepare();
 
                         final PhoneStateListener listener = new PhoneStateListener() {
-                            private synchronized void doIt(String from) {
-                                if (isConnected()) {
-                                    Location rslt = th.getLocationEstimate();
-                                    String logString;
-
-                                    if (rslt != null) {
-                                        rslt.setTime(System.currentTimeMillis());
-                                        logString = from + rslt.toString();
-                                    }
-                                    else
-                                        logString = from + " null position";
-
-                                    if (DEBUG)
-                                        Log.i(TAG, logString);
-
-                                    report(rslt);
-                                    lastLocation = rslt;
-                                }
-                            }
-
                             public void onServiceStateChanged(ServiceState serviceState) {
-                                doIt("onServiceStateChanged: ");
+                                scanGsm("onServiceStateChanged: ");
                             }
 
                             public void onCellLocationChanged(CellLocation location) {
-                                doIt("onCellLocationChanged: ");
+                                scanGsm("onCellLocationChanged: ");
                             }
 
                             public void onCellInfoChanged(List<android.telephony.CellInfo> cellInfo) {
-                                doIt("onCellInfoChanged: ");
+                                scanGsm("onCellInfoChanged: ");
                             }
                         };
                         tm.listen(
@@ -191,6 +168,37 @@ public class GsmService extends LocationBackendService {
                 worker = null;
             }
         }
+    }
+
+    public synchronized void scanGsm(final String calledFrom) {
+        if (thread != null) {
+            if (DEBUG)
+                Log.i(TAG, "scanGsm() : Thread busy?!");
+            return;
+        }
+
+        thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Location rslt = th.getLocationEstimate();
+                String logString;
+
+                if (rslt != null) {
+                    rslt.setTime(System.currentTimeMillis());
+                    logString = "scanGsm(" + calledFrom + ") " + rslt.toString();
+                }
+                else
+                    logString = "scanGsm(" + calledFrom + ")  null position";
+
+                if (DEBUG)
+                    Log.i(TAG, logString);
+
+                report(rslt);
+
+                thread = null;
+            }
+        });
+        thread.start();
     }
 
     private void setShowPermissionNotification(boolean visible) {

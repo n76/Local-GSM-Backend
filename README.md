@@ -108,5 +108,5 @@ Update History
 1.4.2|19May2016|Only report new samples, not old ones with old times, to reduce debug logging in UnifiedNLP.
 1.4.3|22May2016|When asked for update, report current position (based on most recent changes reported by TelephonyManager) with current time.
 1.4.4|23May2016|Allow use of user defined database directory location. Fix negative progress indicator for large downloads.
-
+1.4.6|14July2016|Trigger scan for mobile/cell towers when location update requested by UnifiedNLP
 
