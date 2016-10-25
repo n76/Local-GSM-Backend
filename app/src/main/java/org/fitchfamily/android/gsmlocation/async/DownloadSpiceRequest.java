@@ -327,18 +327,18 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
 
         final long progressSize = progressEnd - progressStart;
 
+        int totalRecords = 0;
+        int insertedRecords = 0;
+        long entryTime = System.currentTimeMillis();
+
         try {
-            int totalRecords = 0;
-            int insertedRecords = 0;
-
-            long entryTime = System.currentTimeMillis();
-
             logInfo(context.getString(R.string.log_URL, source));
 
             SourceConnection connection = source.connect();
 
             logInfo(context.getString(R.string.log_CONT_LENGTH, String.valueOf(connection.getCompressedContentLength())));
             final long maxLength = connection.getContentLength();
+            long maxProgress = 0;
 
             CsvParser cvs = new CsvParser(connection.inputStream());
 
@@ -387,7 +387,12 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
                         progress = ((((long) cvs.bytesRead()) * progressSize)) / maxLength;
                     }
 
-                    publishProgress(progressStart + (int) progress, statusText);
+                    // OpenCellId files seem to have the wrong length and our progress starts
+                    // to go backwards. So only report the maximum positive progress we have
+                    // achieved.
+                    if (progress > maxProgress)
+                        maxProgress = progress;
+                    publishProgress(progressStart + (int) maxProgress, statusText);
                 }
 
                 int mcc = Integer.parseInt(rec.get(mccIndex));
@@ -439,10 +444,15 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
             throw e;
         } catch (Exception e) {
             logError(e.getMessage());
-
             e.printStackTrace();
 
-            throw e;
+            // OpenCellId files seem to have wrong length. If we've read at least 31
+            // million records (a bit smaller than the file is as of 10/25/2016), assume
+            // we've read all the data and exit normally. Otherwise we will pass our
+            // exception up the line.
+            if (totalRecords < 31000000) {
+                throw e;
+            }
         }
     }
 
