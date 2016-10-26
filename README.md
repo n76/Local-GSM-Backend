@@ -111,4 +111,5 @@ Update History
 1.4.6|14July2016|Trigger scan for mobile/cell towers when location update requested by UnifiedNLP
 1.4.7|14July2016|Brazilian Portugese translation thanks to @anonimou on XDA forums.
 1.4.8|25Oct2016|Kludge to work around incorrect length on OpenCellId ZIP files that cause failure at end of download.
+1.4.9|25Oct2016|Make check for unexpectedly short file a bit more lenient.
 

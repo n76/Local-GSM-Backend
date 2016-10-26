@@ -446,11 +446,12 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
             logError(e.getMessage());
             e.printStackTrace();
 
-            // OpenCellId files seem to have wrong length. If we've read at least 31
-            // million records (a bit smaller than the file is as of 10/25/2016), assume
-            // we've read all the data and exit normally. Otherwise we will pass our
-            // exception up the line.
-            if (totalRecords < 31000000) {
+            // OpenCellId files seem to have wrong length. If we've read at least 10
+            // million records, assume we've read all the data and exit normally.
+            // Otherwise we will pass our exception up the line.
+            if (totalRecords > 10000000) {
+                databaseCreator.commitTransaction();
+            } else {
                 throw e;
             }
         }
