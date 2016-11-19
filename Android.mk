@@ -13,10 +13,10 @@ gsmback_build := $(gsmback_root)/$(gsmback_dir)/build
 gsmback_apk   := build/outputs/apk/$(gsmback_dir)-release-unsigned.apk
 
 $(gsmback_root)/$(gsmback_dir)/$(gsmback_apk):
-        rm -Rf $(gsmback_build)
-        mkdir -p $(gsmback_out)
-        ln -sf $(gsmback_out) $(gsmback_build)
-        cd $(gsmback_root)/$(gsmback_dir) && JAVA_TOOL_OPTIONS="$(JAVA_TOOL_OPTIONS) -Dfile.encoding=UTF8" ../gradlew assembleRelease
+	rm -Rf $(gsmback_build)
+	mkdir -p $(gsmback_out)
+	ln -sf $(gsmback_out) $(gsmback_build)
+	cd $(gsmback_root)/$(gsmback_dir) && JAVA_TOOL_OPTIONS="$(JAVA_TOOL_OPTIONS) -Dfile.encoding=UTF8" ../gradlew assembleRelease
 
 LOCAL_CERTIFICATE := platform
 LOCAL_SRC_FILES := $(gsmback_dir)/$(gsmback_apk)
