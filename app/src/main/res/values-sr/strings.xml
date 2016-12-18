@@ -4,9 +4,7 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
     tools:ignore="MissingTranslation">
     <string name="app_name">Услуга локације помоћу ГСМ-а</string>
-    <!--
     <string name="summary">Лоцирање помоћу базе података базних станица на телефону.</string>
-    -->
 
     <!-- Strings for settings -->
     <string name="use_mls">Мозилине услуге лоцирања</string>
@@ -22,6 +20,10 @@
     <string name="mnc_filter_label">МНЦ филтер</string>
 
     <string name="mnc_filter_description">Списак кôдова мобилних мрежа (MNC) за коришћење, одвојених зарезом. Погледајте http://en.wikipedia.org/wiki/Mobile_country_code</string>
+
+    <string name="ext_db_location">Спољашња локација базе података</string>
+    <string name="ext_db_label">Путања до директоријума базе података (необавезно)</string>
+    <string name="ext_db_description">Директоријум за базу података.</string>
 
     <string name="invalid_oci_api_key">Задати АПИ кључ није исправан. Задајте исправан кључ (или искључите OpenCellID извор података).</string>
 
@@ -71,6 +73,7 @@
     <string name="dialog_location_perm_denied">Услуга неће моћи да сакупља податке о мобилним
         базним станицама и биће бескорисна док не одобрите дозволе лоцирања.
     </string>
+    <string name="preference_grant_permission">Тапните да одобрите захтеване дозволе</string>
 
     <!-- string for the new UI -->
     <string name="fragment_settings_title">Поставке</string>
@@ -131,6 +134,5 @@
     <string name="activity_area_list_search_hint">Тражи</string>
 
     <string name="activity_main_about">О програму</string>
-    <string name="preference_grant_permission">Додирните да изда потребну дозволу</string>
 </resources>
 
