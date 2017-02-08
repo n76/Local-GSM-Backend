@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
+    tools:ignore="MissingTranslation">
+    <string name="app_name">GSM Location Service</string>
+    <string name="summary">Обнаружение местоположения с помощью локальной базы данных.</string>
+
+    <!-- Strings for settings -->
+    <string name="use_mls">Сервисы геолокации Mozilla</string>
+
+    <string name="oci_config">Настройки OpenCellID</string>
+    <string name="oci_api_label">OpenCellId API</string>
+    <string name="oci_api_description">См. http://wiki.opencellid.org/wiki/API</string>
+
+    <string name="filter_title">Фильтры</string>
+    <string name="mcc_filter_label">MCC фильтр</string>
+    <string name="mcc_filter_description">Разделённые запятой мобильные коды стран (MCC) для использования.
+        См. http://ru.wikipedia.org/wiki/Mobile_Country_Code
+    </string>
+    <string name="mnc_filter_label">MNC фильтр</string>
+    <string name="mnc_filter_description">Разделённые запятой коды мобильных сетей (MNC), для использования.
+        См. https://ru.wikipedia.org/wiki/MNC
+    </string>
+
+    <string name="ext_db_location">Расположение сторонней базы данных</string>
+    <string name="ext_db_label">Путь до сторонней базы данных</string>
+    <string name="ext_db_description">Папка для использования базой данных.</string>
+
+    <string name="invalid_oci_api_key">Неверный API ключ. Введите правильный или выключите источник
+        данных OpenCellID).
+    </string>
+
+    <string name="log_MCC_FILTER">MCC фильтр:
+        <xliff:g example="42,48" id="MCC filter">%1$s</xliff:g>
+    </string>
+    <string name="log_MCC_WORLD">MCC фильтров нет, использую все страны</string>
+    <string name="log_MNC_FILTER">MNC фильтр:
+        <xliff:g example="1,2,3,4" id="MNC filter">%1$s</xliff:g>
+    </string>
+
+    <string name="log_MNC_WORLD">MNC фильтров нет, использую все сети</string>
+    <string name="log_GETTING_OCID">Получаю расположение вышек из OpenCellID. . .</string>
+    <string name="log_GETTING_MOZ">Получаю расположение вышек из сервиса геолокации Mozilla. . .</string>
+    <string name="log_URL">Ссылка: 
+        <xliff:g example="http://opencellid.org/downloads/" id="url">%1$s</xliff:g>
+    </string>
+    <string name="log_CONT_LENGTH">Количество записей =
+        <xliff:g example="5535" id="content length">%1$s</xliff:g>
+    </string>
+    <string name="log_REC_STATS">
+        Записей прочитано:<xliff:g example="1000" id="records read">%1$d</xliff:g>,
+        Вставлено:
+        <xliff:g id="records inserted">%2$d</xliff:g>
+    </string>
+    <string name="log_INDICIES">Создания индексов для ускорения работы.</string>
+    <string name="log_TOT_TIME">Всего времени:
+        <xliff:g example="29530" id="time in milliseconds">%1$d</xliff:g>
+        мс
+    </string>
+    <string name="log_FINISHED">Закончено.</string>
+    <string name="log_END_STATS">Всего времени:
+        <xliff:g id="time in milliseconds">%1$s</xliff:g>
+        мс
+        (
+        <xliff:g id="milliseconds per record">%2$s</xliff:g>
+        мс/запись)
+    </string>
+
+    <string name="st_CANCELED">Завершено.</string>
+    
+    <!-- Строки, относящиеся к запросу/выдаче разрешений -->
+
+    <string name="notification_location_permission">Ткните, чтобы дать необходимое
+        разрешение геолокации.
+    </string>
+    <string name="dialog_location_perm_granted">Теперь выключите и включите GSM Location Service
+        в настройках UnifiedNlp. Или, выключите и включите геолокацию в быстрых настройках.
+    </string>
+    <string name="dialog_location_perm_denied">Сервис не будет работать, пока вы не дадите ему
+    разрешение на геолокацию.
+    </string>
+    <string name="preference_grant_permission">Ткните, чтобы выдать необходимое разрешение</string>
+
+    <!-- строки для нового UI -->
+    <string name="fragment_settings_title">Настройки</string>
+
+    <string name="fragment_update_database_title">База данных</string>
+
+    <string name="fragment_update_database_last_update">Последнее обновление базы данных:
+        <xliff:g example="3 minutes ago" id="time">%1$s</xliff:g>
+    </string>
+    <string name="fragment_update_database_no_database_found">База данных не найдена</string>
+    <string name="fragment_update_database_no_permission">База данных найдена, но не может быть прочитана.
+        Отредактируйте разрешения в
+        <xliff:g id="file">%s</xliff:g>
+    </string>
+    <string name="fragment_update_database_start_update">Обновить базу данных</string>
+    <string name="fragment_update_database_create_database">Создать базу данных</string>
+    <string name="fragment_update_database_show_details">Подробнее</string>
+
+    <string name="fragment_update_database_exception_title">Ошибка при обновлении базы данных</string>
+
+    <string name="fragment_settings_card_sources_title">Источники</string>
+    
+    <string name="fragment_settings_card_sources_filter_on_phone">Загрузить все зоны и сохранить только выбранные</string>
+    <string name="fragment_settings_card_sources_filter_remote">Загрузить выбранные зоны из lacells (данные могут быть устаревшими)</string>
+    
+    <string name="fragment_settings_opencellid_error_title">OpenCellID не включается</string>
+    <string name="fragment_settings_opencellid_error_connection">Соединение не удалось</string>
+    <string name="fragment_settings_opencellid_error_day_limit">Попробуйте завтра</string>
+
+    <string name="fragment_settings_card_areas_title">Зоны</string>
+
+    <string name="fragment_settings_card_areas_nothing_chosen">Ничего не выбрано (будет выбрано всё)
+    </string>
+    <string name="fragment_settings_card_areas_other">Остальные</string>
+
+    <string name="fragment_settings_blocked_database_update">Нельзя изменять настройки во время
+        обновления базы данных
+    </string>
+    
+    <string name="activity_area_list_title">Выберите зоны</string>
+
+    <string name="fragment_area_list_unknown">Неизвестная зона (MCC:<xliff:g example="42" id="mcc">
+        %1$s</xliff:g>)
+    </string>
+    
+    <string name="fragment_database_update_error_no_sources">Для начала, выберите источник в
+        настройках
+    </string>
+    <string name="fragment_database_update_button_settings">Открыть настройки</string>
+
+    <string name="fragment_database_update_error_no_permission">Необходимо разрешение на сохранение файлов</string>
+    <string name="fragment_database_update_button_permission_allow">Разрешить</string>
+
+    <string name="fragment_settings_advanced_title">Дополнительные настройки</string>
+
+    <string name="activity_area_list_search_hint">Поиск</string>
+    <string name="activity_main_libraries">Сторонние библиотеки</string>
+    <string name="activity_main_about">О приложении</string>
+</resources>
