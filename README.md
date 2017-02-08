@@ -112,4 +112,5 @@ Update History
 1.4.7|14July2016|Brazilian Portugese translation thanks to @anonimou on XDA forums.
 1.4.8|25Oct2016|Kludge to work around incorrect length on OpenCellId ZIP files that cause failure at end of download.
 1.4.9|25Oct2016|Make check for unexpectedly short file a bit more lenient.
+1.4.10|8Feb2017|Update Serbian translation, add Russian translation, update build scripts. Thanks to Boris Kraut, Mladen Pejaković, @daktak and @Xottab-DUTY
 
