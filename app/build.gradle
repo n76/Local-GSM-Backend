@@ -24,8 +24,8 @@ android {
         applicationId "org.fitchfamily.android.gsmlocation"
         minSdkVersion 10
         targetSdkVersion 23
-        versionCode 57
-        versionName "1.4.10"
+        versionCode 58
+        versionName "1.4.11"
     }
 
     buildTypes {
@@ -39,7 +39,7 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
-    
+
     lintOptions {
         checkReleaseBuilds false
         // Or, if you prefer, you can continue to check for errors in release builds,
