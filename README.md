@@ -114,4 +114,5 @@ Update History
 1.4.9|25Oct2016|Make check for unexpectedly short file a bit more lenient.
 1.4.10|8Feb2017|Update Serbian translation, add Russian translation, update build scripts. Thanks to Boris Kraut, Mladen Pejaković, @daktak and @Xottab-DUTY
 1.4.11|13Feb2017|Add Ukrainian translation. Thanks to @burunduk
+1.4.12|11May2017|Add French translation. Thanks to @Massedil
 
