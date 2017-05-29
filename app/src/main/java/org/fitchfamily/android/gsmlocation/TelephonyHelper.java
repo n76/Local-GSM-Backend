@@ -188,8 +188,16 @@ public class TelephonyHelper {
                 Log.i(TAG, "legacyGetCellTowers(): mncString is NULL or not recognized.");
             return null;
         }
-        int mcc = Integer.parseInt(mncString.substring(0, 3));
-        int mnc = Integer.parseInt(mncString.substring(3));
+        int mcc = 0;
+        int mnc = 0;
+        try {
+            mcc = Integer.parseInt(mncString.substring(0, 3));
+            mnc = Integer.parseInt(mncString.substring(3));
+        } catch (NumberFormatException e) {
+            if (DEBUG)
+                Log.i(TAG, "legacyGetCellTowers(), Unable to parse mncString: " + e.toString());
+            return null;
+        }
         final CellLocation cellLocation = tm.getCellLocation();
 
         if ((cellLocation != null) && (cellLocation instanceof GsmCellLocation)) {

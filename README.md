@@ -115,4 +115,5 @@ Update History
 1.4.10|8Feb2017|Update Serbian translation, add Russian translation, update build scripts. Thanks to Boris Kraut, Mladen Pejaković, @daktak and @Xottab-DUTY
 1.4.11|13Feb2017|Add Ukrainian translation. Thanks to @burunduk
 1.4.12|11May2017|Add French translation. Thanks to @Massedil
+1.4.13|29May2017|Fix bug #98: Crash on unexpected MMC/MNC values.
 

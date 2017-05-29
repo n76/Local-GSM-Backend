@@ -24,8 +24,8 @@ android {
         applicationId "org.fitchfamily.android.gsmlocation"
         minSdkVersion 10
         targetSdkVersion 23
-        versionCode 59
-        versionName "1.4.12"
+        versionCode 60
+        versionName "1.4.13"
     }
 
     buildTypes {
