@@ -6,7 +6,10 @@ public class Config {
     // Strings for building URLs
     // Open Cell ID uses:
     // "http://opencellid.org/downloads/?apiKey=${API_KEY}&filename=cell_towers.csv.gz"
-    public static final String OCI_URL_FMT = "http://opencellid.org/downloads/?apiKey=%s&filename=cell_towers.csv.gz";
+    // public static final String OCI_URL_FMT = "http://opencellid.org/downloads/?apiKey=%s&filename=cell_towers.csv.gz";
+
+    // Unwired Labs has taken over Open Cell ID and one of the changes is in the download URL
+    public static final String OCI_URL_FMT = "https://download.unwiredlabs.com/ocid/downloads?token=%s&file=cell_towers.csv.gz";
 
     // URL for requesting new OpenCellID API key
     public static final String OCI_API_GET_KEY_URL = "http://opencellid.org/gsmCell/user/generateApiKey";
