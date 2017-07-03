@@ -117,4 +117,5 @@ Update History
 1.4.12|11May2017|Add French translation. Thanks to @Massedil
 1.4.13|29May2017|Fix bug #98: Crash on unexpected MMC/MNC values.
 1.4.14|8Jun2017|Fix bug #96: Change URL for OpenCellId data download. Thanks to @IrrationalEscalation for pointing out the URL change. Automatic acquisition of OpenCellId API token/key still broken, but download with older key now works again.
+1.4.15|3Jul2017|Fix bug #100: Errors in XML on French translation
 

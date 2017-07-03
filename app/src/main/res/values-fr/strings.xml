@@ -25,20 +25,40 @@
 
     <string name="invalid_oci_api_key">La clé d\'API est incorrecte. Merci d\'en insérer une valide (ou de désactiver la source de données OpenCellID).</string>
 
-    <string name="log_MCC_FILTER">Filtre MMC :          &lt;xliff:g example=\"42,48\" id=\"MCC filter\" &gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="log_MCC_FILTER">Filtre MMC :
+        <xliff:g example="42,48" id="MCC filter">%1$s</xliff:g>
+    </string>
     <string name="log_MCC_WORLD">Pas de filtre MCC, utilisera tous les pays</string>
-    <string name="log_MNC_FILTER">Filtre MMC :         &lt;xliff:g example=\"1,2,3,4\" id=\"MNC filter\" &gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="log_MNC_FILTER">Filtre MMC :
+        <xliff:g example="1,2,3,4" id="MNC filter">%1$s</xliff:g>
+    </string>
 
     <string name="log_MNC_WORLD">Pas de filtre MNC, utilisera tous les opérateurs</string>
     <string name="log_GETTING_OCID">Récupération des Données d\'Antennes Mobiles depuis OpenCellID. . .</string>
     <string name="log_GETTING_MOZ">Récupération des Données d\'Antennes Mobiles depuis Mozilla Location Services. . .</string>
-    <string name="log_URL">URL :          &lt;xliff:g example=\"http://opencellid.org/downloads/\" id=\"url\" &gt;%1$s&lt;/xliff:g&gt;</string>
-    <string name="log_CONT_LENGTH">Taille du contenu =          &lt;xliff:g example=\"5535\" id=\"content length\" &gt;%1$s&lt;/xliff:g&gt;</string>
-    <string name="log_REC_STATS">Enregistrements lus : &lt;xliff:g example=\"1000\" id=\"records read\" &gt;%1$d&lt;/xliff:g&gt;,         Ajoutés :         &lt;xliff:g id=\"records inserted\" &gt;%2$d&lt;/xliff:g&gt;</string>
+    <string name="log_URL">URL :
+        <xliff:g example="http://opencellid.org/downloads/" id="url">%1$s</xliff:g>
+    </string>
+    <string name="log_CONT_LENGTH">Taille du contenu =
+        <xliff:g example="5535" id="content length">%1$s</xliff:g>
+    </string>
+    <string name="log_REC_STATS">Enregistrements lus :<xliff:g example="1000" id="records read">%1$d</xliff:g>,
+        Ajoutés :
+        <xliff:g id="records inserted">%2$d</xliff:g>
+    </string>
     <string name="log_INDICIES">Création des index pour une recherche accélérée.</string>
-    <string name="log_TOT_TIME">Temps total : xliff:g example=\"29530\" id=\"time in milliseconds\" &gt;%1$d&lt;/xliff:g&gt;         ms</string>
+    <string name="log_TOT_TIME">Temps total :
+        <xliff:g example="29530" id="time in milliseconds">%1$d</xliff:g>
+        ms
+    </string>
     <string name="log_FINISHED">Terminé.</string>
-    <string name="log_END_STATS">Temps total : xliff:g id=\"time in milliseconds\" &gt;%1$s&lt;/xliff:g&gt;         ms         (         &lt;xliff:g id=\"milliseconds per record\" &gt;%2$s&lt;/xliff:g&gt;         ms/record)</string>
+    <string name="log_END_STATS">Temps total :
+        <xliff:g id="time in milliseconds">%1$s</xliff:g>
+        ms
+        (
+        <xliff:g id="milliseconds per record">%2$s</xliff:g>
+        ms/record)
+    </string>
 
     <string name="st_CANCELED">ANNULÉ</string>
 
@@ -53,9 +73,13 @@
 
     <string name="fragment_update_database_title">Base de données</string>
 
-    <string name="fragment_update_database_last_update">Dernière mise à jour des données :         &lt;xliff:g example=\"3 minutes ago\" id=\"time\" &gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="fragment_update_database_last_update">Dernière mise à jour des données :
+        <xliff:g example="3 minutes ago" id="time">%1$s</xliff:g>
+    </string>
     <string name="fragment_update_database_no_database_found">Pas de base de données trouvée</string>
-    <string name="fragment_update_database_no_permission">Le fichier de base de données existe bien mais ne peut pas être lu. Modifiez les permissions sur         &lt;xliff:g id=\"file\" &gt;%s&lt;/xliff:g&gt;</string>
+    <string name="fragment_update_database_no_permission">Le fichier de base de données existe bien mais ne peut pas être lu. Modifiez les permissions sur
+        <xliff:g id="file">%s</xliff:g>
+    </string>
     <string name="fragment_update_database_start_update">Mettre à jour la base de données</string>
     <string name="fragment_update_database_create_database">Créer la base de données</string>
     <string name="fragment_update_database_show_details">Voir les détails</string>
@@ -82,7 +106,9 @@
 
     <string name="activity_area_list_title">Choisir les zones</string>
 
-    <string name="fragment_area_list_unknown">Zone Inconnue (MCC:&lt;xliff:g example=\"42\" id=\"mcc\" &gt;         %1$s&lt;/xliff:g&gt;)</string>
+    <string name="fragment_area_list_unknown">Zone Inconnue (MCC:<xliff:g example="42" id="mcc">
+        %1$s</xliff:g>)
+    </string>
 
     <string name="fragment_database_update_error_no_sources">Vous devez choisir les sources dans les paramètres d\'abord</string>
     <string name="fragment_database_update_button_settings">Ouvrir les Paramètres</string>
