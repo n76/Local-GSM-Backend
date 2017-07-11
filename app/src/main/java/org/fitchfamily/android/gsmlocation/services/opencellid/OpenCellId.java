@@ -9,10 +9,20 @@ public abstract class OpenCellId {
      * OpenCellID API keys appear to be canonical form version 4 UUIDs, except keys
      * generated with http://opencellid.org/gsmCell/user/generateApiKey have
      * "dev-usr-" instead of hexadecimal digits before the first hyphen.
+     *
+     * OCID is now being run by a new owner. Old keys appear to still work but new keys
+     * seem to be hexidecimal numbers with 14 places.
      */
     public static boolean isApiKeyValid(String key) {
-        return key.matches(
+        boolean rslt = false;
+
+        // Old style keys
+        rslt = key.matches(
                 "(?:[0-9a-f]{8}|dev-usr-)-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}");
+        if (!rslt)
+            rslt = key.matches(("(?:[0-9a-f]{14})"));       // New style keys
+        return rslt;
+
     }
 
     public static void throwIfApiKeyInvalid(String key) {
