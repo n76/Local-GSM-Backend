@@ -177,28 +177,30 @@ public class GsmService extends LocationBackendService {
             return;
         }
 
-        thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Location rslt = th.getLocationEstimate();
-                String logString;
+        if (th != null) {
+            thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Location rslt = th.getLocationEstimate();
+                    String logString;
 
-                if (rslt != null) {
-                    rslt.setTime(System.currentTimeMillis());
-                    logString = "scanGsm(" + calledFrom + ") " + rslt.toString();
+                    if (rslt != null) {
+                        rslt.setTime(System.currentTimeMillis());
+                        logString = "scanGsm(" + calledFrom + ") " + rslt.toString();
+                    } else
+                        logString = "scanGsm(" + calledFrom + ")  null position";
+
+                    if (DEBUG)
+                        Log.i(TAG, logString);
+
+                    report(rslt);
+
+                    thread = null;
                 }
-                else
-                    logString = "scanGsm(" + calledFrom + ")  null position";
-
-                if (DEBUG)
-                    Log.i(TAG, logString);
-
-                report(rslt);
-
-                thread = null;
-            }
-        });
-        thread.start();
+            });
+            thread.start();
+        } else if (DEBUG)
+            Log.i(TAG, "Telephony helper is null?!?");
     }
 
     private void setShowPermissionNotification(boolean visible) {

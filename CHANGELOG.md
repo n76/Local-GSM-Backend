@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Not applicable
 
 ### Changed
-- Not applicable
+- [Crash report #101](https://github.com/n76/Local-GSM-Backend/issues/101)
 
 ### Removed
 - Not applicable
