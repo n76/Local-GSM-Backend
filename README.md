@@ -76,47 +76,4 @@ WRITE_EXTERNAL_STORAGE|Allows database to reside on external storage.
 
 Update History
 ==============
-|Version|Date|Comment|
-|:-------|:----:|:-------|
-0.8.0|27June2015|Serbian translation (thanks to Mladen Pejaković) and conversion to use Android Studio and Gradle for building.
-0.9.0|29June2015|Add ability to acquire OpenCellID API key from within app (thanks to agilob)
-0.9.1|30June2015|Improve acquisition of OpenCellID API key.
-0.9.2|2Aug2015|Fix bug where on download where towers were not being inserted into database.
-0.9.3|3Aug2015|Update Serbian translation.
-0.9.4|13Aug2015|Slight revision to clean up logic, might help on https://github.com/n76/Local-GSM-Backend/issues/31 however the largest change is moving many text strings into string resources so that internationalization is better.
-1.0.0|14Aug2015|Update Serbian translation.
-1.0.1|8Oct2015|Restore compability with API 17
-1.0.2|22Nov2015|Thanks to @hogbush Lots of code cleanup with better handling of UI elements.
-1.0.3|22Nov2015|Thanks to @pejakm Updated Serbian translation.
-1.0.4|24Nov2015|Thanks to @hogbush Support Marshmallow’s runtime permissions.
-1.0.5|20Dec2015|Detect and better handle SQLite detected errors
-1.0.6|21Dec2015|Revise required API to allow install on Gingerbread
-1.0.7|23Dec2015|Revise target API to allow install on Gingerbread through Marshmallow
-1.1.0|25Dec2015|Thanks to @UnknownUntilNow Improve database download, add German translation
-1.2.0|27Dec2015|Thanks to @UnknownUntilNow Improve database download, new UI allows selection of countries by name for many countries.
-1.2.1|28Dec2015|Correct report on processing time per record.
-1.3.0|28Dec2015|Thanks to @UnknownUntilNow Add import of cell tower data from per MCC extracts provided by @wvengen
-1.3.1|29Dec2015|Fix bug on downloading small files from lacells.
-1.3.2|29Dec2015|Improve download of lacells MCC extract files.
-1.3.3|29Dec2015|Move database to reduce permissions needed.
-1.3.4|2Jan2016|Update Serbian translation
-1.3.5|14Jan2016|Remove all access and permissions required for access to old database storage location. If upgrading from a version prior to 1.3.3 you will need to re-generate your database and you should manually remove the old database from the /sdcard/.nogapps/ directory.
-1.3.6|23Mar2016|Support location aging in newest version of UnifiedNlp
-1.3.7|30Mar2016|Revert changes from 1.3.4 to 1.3.5 as some users are reporting file permission issues. Fix crash introduced in v1.3.6.
-1.4.0|4May2016|Support Marshmallow (Android 6.x) permissions.
-1.4.1|6May2016|Remove confusion about mobile country code 505 Australia and Norfolk Island in favor of Australia.
-1.4.2|19May2016|Only report new samples, not old ones with old times, to reduce debug logging in UnifiedNLP.
-1.4.3|22May2016|When asked for update, report current position (based on most recent changes reported by TelephonyManager) with current time.
-1.4.4|23May2016|Allow use of user defined database directory location. Fix negative progress indicator for large downloads.
-1.4.6|14July2016|Trigger scan for mobile/cell towers when location update requested by UnifiedNLP
-1.4.7|14July2016|Brazilian Portugese translation thanks to @anonimou on XDA forums.
-1.4.8|25Oct2016|Kludge to work around incorrect length on OpenCellId ZIP files that cause failure at end of download.
-1.4.9|25Oct2016|Make check for unexpectedly short file a bit more lenient.
-1.4.10|8Feb2017|Update Serbian translation, add Russian translation, update build scripts. Thanks to Boris Kraut, Mladen Pejaković, @daktak and @Xottab-DUTY
-1.4.11|13Feb2017|Add Ukrainian translation. Thanks to @burunduk
-1.4.12|11May2017|Add French translation. Thanks to @Massedil
-1.4.13|29May2017|Fix bug #98: Crash on unexpected MMC/MNC values.
-1.4.14|8Jun2017|Fix bug #96: Change URL for OpenCellId data download. Thanks to @IrrationalEscalation for pointing out the URL change. Automatic acquisition of OpenCellId API token/key still broken, but download with older key now works again.
-1.4.15|3Jul2017|Fix bug #100: Errors in XML on French translation
-1.4.16|11Jul2017|Fix bug #96: Allow newer style OpenCellId API keys
-
+[History is now a separate file](CHANGELOG.md)
