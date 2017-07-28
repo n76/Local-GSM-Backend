@@ -14,15 +14,10 @@ public abstract class OpenCellId {
      * seem to be hexidecimal numbers with 14 places.
      */
     public static boolean isApiKeyValid(String key) {
-        boolean rslt = false;
-
         // Old style keys
-        rslt = key.matches(
-                "(?:[0-9a-f]{8}|dev-usr-)-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}");
-        if (!rslt)
-            rslt = key.matches(("(?:[0-9a-f]{14})"));       // New style keys
-        return rslt;
-
+        return  key.matches(
+                "(?:[0-9a-f]{8}|dev-usr-)-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}") ||
+                key.matches(("(?:[0-9a-f]{14})"));       // New style keys
     }
 
     public static void throwIfApiKeyInvalid(String key) {
