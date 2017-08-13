@@ -29,6 +29,14 @@
                     android:text="@string/fragment_update_database_last_update"
                     android:textAppearance="?android:attr/textAppearanceMedium"/>
 
+                <TextView
+                    android:id="@+id/record_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="@string/fragment_size_database"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
                 <Button
                     android:id="@+id/update"
                     style="?android:attr/buttonStyleSmall"

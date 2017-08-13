@@ -102,6 +102,9 @@
     <string name="fragment_update_database_start_update">Update database</string>
     <string name="fragment_update_database_create_database">Create database</string>
     <string name="fragment_update_database_show_details">Show details</string>
+    <string name="fragment_size_database">
+        <xliff:g id="size">%1$d</xliff:g> Cell Towers
+    </string>
 
     <string name="fragment_update_database_exception_title">Error during updating database</string>
 

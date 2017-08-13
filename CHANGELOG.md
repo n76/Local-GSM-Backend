@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
-- Not applicable
+- Issue 106: Show number of records in database on "Database" screen
 
 ### Changed
 - Not applicable

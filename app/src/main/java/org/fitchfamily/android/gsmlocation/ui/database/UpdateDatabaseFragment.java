@@ -30,6 +30,7 @@ import org.androidannotations.annotations.ViewById;
 import org.fitchfamily.android.gsmlocation.R;
 import org.fitchfamily.android.gsmlocation.Settings;
 import org.fitchfamily.android.gsmlocation.async.DownloadSpiceRequest;
+import org.fitchfamily.android.gsmlocation.database.CellLocationDatabase;
 import org.fitchfamily.android.gsmlocation.ui.base.BaseFragment;
 
 @EFragment(R.layout.fragment_update_database)
@@ -57,6 +58,9 @@ public class UpdateDatabaseFragment extends BaseFragment implements
 
     @ViewById
     protected TextView lastUpdate;
+
+    @ViewById
+    protected TextView recordCount;
 
     @ViewById
     protected ViewSwitcher detailsSwitcher;
@@ -93,6 +97,7 @@ public class UpdateDatabaseFragment extends BaseFragment implements
     public void onStart() {
         super.onStart();
         updateLastDatabaseUpdate();
+        showDatabaseSize();
         updateShownErrors();
         registerListener();
     }
@@ -192,6 +197,14 @@ public class UpdateDatabaseFragment extends BaseFragment implements
         }
     }
 
+    @Background
+    protected void showDatabaseSize() {
+        CellLocationDatabase db = new CellLocationDatabase(getContext());
+        db.checkForNewDatabase();
+        long size = db.getDatabaseSize();
+        recordCount.setText(getString( R.string.fragment_size_database, size));
+    }
+
     @UiThread
     void setLastUpdateString(String string, boolean is_update) {
         lastUpdate.setText(string);
@@ -251,6 +264,7 @@ public class UpdateDatabaseFragment extends BaseFragment implements
     public void onRequestSuccess(DownloadSpiceRequest.Result result) {
         onDownloadDone();
         updateLastDatabaseUpdate();
+        showDatabaseSize();
     }
 
     @Override
@@ -265,6 +279,7 @@ public class UpdateDatabaseFragment extends BaseFragment implements
         if (requestCode == REQUEST_PERMISSION_STORAGE) {
             updateShownErrors();
             updateLastDatabaseUpdate();
+            showDatabaseSize();
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }

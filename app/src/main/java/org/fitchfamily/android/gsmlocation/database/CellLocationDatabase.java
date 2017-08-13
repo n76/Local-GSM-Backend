@@ -110,6 +110,20 @@ public class CellLocationDatabase {
         }
     }
 
+    public synchronized long getDatabaseSize() {
+        long rslt = 0l;
+        openDatabase();
+        if (database != null) {
+            Cursor cursor = database.rawQuery("select count(*) from " + TABLE_CELLS, null);
+            if (cursor.getCount() > 0 && cursor.getColumnCount() > 0) {
+                cursor.moveToFirst();
+                rslt = cursor.getInt(0);
+            }
+            cursor.close();
+        }
+        return rslt;
+    }
+
     public synchronized Location query(final Integer mcc, final Integer mnc, final int cid, final int lac) {
         SqlWhereBuilder queryBuilder = new SqlWhereBuilder();
 
