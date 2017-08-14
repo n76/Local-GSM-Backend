@@ -197,18 +197,22 @@ public class UpdateDatabaseFragment extends BaseFragment implements
         }
     }
 
-    @Background
-    protected void showDatabaseSize() {
-        CellLocationDatabase db = new CellLocationDatabase(getContext());
-        db.checkForNewDatabase();
-        long size = db.getDatabaseSize();
-        recordCount.setText(getString( R.string.fragment_size_database, size));
-    }
-
     @UiThread
     void setLastUpdateString(String string, boolean is_update) {
         lastUpdate.setText(string);
         update.setText(is_update ? R.string.fragment_update_database_start_update : R.string.fragment_update_database_create_database);
+    }
+
+    @Background
+    protected void showDatabaseSize() {
+        CellLocationDatabase db = new CellLocationDatabase(getContext());
+        db.checkForNewDatabase();
+        setDatabaseSizeString(db.getDatabaseSize());
+    }
+
+    @UiThread
+    protected void setDatabaseSizeString(long size) {
+        recordCount.setText(getString(R.string.fragment_size_database, size));
     }
 
     private String getLog() {
