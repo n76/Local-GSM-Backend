@@ -4,9 +4,7 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
     tools:ignore="MissingTranslation">
     <string name="app_name">Serviço de Localização GSM</string>
-    <!--
     <string name="summary">Posição usando banco de dados no telefone.</string>
-    -->
 
     <!-- Strings for settings -->
     <string name="use_mls">Serviços de Localização da Mozilla</string>

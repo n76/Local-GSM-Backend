@@ -4,6 +4,7 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
     tools:ignore="MissingTranslation">
     <string name="app_name">GSM Location Service</string>
+    <string name="summary">Locate using on phone database.</string>
 
     <!-- Strings for settings -->
     <string name="use_mls">Mozilla Location Services</string>
