@@ -7,10 +7,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
+- Not applicable
+
+### Changed
+- Not applicable
+
+### Removed
+- Not applicable
+
+## [1.4.18] 2017-09-24
+### Added
 - Issue 106: Show number of records in database on "Database" screen
 
 ### Changed
 - Allow "summary" to be translated.
+- Add Polish translation. Thanks to @verdulo
 
 ### Removed
 - Not applicable
