@@ -1,1 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
+    tools:ignore="MissingTranslation">
+    <string name="app_name">Usługa lokalizacji GSM</string>
+    <string name="summary">Określaj lokalizację za pomocą bazy nadajników GSM na telefonie</string>
+
+    <!-- Strings for settings -->
+    <string name="use_mls">Usługa Lokalizacji Mozilla</string>
+
+    <string name="oci_config">Konfiguracja OpenCellID</string>
+    <string name="oci_api_label">OpenCellId API</string>
+    <string name="oci_api_description">Zajrzyj na http://wiki.opencellid.org/wiki/API</string>
+
+    <string name="filter_title">Filtrowanie</string>
+    <string name="mcc_filter_label">Filtr MCC</string>
+    <string name="mcc_filter_description">Kody MCC oddzielone przecinkami: https://pl.wikipedia.org/wiki/Mobile_Country_Code</string>
+
+    <string name="mnc_filter_label">Filtr MNC</string>
+    <string name="mnc_filter_description">Kody MNC oddzielone przecinkamim: https://pl.wikipedia.org/wiki/Mobile_Network_Code</string>
+
+    <string name="ext_db_location">Miejsce zewnętrznej bazy danych</string>
+    <string name="ext_db_label">Ścieżka do katalogu bazy danych (opcjonalne)</string>
+    <string name="ext_db_description">Katalog używany przez bazę danych.</string>
+
+    <string name="invalid_oci_api_key">Podany klucz API jest niepoprawny. Wprowadź prawidłowy klucz (bądź wyłącz OpenCellID jako źródło danych).</string>
+
+    <string name="log_MCC_FILTER">Filtr MCC:
+        <xliff:g example="42,48" id="MCC filter">%1$s</xliff:g>
+    </string>
+    <string name="log_MCC_WORLD">Brak filtra MCC, uwzględniono wszystkie kraje</string>
+    <string name="log_MNC_FILTER">Filtr MNC:
+        <xliff:g example="1,2,3,4" id="MNC filter">%1$s</xliff:g>
+    </string>
+
+    <string name="log_MNC_WORLD">Brak filtra MNC, uwzględniono wszystkich operatorów</string>
+    <string name="log_GETTING_OCID">Pobieranie informacji o nadajnikach OpenCellID…</string>
+    <string name="log_GETTING_MOZ">Pobieranie informacji o nadajnikach z Usługi Lokalizacji Mozilla…</string>
+    <string name="log_URL">URL:
+        <xliff:g example="http://opencellid.org/downloads/" id="url">%1$s</xliff:g>
+    </string>
+    <string name="log_CONT_LENGTH">Długość =
+        <xliff:g example="5535" id="content length">%1$s</xliff:g>
+    </string>
+    <string name="log_REC_STATS">
+        Przetworzonych wpisów:<xliff:g example="1000" id="records read">%1$d</xliff:g>,
+        Dodano:
+        <xliff:g id="records inserted">%2$d</xliff:g>
+    </string>
+    <string name="log_INDICIES">Tworzenie indeksów, aby przyspieszyć dostęp…</string>
+    <string name="log_TOT_TIME">Czas całkowity:
+        <xliff:g example="29530" id="time in milliseconds">%1$d</xliff:g>
+        ms
+    </string>
+    <string name="log_FINISHED">Zakończono.</string>
+    <string name="log_END_STATS">Czas całkowity:
+        <xliff:g id="time in milliseconds">%1$s</xliff:g>
+        ms
+        (
+        <xliff:g id="milliseconds per record">%2$s</xliff:g>
+        ms/wpis)
+    </string>
+
+    <string name="st_CANCELED">ANULOWANO</string>
+
+    <!-- Strings related to requesting/granting permissions -->
+    <string name="notification_location_permission">Stuknij, aby udzielić niezbędnego uprawnienia lokalizacji.</string>
+    <string name="dialog_location_perm_granted">Dla poprawnego działania włącz i wyłącz Usługę lokalizacji GSM w UnifiedNlp. Możesz też ponownie aktywować lokalizację na pasku szybkich ustawień.</string>
+    <string name="dialog_location_perm_denied">Usługa nie będzie mogła pobierać danych o nadajnikach GSM i będzie bezużyteczna zanim udzielisz uprawnienia lokalizacji.</string>
+    <string name="preference_grant_permission">Stuknij, aby udzielić niezbędnego uprawnienia</string>
+
+    <!-- string for the new UI -->
+    <string name="fragment_settings_title">Ustawienia</string>
+
+    <string name="fragment_update_database_title">Baza danych</string>
+
+    <string name="fragment_update_database_last_update">Ostatnia aktualizacja bazy: <xliff:g example="3 minutes ago" id="time">%1$s</xliff:g></string>
+    <string name="fragment_update_database_no_database_found">Brak bazy danych</string>
+    <string name="fragment_update_database_no_permission">Plik bazy danych istnieje, ale  jest nieczytelny. Zmień uprawnienia <xliff:g id="file">%s</xliff:g></string>
+    <string name="fragment_update_database_start_update">Uaktualnij bazę danych</string>
+    <string name="fragment_update_database_create_database">Utwórz bazę danych</string>
+    <string name="fragment_update_database_show_details">Pokaż szczegóły</string>
+    <string name="fragment_size_database">
+        <xliff:g id="size">%1$d</xliff:g> nadajników
+    </string>
+
+    <string name="fragment_update_database_exception_title">Błąd podczas aktualizacji bazy</string>
+
+    <string name="fragment_settings_card_sources_title">Źródła</string>
+
+    <string name="fragment_settings_card_sources_filter_on_phone">Pobierz wszystkie obszary i zapisz tylko wybrane</string>
+    <string name="fragment_settings_card_sources_filter_remote">Pobierz tylko wybrane obszary z lacells (dane mogą być przestarzałe)</string>
+
+    <string name="fragment_settings_opencellid_error_title">Nie można włączyć OpenCellID</string>
+    <string name="fragment_settings_opencellid_error_connection">Błąd połączenia</string>
+    <string name="fragment_settings_opencellid_error_day_limit">Spróbuj ponownie jutro</string>
+
+    <string name="activity_main_libraries">Zewnętrzne biblioteki</string>
+
+    <string name="fragment_settings_card_areas_title">Obszary</string>
+
+    <string name="fragment_settings_card_areas_nothing_chosen">Wybrano nic (czyli wszystko)
+    </string>
+    <string name="fragment_settings_card_areas_other">Inne</string>
+
+    <string name="fragment_settings_blocked_database_update">Nie możesz zmienić ustawień podczas pobierania bazy danych.</string>
+
+    <string name="activity_area_list_title">Wybierz obszary</string>
+
+    <string name="fragment_area_list_unknown">Nieznany obszar (MCC:<xliff:g example="42" id="mcc">
+        %1$s</xliff:g>)
+    </string>
+
+    <string name="fragment_database_update_error_no_sources">Najpierw musisz wybrać źródła w ustawieniach</string>
+    <string name="fragment_database_update_button_settings">Otwórz ustawienia</string>
+
+    <string name="fragment_database_update_error_no_permission">Wymagane uprawnienie do zapisu plików</string>
+    <string name="fragment_database_update_button_permission_allow">Zezwól</string>
+
+    <string name="fragment_settings_advanced_title">Zaawansowane ustawienia</string>
+
+    <string name="activity_area_list_search_hint">Wyszukaj</string>
+
+    <string name="activity_main_about">O programie</string>
+</resources>
 
