@@ -179,28 +179,32 @@ public class UpdateDatabaseFragment extends BaseFragment implements
 
     @Background
     protected void updateLastDatabaseUpdate() {
-        long time = Settings.with(this).databaseLastModified();
+        if (isAdded()) {
+            long time = Settings.with(this).databaseLastModified();
 
-        if (time != 0) {
-            setLastUpdateString(getString(
-                    R.string.fragment_update_database_last_update,
-                    DateUtils.getRelativeTimeSpanString(time, System.currentTimeMillis(), DateUtils.DAY_IN_MILLIS)
-            ), true);
-        } else if (Settings.with(this).databaseFile() != null) {
-            // exists but not readable
-            setLastUpdateString(getString(
-                    R.string.fragment_update_database_no_permission, Settings.with(this).databaseFile()
-            ), true);
-        } else {
-            // not found
-            setLastUpdateString(getString(R.string.fragment_update_database_no_database_found), false);
+            if (time != 0) {
+                setLastUpdateString(getString(
+                        R.string.fragment_update_database_last_update,
+                        DateUtils.getRelativeTimeSpanString(time, System.currentTimeMillis(), DateUtils.DAY_IN_MILLIS)
+                ), true);
+            } else if (Settings.with(this).databaseFile() != null) {
+                // exists but not readable
+                setLastUpdateString(getString(
+                        R.string.fragment_update_database_no_permission, Settings.with(this).databaseFile()
+                ), true);
+            } else {
+                // not found
+                setLastUpdateString(getString(R.string.fragment_update_database_no_database_found), false);
+            }
         }
     }
 
     @UiThread
     void setLastUpdateString(String string, boolean is_update) {
-        lastUpdate.setText(string);
-        update.setText(is_update ? R.string.fragment_update_database_start_update : R.string.fragment_update_database_create_database);
+        if (isAdded()) {
+            lastUpdate.setText(string);
+            update.setText(is_update ? R.string.fragment_update_database_start_update : R.string.fragment_update_database_create_database);
+        }
     }
 
     @Background
@@ -212,7 +216,9 @@ public class UpdateDatabaseFragment extends BaseFragment implements
 
     @UiThread
     protected void setDatabaseSizeString(long size) {
-        recordCount.setText(getString(R.string.fragment_size_database, size));
+        if (isAdded()) {
+            recordCount.setText(getString(R.string.fragment_size_database, size));
+        }
     }
 
     private String getLog() {
@@ -266,9 +272,11 @@ public class UpdateDatabaseFragment extends BaseFragment implements
 
     @Override
     public void onRequestSuccess(DownloadSpiceRequest.Result result) {
-        onDownloadDone();
-        updateLastDatabaseUpdate();
-        showDatabaseSize();
+        if (isAdded()) {
+            onDownloadDone();
+            updateLastDatabaseUpdate();
+            showDatabaseSize();
+        }
     }
 
     @Override
@@ -280,7 +288,7 @@ public class UpdateDatabaseFragment extends BaseFragment implements
     @Override
     @TargetApi(23)
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_PERMISSION_STORAGE) {
+        if (isAdded() && (requestCode == REQUEST_PERMISSION_STORAGE)) {
             updateShownErrors();
             updateLastDatabaseUpdate();
             showDatabaseSize();
