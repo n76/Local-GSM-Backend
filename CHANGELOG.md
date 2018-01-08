@@ -10,10 +10,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Not applicable
 
 ### Changed
-- Check if user interface fragment is attached before access.
+- Not applicable
 
 ### Removed
 - Not applicable
+
+## [1.4.19] 2018-01-08
+### Changed
+- Check if user interface fragment is attached before access.
 
 ## [1.4.18] 2017-09-24
 ### Added
