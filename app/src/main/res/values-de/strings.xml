@@ -24,22 +24,42 @@
     <string name="ext_db_label">Optionaler Pfad zum Datenbankverzeichnis</string>
     <string name="ext_db_description">Verzeichnis für die Datenbank.</string>
 
-    <string name="invalid_oci_api_key">Der vorgegebene API-Schlüssel ist ungültig. Gebe einen gültigen ein (oder deaktiviere           die OpenCellID Datenquelle).</string>
+    <string name="invalid_oci_api_key">Der vorgegebene API-Schlüssel ist ungültig. Gebe einen gültigen ein (oder deaktiviere die OpenCellID Datenquelle).</string>
 
-    <string name="log_MCC_FILTER">MCC Filter:         &lt;xliff:g example=\"42,48\" id=\"MCC filter\" &gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="log_MCC_FILTER">MCC Filter:
+        <xliff:g example="42,48" id="MCC filter">%1$s</xliff:g>
+    </string>
     <string name="log_MCC_WORLD">Keine MCC Filter, nehme alle Länder</string>
-    <string name="log_MNC_FILTER">MNC Filter:         &lt;xliff:g example=\"1,2,3,4\" id=\"MNC filter\" &gt;%1$s&lt;/xliff:g&gt;</string>
-
+    <string name="log_MNC_FILTER">MNC Filter:
+        <xliff:g example="1,2,3,4" id="MNC filter">%1$s</xliff:g>
+    </string>
     <string name="log_MNC_WORLD">Keine MNC Filter, nehme alle Netzwerke</string>
     <string name="log_GETTING_OCID">Abrufen von Mobilfunkmastdaten von OpenCellId …</string>
     <string name="log_GETTING_MOZ">Abrufen von Mobilfunkmastdaten vom Mozilla Standortdienst …</string>
-    <string name="log_URL">Die URL ist         &lt;xliff:g example=\"http://opencellid.org/downloads/\" id=\"url\" &gt;%1$s&lt;/xliff:g&gt;</string>
-    <string name="log_CONT_LENGTH">Inhaltslänge =          &lt;xliff:g example=\"5535\" id=\" Inhaltslänge\" &gt;%1$s&lt;/xliff:g&gt;</string>
-    <string name="log_REC_STATS">Gelesene Einträge:&lt;xliff:g Beispiel=\"1000\" id=\"gelesene Einträge\" &gt;%1$d&lt;/xliff:g&gt;,           Eingefügt:         &lt;xliff:g id=\"Einträge eingefügt\" &gt;%2$d&lt;/xliff:g&gt;</string>
+    <string name="log_URL">Die URL ist
+        <xliff:g example="http://opencellid.org/downloads/" id="url">%1$s</xliff:g>
+    </string>
+    <string name="log_CONT_LENGTH">Inhaltslänge =
+        <xliff:g example="5535" id=" Inhaltslänge" >%1$s</xliff:g>
+    </string>
+    <string name="log_REC_STATS">
+        Gelesene Einträge:<xliff:g Beispiel="1000" id="gelesene Einträge" >%1$d</xliff:g>,
+        Eingefügt:
+        <xliff:g id="Einträge eingefügt" >%2$d</xliff:g>
+    </string>
     <string name="log_INDICIES">Erstelle Verzeichnisse für schnelleren Zugriff.</string>
-    <string name="log_TOT_TIME">Gesamtzeit:         &lt;xliff:g example=\"29530\" id=\"Zeit in Millisekunden\" &gt;%1$d&lt;/xliff:g&gt;         Ms</string>
+    <string name="log_TOT_TIME">Gesamtzeit:
+        <xliff:g example="29530" id="Zeit in Millisekunden" >%1$d</xliff:g>
+        Ms
+    </string>
     <string name="log_FINISHED">Fertig.</string>
-    <string name="log_END_STATS">Gesamtzeit:         &lt;xliff:g id=\"Zeit in Millisekunden\" &gt;%1$s&lt;/xliff:g&gt;          Ms         (         &lt;xliff:g id=\"Millisekunden je Eintrag\" &gt;%2$s&lt;/xliff:g&gt;         Ms/ Eintrag)</string>
+    <string name="log_END_STATS">Gesamtzeit:
+        <xliff:g id="Zeit in Millisekunden" >%1$s</xliff:g>
+        Ms
+        (
+        <xliff:g id="Millisekunden je Eintrag" >%2$s</xliff:g>
+        Ms/ Eintrag)
+    </string>
 
     <string name="st_CANCELED">ABGEBROCHEN</string>
 
@@ -54,15 +74,22 @@
 
     <string name="fragment_update_database_title">Datenbank</string>
 
-    <string name="fragment_update_database_last_update">Letztes Datenbank-Aktualisierung:           &lt;xliff:g example=\"3 minutes ago\" id=\"time\" &gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="fragment_update_database_last_update">Letztes Datenbank-Aktualisierung:
+        <xliff:g example="3 minutes ago" id="time" >%1$s</xliff:g>
+    </string>
     <string name="fragment_update_database_no_database_found">Keine Datenbank gefunden</string>
-    <string name="fragment_update_database_no_permission">Datenbank existiert aber ist nicht lesbar.       Modifiziere Berechtigungen für         &lt;xliff:g id=\"file\" &gt;%s&lt;/xliff:g&gt;</string>
+    <string name="fragment_update_database_no_permission">Datenbank existiert aber ist nicht
+        lesbar.
+        Modifiziere Berechtigungen für
+        <xliff:g id="file" >%s</xliff:g>
+    </string>
     <string name="fragment_update_database_start_update">Datenbank Aktualisieren</string>
     <string name="fragment_update_database_create_database">Erstelle Datenbank</string>
     <string name="fragment_update_database_show_details">Details anzeigen</string>
-    <string name="fragment_size_database">&lt;xliff:g id=\"size\" &gt;%1$d&lt;/xliff:g&gt; Funktürme</string>
+    <string name="fragment_size_database"><xliff:g id="size" >%1$d</xliff:g> Funktürme</string>
 
-    <string name="fragment_update_database_exception_title">Fehler während der Datenbank-Aktualisierung</string>
+    <string name="fragment_update_database_exception_title">Fehler während der Datenbank-Aktualisierung
+    </string>
 
     <string name="fragment_settings_card_sources_title">Quellen</string>
 
@@ -84,7 +111,7 @@
 
     <string name="activity_area_list_title">Gebiete auswählen</string>
 
-    <string name="fragment_area_list_unknown">Unbekanntes Gebiet (MCC:&lt;xliff:g example=\"42\" id=\"mcc\" &gt;%1$s&lt;/xliff:g&gt;)</string>
+    <string name="fragment_area_list_unknown">Unbekanntes Gebiet (MCC:<xliff:g example="42" id="mcc" >%1$s</xliff:g>)</string>
 
     <string name="fragment_database_update_error_no_sources">Sie müssen zuerst Quellen wählen</string>
     <string name="fragment_database_update_button_settings">Einstellungen öffnen</string>
@@ -98,3 +125,4 @@
 
     <string name="activity_main_about">Über</string>
 </resources>
+

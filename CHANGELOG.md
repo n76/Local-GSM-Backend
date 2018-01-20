@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Removed
 - Not applicable
 
+## [1.4.20] 2018-01-20
+
+### Changed
+- Update German translation
+
 ## [1.4.19] 2018-01-08
 ### Changed
 - Check if user interface fragment is attached before access.
