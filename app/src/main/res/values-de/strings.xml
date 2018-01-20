@@ -11,20 +11,20 @@
 
     <string name="oci_config">OpenCellID-Konfiguration</string>
     <string name="oci_api_label">OpenCellId-API-Schlüssel</string>
-    <string name="oci_api_description">siehe http://wiki.opencellid.org/wiki/API</string>
+    <string name="oci_api_description">Siehe http://wiki.opencellid.org/wiki/API</string>
 
     <string name="filter_title">Filtern</string>
     <string name="mcc_filter_label">MCC Filter</string>
-    <string name="mcc_filter_description">Komma-getrennte Liste von Mobilen Länder-Code-Nummern (MCC). siehe https://de.wikipedia.org/wiki/Mobile_Country_Code</string>
+    <string name="mcc_filter_description">Komma-Getrennte Liste von Mobilen Länder-Code-Nummern (MCC). siehe https://de.wikipedia.org/wiki/Mobile_Country_Code</string>
 
     <string name="mnc_filter_label">MNC Filter</string>
-    <string name="mnc_filter_description">Komma-getrennte Liste von MobilenNetzwerk-Code-Nummern (MNC). siehe https://de.wikipedia.org/wiki/Mobile_Network_Code</string>
+    <string name="mnc_filter_description">Komma-getrennte Liste von numerischen MobilNetzwerk-Code-Nummern (MNC). siehe https://de.wikipedia.org/wiki/Mobile_Network_Code</string>
 
     <string name="ext_db_location">Speicherort der externen Datenbank</string>
     <string name="ext_db_label">Optionaler Pfad zum Datenbankverzeichnis</string>
     <string name="ext_db_description">Verzeichnis für die Datenbank.</string>
 
-    <string name="invalid_oci_api_key">Der API-Schlüssel ist ungültig. Gebe einen gültigen ein (oder deaktiviere              die OpenCellID-Option).</string>
+    <string name="invalid_oci_api_key">Der vorgegebene API-Schlüssel ist ungültig. Gebe einen gültigen ein (oder deaktiviere           die OpenCellID Datenquelle).</string>
 
     <string name="log_MCC_FILTER">MCC Filter:         &lt;xliff:g example=\"42,48\" id=\"MCC filter\" &gt;%1$s&lt;/xliff:g&gt;</string>
     <string name="log_MCC_WORLD">Keine MCC Filter, nehme alle Länder</string>
@@ -32,20 +32,20 @@
 
     <string name="log_MNC_WORLD">Keine MNC Filter, nehme alle Netzwerke</string>
     <string name="log_GETTING_OCID">Abrufen von Mobilfunkmastdaten von OpenCellId …</string>
-    <string name="log_GETTING_MOZ">Abrufen von Mobilfunkmastdaten vom Mozilla Location Service …</string>
-    <string name="log_URL">Die URL lautet         &lt;xliff:g example=\"http://opencellid.org/downloads/\" id=\"url\" &gt;%1$s&lt;/xliff:g&gt;</string>
-    <string name="log_CONT_LENGTH">Datengröße =         &lt;xliff:g example=\"5535\" id=\"content length\" &gt;%1$s&lt;/xliff:g&gt;</string>
-    <string name="log_REC_STATS">Gelesene Einträge:&lt;xliff:g example=\"1000\" id=\"records read\" &gt;%1$d&lt;/xliff:g&gt;,         Gespeichert:         &lt;xliff:g id=\"records inserted\" &gt;%2$d&lt;/xliff:g&gt;</string>
-    <string name="log_INDICIES">Erstelle Index für schnellen Zugriff.</string>
-    <string name="log_TOT_TIME">Gesamtzeit:         &lt;xliff:g example=\"29530\" id=\"time in milliseconds\" &gt;%1$d&lt;/xliff:g&gt;         Millisekunden</string>
+    <string name="log_GETTING_MOZ">Abrufen von Mobilfunkmastdaten vom Mozilla Standortdienst …</string>
+    <string name="log_URL">Die URL ist         &lt;xliff:g example=\"http://opencellid.org/downloads/\" id=\"url\" &gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="log_CONT_LENGTH">Inhaltslänge =          &lt;xliff:g example=\"5535\" id=\" Inhaltslänge\" &gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="log_REC_STATS">Gelesene Einträge:&lt;xliff:g Beispiel=\"1000\" id=\"gelesene Einträge\" &gt;%1$d&lt;/xliff:g&gt;,           Eingefügt:         &lt;xliff:g id=\"Einträge eingefügt\" &gt;%2$d&lt;/xliff:g&gt;</string>
+    <string name="log_INDICIES">Erstelle Verzeichnisse für schnelleren Zugriff.</string>
+    <string name="log_TOT_TIME">Gesamtzeit:         &lt;xliff:g example=\"29530\" id=\"Zeit in Millisekunden\" &gt;%1$d&lt;/xliff:g&gt;         Ms</string>
     <string name="log_FINISHED">Fertig.</string>
-    <string name="log_END_STATS">Gesamtzeit:         &lt;xliff:g id=\"time in milliseconds\" &gt;%1$s&lt;/xliff:g&gt;         Millisekunden         (         &lt;xliff:g id=\"milliseconds per record\" &gt;%2$s&lt;/xliff:g&gt;         Millisekunden je Eintrag)</string>
+    <string name="log_END_STATS">Gesamtzeit:         &lt;xliff:g id=\"Zeit in Millisekunden\" &gt;%1$s&lt;/xliff:g&gt;          Ms         (         &lt;xliff:g id=\"Millisekunden je Eintrag\" &gt;%2$s&lt;/xliff:g&gt;         Ms/ Eintrag)</string>
 
     <string name="st_CANCELED">ABGEBROCHEN</string>
 
     <!-- Strings related to requesting/granting permissions -->
-    <string name="notification_location_permission">Berühren um erforderlichen Standortzugriff zu erlauben.</string>
-    <string name="dialog_location_perm_granted">Nun ist es erforderlich, den GSM Ortungsdienst (oder den Standort in den Schnelleinstellungen) zu deaktivieren und zu reaktivieren.</string>
+    <string name="notification_location_permission">Berühren um erforderlichen Standortzugriff         zu erlauben.</string>
+    <string name="dialog_location_perm_granted">Jetzt Deaktivieren und Aktiviere wieder den GSM Standortdienst in den UnifiedNlp-Einstellungen, damit es funktioniert. Alternativ können Sie den Standort im             Schnelleinstellungsmenü deaktivieren und erneut aktivieren.</string>
     <string name="dialog_location_perm_denied">Der Dienst kann keine Informationen über Mobilfunkzellen sammeln und ist nutzlos, bis Sie die Standortgenehmigung erteilen.</string>
     <string name="preference_grant_permission">Tippen um die erforderliche Berechtigung zu erteilen</string>
 
@@ -54,42 +54,42 @@
 
     <string name="fragment_update_database_title">Datenbank</string>
 
-    <string name="fragment_update_database_last_update">Letztes Datenbankupdate:         &lt;xliff:g example=\"3 minutes ago\" id=\"time\" &gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="fragment_update_database_last_update">Letztes Datenbank-Aktualisierung:           &lt;xliff:g example=\"3 minutes ago\" id=\"time\" &gt;%1$s&lt;/xliff:g&gt;</string>
     <string name="fragment_update_database_no_database_found">Keine Datenbank gefunden</string>
-    <string name="fragment_update_database_no_permission">Datenbank existiert, aber ist nicht         lesbar.         Bitte Berechtigungen für         &lt;xliff:g id=\"file\" &gt;%s&lt;/xliff:g&gt;         bearbeiten</string>
-    <string name="fragment_update_database_start_update">Datenbank aktualisieren</string>
+    <string name="fragment_update_database_no_permission">Datenbank existiert aber ist nicht lesbar.       Modifiziere Berechtigungen für         &lt;xliff:g id=\"file\" &gt;%s&lt;/xliff:g&gt;</string>
+    <string name="fragment_update_database_start_update">Datenbank Aktualisieren</string>
     <string name="fragment_update_database_create_database">Erstelle Datenbank</string>
     <string name="fragment_update_database_show_details">Details anzeigen</string>
-    <string name="fragment_size_database">&lt;xliff:g id=\"size\" &gt;%1$d&lt;/xliff:g&gt; Cell Towers</string>
+    <string name="fragment_size_database">&lt;xliff:g id=\"size\" &gt;%1$d&lt;/xliff:g&gt; Funktürme</string>
 
-    <string name="fragment_update_database_exception_title">Fehler während des Datenbankupdates</string>
+    <string name="fragment_update_database_exception_title">Fehler während der Datenbank-Aktualisierung</string>
 
     <string name="fragment_settings_card_sources_title">Quellen</string>
 
     <string name="fragment_settings_card_sources_filter_on_phone">Alle Gebiete herunterladen und nur die ausgewählten speichern</string>
-    <string name="fragment_settings_card_sources_filter_remote">Ausgewählte Gebiete von lacells herunterladen (Daten sind veraltet)</string>
+    <string name="fragment_settings_card_sources_filter_remote">Ausgewählte Gebiete von lacells herunterladen (Daten können veraltet sein)</string>
 
-    <string name="fragment_settings_opencellid_error_title">OpenCellID konnte nicht aktiviert werden</string>
+    <string name="fragment_settings_opencellid_error_title">Konnte OpenCellID nicht aktivieren</string>
     <string name="fragment_settings_opencellid_error_connection">Verbindung fehlgeschlagen</string>
-    <string name="fragment_settings_opencellid_error_day_limit">Versuche es morgen wieder?</string>
+    <string name="fragment_settings_opencellid_error_day_limit">Versuche es morgen wieder</string>
 
     <string name="activity_main_libraries">Externe Bibliotheken</string>
 
     <string name="fragment_settings_card_areas_title">Gebiete</string>
 
-    <string name="fragment_settings_card_areas_nothing_chosen">Nichts ausgewählt (alle werden         verwendet)</string>
+    <string name="fragment_settings_card_areas_nothing_chosen">Nichts ausgewählt (werde alle verwenden)</string>
     <string name="fragment_settings_card_areas_other">Andere</string>
 
-    <string name="fragment_settings_blocked_database_update">Die Einstellungen können nicht         verändert         werden, während die Datenbank aktualisiert wird.</string>
+    <string name="fragment_settings_blocked_database_update">Die Einstellungen können nicht          verändert         werden, während die Datenbank aktualisiert wird.</string>
 
-    <string name="activity_area_list_title">Gebiete wählen</string>
+    <string name="activity_area_list_title">Gebiete auswählen</string>
 
-    <string name="fragment_area_list_unknown">Unbekanntes Gebiet (MCC:&lt;xliff:g example=\"42\" id=\"mcc\" &gt;         %1$s&lt;/xliff:g&gt;)</string>
+    <string name="fragment_area_list_unknown">Unbekanntes Gebiet (MCC:&lt;xliff:g example=\"42\" id=\"mcc\" &gt;%1$s&lt;/xliff:g&gt;)</string>
 
     <string name="fragment_database_update_error_no_sources">Sie müssen zuerst Quellen wählen</string>
     <string name="fragment_database_update_button_settings">Einstellungen öffnen</string>
 
-    <string name="fragment_database_update_error_no_permission">Berechtigung zum Speichern von Daten         ist erforderlich</string>
+    <string name="fragment_database_update_error_no_permission">Berechtigung zum Speichern von Dateien erforderlich</string>
     <string name="fragment_database_update_button_permission_allow">Erlauben</string>
 
     <string name="fragment_settings_advanced_title">Erweiterte Einstellungen</string>
