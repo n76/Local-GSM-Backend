@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Removed
 - Not applicable
 
+## [1.4.21] 2018-01-26
+### Changed
+- Increase length of allowed external database path in advanced settings
+
 ## [1.4.20] 2018-01-20
 
 ### Changed
