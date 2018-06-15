@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Not applicable
 
 ### Changed
-- Not applicable
+- Update Ukrainian Translation. Thanks to @burunduk
 
 ### Removed
 - Not applicable

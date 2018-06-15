@@ -1,0 +1,1 @@
+The µg Project at https://github.com/microg has a unified network location provider that accepts backends for the actual location lookup. GSM LocationProvider is a cell-tower based backend for either µg Project's gmsCore or UnifiedNlp network location providers. This location provider backend works without mobile data connectivity and will never post your data anywhere.
