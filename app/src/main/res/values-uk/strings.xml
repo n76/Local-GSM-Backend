@@ -4,7 +4,7 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
     tools:ignore="MissingTranslation">
     <string name="app_name">GSM Location Service</string>
-    <string name="summary">Locate using on phone database.</string>
+    <string name="summary">Позиціювання на основі локальної бази даних телефона.</string>
 
     <!-- Strings for settings -->
 
@@ -44,7 +44,7 @@
     </string>
 
     <string name="log_MNC_WORLD">Відсутні MNC фільтри, прийматимуться всі мережі</string>
-    <string name="log_GETTING_OCID">Отримання даних по вежах із OpenCellID. . .</string>
+    <string name="log_GETTING_OCID">Отримання даних по вежах з OpenCellID. . .</string>
     <string name="log_GETTING_MOZ">Отримання даних по вежах із сервісу позиціювання Mozilla. . .</string>
     <string name="log_URL">Посилання
         <xliff:g example="http://opencellid.org/downloads/" id="url">%1$s</xliff:g>
@@ -107,8 +107,8 @@
 
     <string name="fragment_settings_card_sources_title">Джерела</string>
 
-    <string name="fragment_settings_card_sources_filter_on_phone">Download all areas and only save chosen</string>
-    <string name="fragment_settings_card_sources_filter_remote">Download chosen areas from lacells (data may be old)</string>
+    <string name="fragment_settings_card_sources_filter_on_phone">Завантажити всі регіони та зберегти лише обрані</string>
+    <string name="fragment_settings_card_sources_filter_remote">Завантажити обрані регіони із lacells (дані можуть бути не актуальні)</string>
 
     <string name="fragment_settings_opencellid_error_title">Не можливо увімкнути OpenCellID</string>
     <string name="fragment_settings_opencellid_error_connection">Помилка з\'єднання</string>
@@ -116,7 +116,7 @@
 
     <string name="activity_main_libraries">Зовнішні бібліотеки</string>
 
-    <string name="fragment_settings_card_areas_title">Області</string>
+    <string name="fragment_settings_card_areas_title">Регіони</string>
 
     <string name="fragment_settings_card_areas_nothing_chosen">Нічого не обрано (обрано всі)
     </string>
@@ -128,7 +128,7 @@
 
     <string name="activity_area_list_title">Оберіть область</string>
 
-    <string name="fragment_area_list_unknown">Невідома область (MCC:<xliff:g example="42" id="mcc">
+    <string name="fragment_area_list_unknown">Невідомий регіон (MCC:<xliff:g example="42" id="mcc">
         %1$s</xliff:g>)
     </string>
 
@@ -145,5 +145,5 @@
 
     <string name="activity_area_list_search_hint">Пошук</string>
 
-    <string name="activity_main_about">Про</string>
+    <string name="activity_main_about">Про додаток</string>
 </resources>
