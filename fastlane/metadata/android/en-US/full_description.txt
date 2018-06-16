@@ -1,11 +1,7 @@
-The µg Project at https://github.com/microg has a unified network location provider that accepts backends for the actual location lookup. GSM LocationProvider is a cell-tower based backend for either µg Project's gmsCore or UnifiedNlp network location providers. This location provider backend works without mobile data connectivity and will never post your data anywhere.
+A backend for the µg Project's network location provider that uses local GSM data to resolve user location. See [https://github.com/microg]
 
-The database needed to lookup cell tower locations resides on the phone. A facility in the setting menu allows you to create a database using data from OpenCellID and/or Mozilla Location Services CSV files.
-
-Alternatively, the on-phone database can be generated from scripts at https://github.com/n76/lacells-creator Those scripts gather tower information from OpenCellId http://opencellid.org and Mozilla Location Services https://location.services.mozilla.com
+A facility in the setting menu allows you to create a database using data from [http://opencellid.org OpenCellId] and/or [https://location.services.mozilla.com Mozilla Location Services] CSV files. Alternatively, the on-phone database can be generated in advance via the [https://github.com/n76/lacells-creator lacells-creator] scripts that gather tower information from those two sources, too.
 
 You can improve the quality of the data used by this location provider by contributing to either or both of those projects.
 
-See http://opencellid.org for information about the OpenCellID project and see https://location.services.mozilla.com for information about the Mozilla Location Services initiative.
-
-This software is licensed as "Apache License, Version 2.0" unless noted otherwise.
+This backend performs no network data to resolve locations, no queries are made to a centralized AP location provider.

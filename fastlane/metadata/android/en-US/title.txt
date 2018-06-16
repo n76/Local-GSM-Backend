@@ -1,1 +1,1 @@
-GSM LocationProvider backend for µg UnifiedNlp
+Local GSM Location - A local cell tower based back end for the µg Project
