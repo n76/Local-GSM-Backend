@@ -164,4 +164,8 @@ public class MainActivity extends AppCompatActivity implements UpdateDatabaseFra
     public enum Action {
         request_permission
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }
