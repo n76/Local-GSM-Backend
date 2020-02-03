@@ -71,7 +71,7 @@
         ms/record)
     </string>
 
-    <string name="st_CANCELED">CANCELED</string>
+    <string name="st_CANCELED">取消</string>
 
     <!-- Strings related to requesting/granting permissions -->
     <string name="notification_location_permission">Tap to grant the necessary location
@@ -91,7 +91,7 @@
 
     <string name="fragment_update_database_title">資料庫</string>
 
-    <string name="fragment_update_database_last_update">Last database update:
+    <string name="fragment_update_database_last_update">最近一次更新:
         <xliff:g example="3 minutes ago" id="time">%1$s</xliff:g>
     </string>
     <string name="fragment_update_database_no_database_found">沒有找到資料庫</string>
@@ -123,7 +123,7 @@
 
     <string name="fragment_settings_card_areas_nothing_chosen">Nothing chosen (will use all)
     </string>
-    <string name="fragment_settings_card_areas_other">Others</string>
+    <string name="fragment_settings_card_areas_other">其它</string>
 
     <string name="fragment_settings_blocked_database_update">You can\'t change the settings while
         the database is being updated.
