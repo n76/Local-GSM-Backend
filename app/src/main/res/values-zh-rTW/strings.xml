@@ -10,7 +10,7 @@
     <string name="use_oci" translatable="false">OpenCellID</string>
     <string name="use_mls">Mozilla Location Services</string>
 
-    <string name="oci_config">OpenCellID Configuration</string>
+    <string name="oci_config">OpenCellID 設定</string>
     <string name="oci_api_label">OpenCellId API</string>
     <string name="oci_api_description">See http://wiki.opencellid.org/wiki/API</string>
 
@@ -27,7 +27,7 @@
         to be used. See http://en.wikipedia.org/wiki/Mobile_country_code
     </string>
 
-    <string name="ext_db_location">External database location</string>
+    <string name="ext_db_location">額外的資料庫位置</string>
     <string name="ext_db_label">Optional Path To Database Directory</string>
     <string name="ext_db_description">Directory to use for database.</string>
 
@@ -58,12 +58,12 @@
         <xliff:g id="records inserted">%2$d</xliff:g>
     </string>
     <string name="log_INDICIES">Creating indicies for faster access.</string>
-    <string name="log_TOT_TIME">Total Time:
+    <string name="log_TOT_TIME">總共時間:
         <xliff:g example="29530" id="time in milliseconds">%1$d</xliff:g>
         ms
     </string>
     <string name="log_FINISHED">完成了.</string>
-    <string name="log_END_STATS">Total Time:
+    <string name="log_END_STATS">總共時間:
         <xliff:g id="time in milliseconds">%1$s</xliff:g>
         ms
         (
@@ -95,8 +95,7 @@
         <xliff:g example="3 minutes ago" id="time">%1$s</xliff:g>
     </string>
     <string name="fragment_update_database_no_database_found">沒有找到資料庫</string>
-    <string name="fragment_update_database_no_permission">Database file exists but cannot be read.
-        Modify permissions on
+    <string name="fragment_update_database_no_permission">資料庫存在，但是不能讀取，請檢查權限
         <xliff:g id="file">%s</xliff:g>
     </string>
     <string name="fragment_update_database_start_update">更新資料庫</string>
@@ -106,7 +105,7 @@
         <xliff:g id="size">%1$d</xliff:g> Cell Towers
     </string>
 
-    <string name="fragment_update_database_exception_title">Error during updating database</string>
+    <string name="fragment_update_database_exception_title">更新資料庫錯誤</string>
 
     <string name="fragment_settings_card_sources_title">來源</string>
 
@@ -119,9 +118,9 @@
 
     <string name="activity_main_libraries">External libraries</string>
 
-    <string name="fragment_settings_card_areas_title">Areas</string>
+    <string name="fragment_settings_card_areas_title">選擇區域</string>
 
-    <string name="fragment_settings_card_areas_nothing_chosen">Nothing chosen (will use all)
+    <string name="fragment_settings_card_areas_nothing_chosen">沒有選擇區域(將選擇全部)
     </string>
     <string name="fragment_settings_card_areas_other">其它</string>
 
@@ -135,8 +134,7 @@
         %1$s</xliff:g>)
     </string>
 
-    <string name="fragment_database_update_error_no_sources">You have to choose sources in the
-        settings first
+    <string name="fragment_database_update_error_no_sources">你需要先在設定裡選擇來源
     </string>
     <string name="fragment_database_update_button_settings">Open Settings</string>
 
