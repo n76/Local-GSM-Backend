@@ -163,12 +163,18 @@ public class DownloadSpiceRequest extends SpiceRequest<DownloadSpiceRequest.Resu
             }
 
             if (Settings.with(context).useMozillaLocationService()) {
+                String mozillaUrlFmt;
+                if (!Settings.with(context).getMozillaCustomURL().isEmpty())
+                    mozillaUrlFmt = Settings.with(context).getMozillaCustomURL();
+                else
+                    mozillaUrlFmt = Config.MLS_URL_FMT;
+
                 SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                 // Mozilla publishes new CSV files at a bit after the beginning of
                 // a new day in GMT time. Get the time for a place a couple hours
                 // west of Greenwich to allow time for the data to be posted.
                 dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT-03"));
-                sources.add(new Source(String.format(Locale.US, Config.MLS_URL_FMT, dateFormatGmt.format(new Date())), Source.Compression.gzip));
+                sources.add(new Source(String.format(Locale.US, mozillaUrlFmt, dateFormatGmt.format(new Date())), Source.Compression.gzip));
             }
         }
 
