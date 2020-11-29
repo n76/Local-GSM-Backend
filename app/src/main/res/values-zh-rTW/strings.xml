@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
+    tools:ignore="MissingTranslation">
+    <string name="app_name">GSM Location Service</string>
+    <string name="summary">Locate using on phone database.</string>
+
+    <!-- Strings for settings -->
+    <string name="use_oci" translatable="false">OpenCellID</string>
+    <string name="use_mls">Mozilla Location Services</string>
+
+    <string name="oci_config">OpenCellID 設定</string>
+    <string name="oci_api_label">OpenCellId API</string>
+    <string name="oci_api_description">See http://wiki.opencellid.org/wiki/API</string>
+
+    <string name="filter_title">Filtering</string>
+    <string name="mcc_filter_label">MCC Filter</string>
+    <string name="mcc_default" translatable="false"></string>
+    <string name="mcc_filter_description">Comma separated list of numeric Mobile Country Codes (MCC)
+        to be used. See http://en.wikipedia.org/wiki/Mobile_country_code
+    </string>
+
+    <string name="mnc_filter_label">MNC Filter</string>
+    <string name="mnc_default" translatable="false"></string>
+    <string name="mnc_filter_description">Comma separated list of numeric Mobile Network Codes (MNC)
+        to be used. See http://en.wikipedia.org/wiki/Mobile_country_code
+    </string>
+
+    <string name="ext_db_location">額外的資料庫位置</string>
+    <string name="ext_db_label">Optional Path To Database Directory</string>
+    <string name="ext_db_description">Directory to use for database.</string>
+
+    <string name="invalid_oci_api_key">The given API key is incorrect. Enter a valid one (or disable
+        the OpenCellID data source).
+    </string>
+
+    <string name="log_MCC_FILTER">MCC filter:
+        <xliff:g example="42,48" id="MCC filter">%1$s</xliff:g>
+    </string>
+    <string name="log_MCC_WORLD">No MCC Filters, assume all countries</string>
+    <string name="log_MNC_FILTER">MNC Filter:
+        <xliff:g example="1,2,3,4" id="MNC filter">%1$s</xliff:g>
+    </string>
+
+    <string name="log_MNC_WORLD">No MNC Filters, assume all networks</string>
+    <string name="log_GETTING_OCID">Getting Tower Data From OpenCellID. . .</string>
+    <string name="log_GETTING_MOZ">Getting Tower Data From Mozilla Location Services. . .</string>
+    <string name="log_URL">URL is
+        <xliff:g example="http://opencellid.org/downloads/" id="url">%1$s</xliff:g>
+    </string>
+    <string name="log_CONT_LENGTH">Content length =
+        <xliff:g example="5535" id="content length">%1$s</xliff:g>
+    </string>
+    <string name="log_REC_STATS">
+        Records Read:<xliff:g example="1000" id="records read">%1$d</xliff:g>,
+        Inserted:
+        <xliff:g id="records inserted">%2$d</xliff:g>
+    </string>
+    <string name="log_INDICIES">Creating indicies for faster access.</string>
+    <string name="log_TOT_TIME">總共時間:
+        <xliff:g example="29530" id="time in milliseconds">%1$d</xliff:g>
+        ms
+    </string>
+    <string name="log_FINISHED">完成了.</string>
+    <string name="log_END_STATS">總共時間:
+        <xliff:g id="time in milliseconds">%1$s</xliff:g>
+        ms
+        (
+        <xliff:g id="milliseconds per record">%2$s</xliff:g>
+        ms/record)
+    </string>
+
+    <string name="st_CANCELED">取消</string>
+
+    <!-- Strings related to requesting/granting permissions -->
+    <string name="notification_location_permission">Tap to grant the necessary location
+        permission.
+    </string>
+    <string name="dialog_location_perm_granted">Now disable and re-enable GSM Location Service in
+        the UnifiedNlp settings to make it work. Alternatively, disable and re-enable location in
+        the quick settings menu.
+    </string>
+    <string name="dialog_location_perm_denied">The service won\'t be able to gather information
+        about mobile network cells and will be useless until you grant the location permission.
+    </string>
+    <string name="preference_grant_permission">Tap to grant required permission</string>
+
+    <!-- string for the new UI -->
+    <string name="fragment_settings_title">設定</string>
+
+    <string name="fragment_update_database_title">資料庫</string>
+
+    <string name="fragment_update_database_last_update">最近一次更新:
+        <xliff:g example="3 minutes ago" id="time">%1$s</xliff:g>
+    </string>
+    <string name="fragment_update_database_no_database_found">沒有找到資料庫</string>
+    <string name="fragment_update_database_no_permission">資料庫存在，但是不能讀取，請檢查權限
+        <xliff:g id="file">%s</xliff:g>
+    </string>
+    <string name="fragment_update_database_start_update">更新資料庫</string>
+    <string name="fragment_update_database_create_database">新增資料庫</string>
+    <string name="fragment_update_database_show_details">Show details</string>
+    <string name="fragment_size_database">
+        <xliff:g id="size">%1$d</xliff:g> Cell Towers
+    </string>
+
+    <string name="fragment_update_database_exception_title">更新資料庫錯誤</string>
+
+    <string name="fragment_settings_card_sources_title">來源</string>
+
+    <string name="fragment_settings_card_sources_filter_on_phone">Download all areas and only save chosen</string>
+    <string name="fragment_settings_card_sources_filter_remote">Download chosen areas from lacells (data may be old)</string>
+
+    <string name="fragment_settings_opencellid_error_title">Couldn\'t enable OpenCellID</string>
+    <string name="fragment_settings_opencellid_error_connection">Connection failed</string>
+    <string name="fragment_settings_opencellid_error_day_limit">Try it tomorrow again</string>
+
+    <string name="activity_main_libraries">External libraries</string>
+
+    <string name="fragment_settings_card_areas_title">選擇區域</string>
+
+    <string name="fragment_settings_card_areas_nothing_chosen">沒有選擇區域(將選擇全部)
+    </string>
+    <string name="fragment_settings_card_areas_other">其它</string>
+
+    <string name="fragment_settings_blocked_database_update">You can\'t change the settings while
+        the database is being updated.
+    </string>
+
+    <string name="activity_area_list_title">選擇區域</string>
+
+    <string name="fragment_area_list_unknown">未知區域 (MCC:<xliff:g example="42" id="mcc">
+        %1$s</xliff:g>)
+    </string>
+
+    <string name="fragment_database_update_error_no_sources">你需要先在設定裡選擇來源
+    </string>
+    <string name="fragment_database_update_button_settings">Open Settings</string>
+
+    <string name="fragment_database_update_error_no_permission">Permission to store files required
+    </string>
+    <string name="fragment_database_update_button_permission_allow">Allow</string>
+
+    <string name="fragment_settings_advanced_title">進階設定</string>
+
+    <string name="activity_area_list_search_hint">搜尋</string>
+
+    <string name="activity_main_about">關於</string>
+</resources>
+
