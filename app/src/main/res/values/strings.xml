@@ -14,6 +14,10 @@
     <string name="oci_api_label">OpenCellId API</string>
     <string name="oci_api_description">See http://wiki.opencellid.org/wiki/API</string>
 
+    <string name="mozilla_config">Mozilla Configuration</string>
+    <string name="mozilla_url_label">Mozilla Custom URL</string>
+    <string name="mozilla_url_description">URL format https://foo.bar/MLS-full-cell-export-%sT000000.csv.gz</string>
+
     <string name="filter_title">Filtering</string>
     <string name="mcc_filter_label">MCC Filter</string>
     <string name="mcc_default" translatable="false"></string>

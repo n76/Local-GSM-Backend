@@ -36,6 +36,8 @@ public class Settings {
 
     private static final String OPEN_CELL_ID_API_KEY = "oci_key_preference";
 
+    private static final String MOZILLA_CUSTOM_URL = "mozilla_url_preference";
+
     private static final String MNC_FILTER = "mnc_filter_preference";
 
     private static final String MCC_FILTER = "mcc_filter_preference";
@@ -112,6 +114,10 @@ public class Settings {
 
     public boolean useOpenCellId() {
         return preferences.getBoolean(USE_OPEN_CELL_ID, false);
+    }
+    
+    public String getMozillaCustomURL() {
+        return preferences.getString(MOZILLA_CUSTOM_URL, "");
     }
 
     public boolean useMozillaLocationService() {

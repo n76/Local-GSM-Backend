@@ -55,6 +55,7 @@ public class AdvancedSettingsFragment extends PreferenceFragment implements Pref
 
         Preference prefDbPath = findPreference(PREF_KEY_DB_PATH);
         bindPreferenceSummaryToValue(findPreference("oci_key_preference"));
+        bindPreferenceSummaryToValue(findPreference("mozilla_url_preference"));
         bindPreferenceSummaryToValue(findPreference("mcc_filter_preference"));
         bindPreferenceSummaryToValue(findPreference("mnc_filter_preference"));
         bindPreferenceSummaryToValue(prefDbPath);

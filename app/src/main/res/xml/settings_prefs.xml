@@ -6,6 +6,14 @@
             android:maxLength="36"
             android:title="@string/oci_api_label" />
     </PreferenceCategory>
+    
+    <PreferenceCategory android:title="@string/mozilla_config">
+        <EditTextPreference
+            android:dialogTitle="@string/mozilla_url_description"
+            android:key="mozilla_url_preference"
+            android:maxLength="1024"
+            android:title="@string/mozilla_url_label" />
+    </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/filter_title">
         <EditTextPreference
