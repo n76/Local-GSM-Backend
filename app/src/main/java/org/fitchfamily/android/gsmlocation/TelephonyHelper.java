@@ -5,6 +5,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.telephony.CellIdentityGsm;
 import android.telephony.CellInfoGsm;
+import android.telephony.CellIdentityLte;
+import android.telephony.CellInfoLte;
 import android.telephony.CellLocation;
 import android.telephony.NeighboringCellInfo;
 import android.telephony.TelephonyManager;
@@ -153,6 +155,10 @@ public class TelephonyHelper {
                 CellInfoGsm gsm = (CellInfoGsm) inputCellInfo;
                 CellIdentityGsm id = gsm.getCellIdentity();
                 cellLocation = db.query(id.getMcc(), id.getMnc(), id.getCid(), id.getLac());
+            } else if (inputCellInfo instanceof CellInfoLte) {
+                CellInfoLte lte = (CellInfoLte) inputCellInfo;
+                CellIdentityLte id = lte.getCellIdentity();
+                cellLocation = db.query(id.getMcc(), id.getMnc(), id.getCi(), id.getTac());
             } else if (CellInfoWcdma.isInstance(inputCellInfo)) {
                 try {
                     CellInfoWcdma wcdma = new CellInfoWcdma(inputCellInfo);
