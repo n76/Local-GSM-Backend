@@ -1,6 +1,6 @@
-NOTICE
+**NOTICE**
 ======
-The author of this backend is now primarily focused on the [Déjá Vu backend](https://github.com/n76/DejaVu). Bug fixes and pull requests will be accepted for this backend but it will not be as well supported as Déjá Vu going forward.
+**I have handed off this project to @devee. The new official repository for this work is a now at [https://github.com/deveee/Local-GSM-Backend](https://github.com/deveee/Local-GSM-Backend).**
 
 GSM LocationProvider backend for µg UnifiedNlp
 ==============================================
