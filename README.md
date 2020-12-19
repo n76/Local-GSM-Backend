@@ -1,6 +1,6 @@
 **NOTICE**
 ======
-**I have handed off this project to @devee. The new official repository for this work is a now at [https://github.com/deveee/Local-GSM-Backend](https://github.com/deveee/Local-GSM-Backend).**
+**I have handed off this project to @devee. The new official repository for this work is a now at [https://gitlab.com/deveee/Local-GSM-Backend](https://gitlab.com/deveee/Local-GSM-Backend).**
 
 GSM LocationProvider backend for µg UnifiedNlp
 ==============================================
